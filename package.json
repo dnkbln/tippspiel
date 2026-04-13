@@ -1,0 +1,21 @@
+{
+  "name": "tippspiel",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22 <23",
+    "pnpm": ">=9 <10"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:start": "bash ./scripts/dev-start.sh",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter backend db:generate",
+    "db:migrate": "pnpm --filter backend db:migrate",
+    "db:push": "pnpm --filter backend db:push",
+    "db:stop": "bash ./scripts/stop-postgres.sh",
+    "check:prereqs": "bash ./scripts/check-prereqs.sh"
+  }
+}

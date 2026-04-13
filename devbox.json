@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.12.0/.schema/devbox.schema.json",
+  "packages": [
+    "git",
+    "nodejs@22",
+    "pnpm@9",
+    "postgresql@16"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Tippspiel devbox environment loaded.'",
+      "echo 'Run: pnpm install && cp .env.example .env && pnpm db:generate'"
+    ]
+  }
+}
+

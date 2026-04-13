@@ -1,0 +1,13 @@
+node_modules/
+.pnpm-store/
+.devbox/
+.local/
+.codex
+dist/
+coverage/
+.env
+.env.local
+*.log
+frontend/dist/
+backend/dist/
+backend/generated/
