@@ -14,7 +14,6 @@ Akzeptanzkriterien:
 - Die E-Mail-Adresse muss eindeutig sein.
 - Der Anzeigename ist frei waehlbar.
 - Das Passwort wird nicht im Klartext gespeichert, sondern mit einem etablierten Verfahren wie `Argon2id` gehasht.
-- Nach erfolgreicher Registrierung kann sich der Nutzer anmelden.
 
 ### US-02 Anmeldung mit E-Mail und Passwort
 

@@ -3,6 +3,9 @@
 set -u
 
 missing=0
+PROJECT_ROOT="$(pwd)"
+LOCAL_SOCKET_DIR="$PROJECT_ROOT/.local/postgres-socket"
+LOCAL_DB_PORT="${TIPPSPIEL_DB_PORT:-5432}"
 
 check_command() {
   local command_name="$1"
@@ -39,8 +42,10 @@ fi
 if command -v pg_isready >/dev/null 2>&1; then
   if pg_isready >/dev/null 2>&1; then
     echo "[ok] PostgreSQL server responds on default socket"
+  elif [ -d "$LOCAL_SOCKET_DIR" ] && pg_isready -h "$LOCAL_SOCKET_DIR" -p "$LOCAL_DB_PORT" >/dev/null 2>&1; then
+    echo "[ok] PostgreSQL server responds on project-local socket: $LOCAL_SOCKET_DIR"
   else
-    echo "[warn] PostgreSQL server does not respond on the default socket"
+    echo "[warn] PostgreSQL server does not respond on the default socket or project-local socket"
   fi
 fi
 
@@ -57,4 +62,3 @@ if [ "$missing" -ne 0 ]; then
 fi
 
 echo "Required command checks passed."
-

@@ -1,14 +1,8 @@
-import Fastify from "fastify";
-
 import { env } from "./config/env.js";
-import { registerHealthRoute } from "./routes/health.js";
+import { createApp } from "./app.js";
 
 async function start() {
-  const app = Fastify({
-    logger: true
-  });
-
-  await registerHealthRoute(app);
+  const app = await createApp();
 
   try {
     await app.listen({
@@ -22,4 +16,3 @@ async function start() {
 }
 
 void start();
-
