@@ -2,57 +2,63 @@
 
 Diese User Stories beschreiben den fachlichen Umfang des MVP. Sie sind so formuliert, dass sie spaeter in Tickets oder Epics ueberfuehrt werden koennen.
 
+## Umsetzungszuschnitt fuer die ersten Stories
+
+Fuer die initiale Umsetzung werden `US-01` bis `US-05` ausschliesslich im Backend realisiert. Die dazugehoerige Oberflaeche wird in der separaten Frontend-Story `US-29` beschrieben.
+
 ## Nutzerkonto und Zugriff
 
-### US-01 Registrierung mit Einladungscode
+### US-01 Registrierung mit Einladungscode im Backend
 
 Als neuer Nutzer moechte ich mich mit E-Mail, Anzeigename, Passwort und Einladungscode registrieren koennen, damit ich am Tippspiel teilnehmen kann.
 
 Akzeptanzkriterien:
 
+- Das Backend stellt einen Registrierungs-Endpunkt fuer E-Mail, Anzeigename, Passwort und Einladungscode bereit.
 - Eine Registrierung ist nur mit gueltigem gemeinsamem Einladungscode moeglich.
 - Die E-Mail-Adresse muss eindeutig sein.
 - Der Anzeigename ist frei waehlbar.
 - Das Passwort wird nicht im Klartext gespeichert, sondern mit einem etablierten Verfahren wie `Argon2id` gehasht.
+- Eine erfolgreiche Registrierung legt den Nutzer persistent an.
 
-### US-02 Anmeldung mit E-Mail und Passwort
+### US-02 Anmeldung mit E-Mail und Passwort im Backend
 
 Als registrierter Nutzer moechte ich mich mit meiner E-Mail-Adresse und meinem Passwort anmelden koennen, damit ich meine Tipps verwalten kann.
 
 Akzeptanzkriterien:
 
-- Die Anmeldung erfolgt mit E-Mail und Passwort.
+- Das Backend stellt einen Login-Endpunkt mit E-Mail und Passwort bereit.
 - Bei falschen Zugangsdaten wird der Zugriff verweigert.
 - Nach erfolgreicher Anmeldung wird eine gueltige serverseitige Sitzung erstellt.
-- Die Sitzung wird im Browser ueber ein `httpOnly` Cookie abgesichert.
+- Die Antwort setzt die Sitzung ueber ein `httpOnly` Cookie.
 
-### US-03 Abmeldung
+### US-03 Abmeldung im Backend
 
 Als angemeldeter Nutzer moechte ich mich abmelden koennen, damit niemand nach mir auf mein Konto zugreifen kann.
 
 Akzeptanzkriterien:
 
-- Der Nutzer kann seine Sitzung aktiv beenden.
-- Nach der Abmeldung sind geschuetzte Bereiche nicht mehr ohne erneute Anmeldung erreichbar.
+- Das Backend stellt einen Logout-Endpunkt zum aktiven Beenden der aktuellen Sitzung bereit.
+- Nach der Abmeldung sind geschuetzte Endpunkte nicht mehr ohne erneute Anmeldung erreichbar.
 - Die serverseitige Sitzung ist nach der Abmeldung ungueltig.
 
-### US-04 Anzeigename aendern
+### US-04 Anzeigename im Backend aendern
 
 Als Nutzer moechte ich meinen Anzeigenamen nach der Registrierung aendern koennen, damit mein oeffentlich sichtbarer Name aktuell bleibt.
 
 Akzeptanzkriterien:
 
-- Der Nutzer kann seinen Anzeigenamen im Profil aendern.
-- Die Aenderung ist sofort in Rangliste und Tippansichten sichtbar.
-- Die E-Mail-Adresse bleibt fuer andere Nutzer unsichtbar.
+- Das Backend stellt einen authentifizierten Endpunkt zum Aendern des Anzeigenamens bereit.
+- Die Aenderung wird persistent gespeichert und bei nachfolgenden Abfragen ausgeliefert.
+- Die E-Mail-Adresse bleibt in oeffentlichen Nutzerdaten fuer andere Nutzer unsichtbar.
 
-### US-05 Passwort durch Admin zuruecksetzen
+### US-05 Passwort durch Admin im Backend zuruecksetzen
 
 Als Admin moechte ich das Passwort eines Nutzers zuruecksetzen koennen, damit ich bei verlorenen Zugangsdaten helfen kann.
 
 Akzeptanzkriterien:
 
-- Der Admin kann fuer einen Nutzer ein neues Passwort setzen oder einen Reset anstossen.
+- Das Backend stellt einen nur fuer Admins verfuegbaren Endpunkt fuer Passwort-Reset oder Passwort-Neuvergabe bereit.
 - Der Nutzer kann sich danach mit dem neuen Passwort anmelden.
 - Die Funktion ist nur fuer Admins verfuegbar.
 
@@ -257,6 +263,20 @@ Akzeptanzkriterien:
 - Fuer `exaktes Ergebnis`, `Tordifferenz` und `Tendenz` koennen Punktwerte gesetzt werden.
 - Das Schema gilt fuer den gesamten Wettbewerb.
 - Nach Wettbewerbsstart ist das Schema nicht mehr aenderbar.
+
+## Frontend-Ergaenzung
+
+### US-29 Frontend fuer Nutzerkonto und Zugriff
+
+Als Nutzer oder Admin moechte ich eine Weboberflaeche fuer Registrierung, Anmeldung, Abmeldung, Profilpflege und Admin-Passwort-Reset haben, damit ich die Backend-Funktionen aus `US-01` bis `US-05` ohne direkte API-Nutzung verwenden kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet Formulare fuer Registrierung und Anmeldung auf Basis der Backend-Endpunkte aus `US-01` und `US-02`.
+- Angemeldete Nutzer koennen ihren Anzeigenamen aendern und sich aktiv abmelden.
+- Admins koennen einen Passwort-Reset oder eine Passwort-Neuvergabe fuer Nutzer ueber die Oberflaeche ausloesen, sofern das Backend dies bereitstellt.
+- Erfolgs- und Fehlermeldungen aus dem Backend werden im Frontend nachvollziehbar angezeigt.
+- Nicht angemeldete Nutzer sehen keine geschuetzten Profil- oder Admin-Bereiche.
 
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
