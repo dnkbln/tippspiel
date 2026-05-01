@@ -17,6 +17,9 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-03 Abmeldung
 
+- Das Akzeptanzkriterium "geschuetzte Endpunkte sind nach Logout nicht mehr ohne erneute Anmeldung erreichbar" ist noch nicht vollstaendig nachweisbar.
+  In der aktuellen Codebasis gibt es noch keinen Auth-Guard und keinen bestehenden geschuetzten Endpoint, ueber den dieses Verhalten getestet werden kann.
+
 ### US-04 Anzeigename aendern
 
 ### US-05 Passwort durch Admin zuruecksetzen
