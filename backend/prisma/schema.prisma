@@ -40,3 +40,61 @@ model InvitationCode {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Competition {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  teams     Team[]
+  rounds    Round[]
+  games     Game[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Team {
+  id            String      @id @default(cuid())
+  competitionId String
+  name          String
+  slug          String
+  homeGames     Game[]      @relation("GameHomeTeam")
+  awayGames     Game[]      @relation("GameAwayTeam")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, slug])
+}
+
+model Round {
+  id            String      @id @default(cuid())
+  competitionId String
+  name          String
+  slug          String
+  order         Int
+  games         Game[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, slug])
+  @@unique([competitionId, order])
+}
+
+model Game {
+  id            String      @id @default(cuid())
+  competitionId String
+  roundId       String
+  homeTeamId    String
+  awayTeamId    String
+  startsAt      DateTime
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  round       Round       @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  homeTeam    Team        @relation("GameHomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
+  awayTeam    Team        @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
+}

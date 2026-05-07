@@ -28,6 +28,9 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-06 Spielplan per JSON importieren
 
+- Echter DB-Integrationstest fuer Import und anschliessenden Spielabruf fehlt noch.
+  Aktuell sind Import-Service, Admin-Route, Spielabruf-Service und Spielabruf-Route testnah mit Mocks abgesichert. Ein Test mit realer Testdatenbank sollte noch nachweisen, dass ein Spielplan importiert und danach ueber den Backend-Abruf fuer Spiele wieder ausgeliefert wird.
+
 ### US-07 Spielzeiten in Berlin anzeigen
 
 ### US-08 Wettbewerb nach Start einfrieren
