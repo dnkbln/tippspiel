@@ -1,6 +1,30 @@
 import { AppError } from "../errors/app-error.js";
 import { prisma } from "../lib/prisma.js";
 
+function parseImportDateTime(value: string, path: string): Date {
+  const parsedDate = new Date(value);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      `${path} must be a valid datetime`,
+    );
+  }
+
+  const hasTimezoneOffset = /(?:Z|[+-]\d{2}:\d{2})$/.test(value);
+
+  if (!hasTimezoneOffset) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      `${path} must include a timezone offset`,
+    );
+  }
+
+  return parsedDate;
+}
+
 export async function importTournamentSchedule(input: unknown): Promise<void> {
   if (!input || typeof input !== "object") {
     throw new AppError(
@@ -211,15 +235,7 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
       );
     }
 
-    const startsAt = new Date(gameRecord.startsAt);
-
-    if (Number.isNaN(startsAt.getTime())) {
-      throw new AppError(
-        "VALIDATION_ERROR",
-        400,
-        `games[${index}].startsAt must be a valid datetime`,
-      );
-    }
+    parseImportDateTime(gameRecord.startsAt, `games[${index}].startsAt`);
 
     if (!roundSlugs.has(gameRecord.roundSlug)) {
       throw new AppError(
@@ -311,7 +327,10 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
           roundId: roundBySlug.get(gameRecord.roundSlug as string)!.id,
           homeTeamId: teamBySlug.get(gameRecord.homeTeamSlug as string)!.id,
           awayTeamId: teamBySlug.get(gameRecord.awayTeamSlug as string)!.id,
-          startsAt: new Date(gameRecord.startsAt as string),
+          startsAt: parseImportDateTime(
+            gameRecord.startsAt as string,
+            "games[].startsAt",
+          ),
         };
       }),
     });

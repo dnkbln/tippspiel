@@ -27,7 +27,7 @@ describe("GET /competitions/:competitionId/games", () => {
     vi.clearAllMocks();
   });
 
-  it("returns games for an authenticated user", async () => {
+  it("returns games with UTC kickoff times for an authenticated user", async () => {
     const app = await createApp();
 
     requireAuthMock.mockResolvedValue({
@@ -94,6 +94,7 @@ describe("GET /competitions/:competitionId/games", () => {
       ],
     });
 
+    expect(response.json().games[0].startsAt).toBe("2026-06-14T17:00:00.000Z");
     expect(requireAuthMock).toHaveBeenCalledTimes(1);
     expect(listTournamentGamesMock).toHaveBeenCalledWith("competition-1");
 

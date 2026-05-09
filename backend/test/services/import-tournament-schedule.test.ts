@@ -878,4 +878,125 @@ describe("importTournamentSchedule", () => {
     ).resolves.toBeUndefined();
   });
 
+  it("persists imported startsAt values as the correct UTC instant", async () => {
+    prismaMock.competition.create.mockResolvedValue({
+      id: "competition-1",
+      name: "Fussball-WM 2026",
+      slug: "fussball-wm-2026",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.team.createMany.mockResolvedValue({ count: 2 });
+    prismaMock.round.createMany.mockResolvedValue({ count: 1 });
+    prismaMock.team.findMany.mockResolvedValue([
+      {
+        id: "team-1",
+        competitionId: "competition-1",
+        name: "Deutschland",
+        slug: "deutschland",
+      },
+      {
+        id: "team-2",
+        competitionId: "competition-1",
+        name: "Frankreich",
+        slug: "frankreich",
+      },
+    ]);
+    prismaMock.round.findMany.mockResolvedValue([
+      {
+        id: "round-1",
+        competitionId: "competition-1",
+        name: "Gruppenphase",
+        slug: "gruppenphase",
+        order: 1,
+      },
+    ]);
+    prismaMock.game.createMany.mockResolvedValue({ count: 1 });
+
+    await importTournamentSchedule({
+      competition: {
+        name: "Fussball-WM 2026",
+        slug: "fussball-wm-2026",
+      },
+      teams: [
+        {
+          name: "Deutschland",
+          slug: "deutschland",
+        },
+        {
+          name: "Frankreich",
+          slug: "frankreich",
+        },
+      ],
+      rounds: [
+        {
+          name: "Gruppenphase",
+          slug: "gruppenphase",
+          order: 1,
+        },
+      ],
+      games: [
+        {
+          roundSlug: "gruppenphase",
+          homeTeamSlug: "deutschland",
+          awayTeamSlug: "frankreich",
+          startsAt: "2026-06-14T19:00:00+02:00",
+        },
+      ],
+    });
+
+    expect(prismaMock.game.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          competitionId: "competition-1",
+          roundId: "round-1",
+          homeTeamId: "team-1",
+          awayTeamId: "team-2",
+          startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        },
+      ],
+    });
+  });
+
+  it("throws when games[0].startsAt has no timezone offset", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          {
+            name: "Deutschland",
+            slug: "deutschland",
+          },
+          {
+            name: "Frankreich",
+            slug: "frankreich",
+          },
+        ],
+        rounds: [
+          {
+            name: "Gruppenphase",
+            slug: "gruppenphase",
+            order: 1,
+          },
+        ],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0].startsAt must include a timezone offset",
+    });
+  });
+
 });
