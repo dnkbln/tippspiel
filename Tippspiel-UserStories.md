@@ -278,6 +278,80 @@ Akzeptanzkriterien:
 - Erfolgs- und Fehlermeldungen aus dem Backend werden im Frontend nachvollziehbar angezeigt.
 - Nicht angemeldete Nutzer sehen keine geschuetzten Profil- oder Admin-Bereiche.
 
+Die breite Frontend-Story `US-29` kann fuer die erste Umsetzung in kleinere Stories mit direktem Bezug zu den bereits vorhandenen Backend-Endpunkten geschnitten werden:
+
+### US-30 Frontend-Grundgeruest fuer Navigation und geschuetzte Bereiche
+
+Als Nutzer moechte ich im Frontend klare Bereiche fuer oeffentliche Seiten, geschuetzte Nutzerseiten und Admin-Funktionen haben, damit ich mich in der Anwendung orientieren und nur fuer mich erlaubte Funktionen sehen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet mindestens Routen oder Ansichten fuer Startseite, Registrierung, Anmeldung, Spielliste und Admin-Import.
+- Nicht angemeldete Nutzer koennen Registrierungs- und Anmeldeseite aufrufen.
+- Geschuetzte Nutzerbereiche sind ohne gueltigen Login im Frontend nicht regulaer erreichbar.
+- Admin-Bereiche sind fuer normale Nutzer im Frontend nicht sichtbar oder nicht erreichbar.
+- Fehlermeldungen aus Backend-Aufrufen koennen zentral und nachvollziehbar angezeigt werden.
+
+### US-31 Registrierung im Frontend
+
+Als neuer Nutzer moechte ich mich ueber ein Webformular mit E-Mail, Anzeigename, Passwort und Einladungscode registrieren koennen, damit ich ohne direkte API-Nutzung ein Konto anlegen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet ein Formular fuer E-Mail, Anzeigename, Passwort und Einladungscode.
+- Das Formular nutzt den Backend-Endpunkt aus `US-01`.
+- Eine erfolgreiche Registrierung wird fuer den Nutzer klar bestaetigt.
+- Validierungs- und Fachfehler aus dem Backend werden im Frontend nachvollziehbar angezeigt.
+- Die Registrierung ist ohne technische Hilfsmittel wie `curl` oder Postman moeglich.
+
+### US-32 Anmeldung und Abmeldung im Frontend
+
+Als registrierter Nutzer moechte ich mich ueber das Frontend anmelden und aktiv wieder abmelden koennen, damit ich geschuetzte Funktionen sicher nutzen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet ein Login-Formular fuer E-Mail und Passwort.
+- Das Formular nutzt den Backend-Endpunkt aus `US-02`.
+- Nach erfolgreicher Anmeldung wechselt das Frontend in einen angemeldeten Zustand und zeigt geschuetzte Nutzerbereiche an.
+- Das Frontend bietet eine sichtbare Moeglichkeit zur aktiven Abmeldung ueber den Backend-Endpunkt aus `US-03`.
+- Nach der Abmeldung behandelt das Frontend den Nutzer wieder als nicht angemeldet und zeigt geschuetzte Bereiche nicht mehr an.
+
+### US-33 Importierte Spiele im Frontend anzeigen
+
+Als angemeldeter Nutzer moechte ich die importierten Spiele eines Wettbewerbs im Frontend sehen, damit ich die verfuegbaren Partien spaeter fuer meine Tipps vor Augen habe.
+
+Akzeptanzkriterien:
+
+- Das Frontend ruft fuer einen ausgewaehlten Wettbewerb die Spielliste ueber den geschuetzten Backend-Endpunkt aus `US-06` ab.
+- Pro Spiel werden mindestens Runde, Heimteam, Auswaertsteam und Anstosszeit angezeigt.
+- Die Spiele werden in aufsteigender Reihenfolge nach Anstoss dargestellt.
+- Falls der Backend-Aufruf mit `401` antwortet, behandelt das Frontend den Nutzer als nicht angemeldet.
+- Falls noch keine Spiele vorhanden sind, zeigt das Frontend einen klaren Leerzustand.
+
+### US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
+
+Als Nutzer moechte ich die importierten Anstosszeiten im Frontend in `Europe/Berlin` sehen, damit ich weiss, bis wann ich tippen muss.
+
+Akzeptanzkriterien:
+
+- Zeitangaben aus dem Backend werden im Frontend mit der Zeitzone `Europe/Berlin` formatiert.
+- Die Anzeige verwendet nicht den rohen UTC-ISO-String aus der API.
+- Sommer- und Winterzeit werden bei der Darstellung korrekt beruecksichtigt.
+- Die Formatierung wird fuer alle angezeigten Spiele konsistent angewendet.
+- Die Frontend-Darstellung erfuellt damit die Anzeigeanforderung aus `US-07`.
+
+### US-35 Admin-Import fuer Spielplan im Frontend
+
+Als Admin moechte ich einen Spielplan als JSON ueber das Frontend importieren koennen, damit ich das Turnier ohne direkte API-Nutzung anlegen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet einen nur fuer Admins sichtbaren Bereich fuer den Spielplanimport.
+- Der Importbereich erlaubt mindestens das Einfuegen eines JSON-Payloads fuer Wettbewerb, Teams, Runden und Spiele.
+- Das Frontend nutzt den Admin-Endpunkt aus `US-06`.
+- Eine erfolgreiche Verarbeitung wird im Frontend klar bestaetigt.
+- Validierungs- und Berechtigungsfehler aus dem Backend werden fuer den Admin nachvollziehbar angezeigt.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
 Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Tipp und dem echten Ergebnis berechnet werden, damit die Rangliste ohne manuelle Nacharbeit aktuell ist.

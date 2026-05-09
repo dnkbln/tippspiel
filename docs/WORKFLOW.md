@@ -8,8 +8,10 @@ Diese Datei beschreibt, wie die weitere Entwicklung des Tippspiels organisiert w
 
 - Dauerhaft relevantes Wissen wird im Repository gepflegt.
 - Einzelne Implementierungen werden in kurzen, fokussierten Chats bearbeitet.
-- Pro Story oder kleinem Story-Paket wird ein neuer Chat verwendet.
+- Pro User Story wird ein neuer Chat verwendet.
 - Der Chatverlauf ist nicht die langfristige Wissensquelle, sondern nur das Arbeitsmedium fuer die aktuelle Aufgabe.
+- Die Implementierung erfolgt in kleinen, testnahen Inkrementen.
+- Offene fachliche oder technische Restpunkte werden in [Tippspiel-OpenPoints.md](/home/dirk/so/2026/tipspiel/Tippspiel-OpenPoints.md) festgehalten.
 
 ## Verbindliche Projektquellen
 
@@ -17,6 +19,7 @@ Diese Dateien gelten als zentrale fachliche und technische Grundlage:
 
 - [Tippspiel-MVP.md](/home/dirk/so/2026/tipspiel/Tippspiel-MVP.md)
 - [Tippspiel-UserStories.md](/home/dirk/so/2026/tipspiel/Tippspiel-UserStories.md)
+- [Tippspiel-OpenPoints.md](/home/dirk/so/2026/tipspiel/Tippspiel-OpenPoints.md)
 - [README.md](/home/dirk/so/2026/tipspiel/README.md)
 - [docs/DEPLOYMENT.md](/home/dirk/so/2026/tipspiel/docs/DEPLOYMENT.md)
 - [docs/WORKFLOW.md](/home/dirk/so/2026/tipspiel/docs/WORKFLOW.md)
@@ -45,16 +48,65 @@ Beispiele:
 - `US-01 Registrierung mit Einladungscode`
 - `US-02 Anmeldung mit E-Mail und Passwort`
 - `US-03 Abmeldung`
-- `US-09` und `US-10` gemeinsam als Tippabgabe
+- `US-09 Gruppenspiel tippen`
 
-### 3. Neuer Chat pro Arbeitspaket
+### 3. Neuer Chat pro User Story
 
 Ein neuer Chat wird gestartet, wenn:
 
-- eine neue Story begonnen wird
+- eine neue User Story begonnen wird
 - ein neues fachliches Thema startet
 - der bisherige Chat zu lang oder zu unuebersichtlich wird
 - eine andere technische Richtung diskutiert werden soll
+
+Wenn eine Story sinnvoll abgegrenzt oder abgeschlossen ist, wird fuer die naechste Story bewusst ein neuer Chat gestartet.
+
+## Arbeitsweise innerhalb eines Umsetzungs-Chats
+
+### 1. Start immer mit Abgleich von Story und Codebasis
+
+Zu Beginn eines Chats werden immer diese drei Quellen gemeinsam geprueft:
+
+- [Tippspiel-UserStories.md](/home/dirk/so/2026/tipspiel/Tippspiel-UserStories.md)
+- [Tippspiel-OpenPoints.md](/home/dirk/so/2026/tipspiel/Tippspiel-OpenPoints.md)
+- die relevante bestehende Codebasis inklusive Routen, Services, Persistenz, Frontend-Struktur und vorhandener Tests
+
+Danach wird die Story in wenige kleine Umsetzungsschritte geschnitten.
+
+### 2. Der Entwickler implementiert selbst
+
+Der Chat liefert in der Regel:
+
+- nur den jeweils naechsten kleinen konkreten Schritt
+- den dazu passenden Testvorschlag
+- die minimale dazugehoerige Codeaenderung
+- kurze Verstaendnisfragen zur Aenderung
+
+Codeaenderungen werden nicht ungefragt direkt vorgenommen, sondern zuerst als konkreter Vorschlag formuliert.
+
+### 3. Testnah und in kleinen Inkrementen arbeiten
+
+Jeder Schritt sollte moeglichst klein sein und sich auf genau einen Fortschritt konzentrieren.
+
+Bevorzugt werden:
+
+- rote Tests fuer den naechsten kleinen fachlichen oder architektonischen Schnitt
+- danach die minimale Codeaenderung fuer gruen
+- zunaechst nur die jeweils relevanten Tests
+
+### 4. Klare Trennung der Verantwortlichkeiten
+
+Die bestehende Architektur wird beibehalten und weitergeschaerft:
+
+- Backend: klare Trennung zwischen Route, Service und Persistenz
+- Frontend: klare Trennung zwischen View, Routing, Store und Hilfslogik
+- keine unnötige Vermischung von fachlicher Logik und Framework-Integration
+
+### 5. Restpunkte sauber markieren
+
+Wenn ein Akzeptanzkriterium noch nicht voll nachweisbar ist, wird das explizit benannt.
+
+Wenn nach Abschluss oder sinnvoller Abgrenzung einer Story noch offene Punkte bestehen, werden sie in [Tippspiel-OpenPoints.md](/home/dirk/so/2026/tipspiel/Tippspiel-OpenPoints.md) dokumentiert.
 
 ## Wie ein neuer Chat gestartet werden sollte
 
@@ -62,18 +114,52 @@ Ein neuer Umsetzungs-Chat sollte moeglichst konkret gestartet werden.
 
 Gute Beispiele:
 
-- Bitte implementiere `US-01 Registrierung mit Einladungscode` auf Basis von `Tippspiel-MVP.md` und `Tippspiel-UserStories.md`.
-- Bitte bearbeite als Naechstes `US-02 Anmeldung mit E-Mail und Passwort`.
-- Bitte implementiere das Datenmodell und den Backend-Endpunkt fuer `US-01`.
+- Bitte bearbeite als Naechstes `US-30` aus `Tippspiel-UserStories.md`.
+- Bitte gleiche zuerst `Tippspiel-UserStories.md`, `Tippspiel-OpenPoints.md` und die bestehende Codebasis mit `US-31` ab.
+- Ich moechte die Implementierung selbst vornehmen. Gib mir immer nur den naechsten kleinen konkreten Schritt.
 
 Wenn es zusaetzliche Randbedingungen gibt, sollten sie direkt im ersten Prompt genannt werden.
 
 Beispiele:
 
-- zuerst nur Backend, noch kein Frontend
-- mit Tests
-- ohne Session-Handling im ersten Schritt
-- inklusive API-Dokumentation
+- ich moechte die Implementierung selbst vornehmen
+- bitte keine Codeaenderungen direkt ausfuehren, ausser ich bitte ausdruecklich darum
+- testgetrieben bzw. testnah in kleinen Schritten
+- klare Trennung zwischen Route, Service, Persistenz und Frontend-Zustaendigkeiten
+- immer nur die jeweils relevanten Tests laufen lassen
+- nach jedem Schritt kurze Verstaendnisfragen stellen
+
+## Empfohlener Startprompt fuer einen neuen Story-Chat
+
+Der folgende Prompt hat sich fuer die Arbeit im Projekt bewaehrt:
+
+```text
+Ich arbeite in diesem Projekt immer nur an genau einer User Story pro Chat. Wenn eine Story abgeschlossen oder sinnvoll abgegrenzt ist, starte ich fuer die naechste Story einen neuen Chat.
+
+Arbeitsweise:
+- Projekt: Tippspiel
+- Ich moechte die Implementierung selbst vornehmen.
+- Du sollst keine Codeaenderungen selbst machen, ausser ich bitte dich ausdruecklich darum.
+- Gleiche zu Beginn immer die bestehende Codebasis mit der gewaehlten User Story ab.
+- Lies dafuer die relevanten bestehenden Routen, Services, Prisma-Modelle, Frontend-Struktur und vorhandenen Tests.
+- Orientiere dich strikt an der bestehenden Architektur und am aktuellen Code.
+- Halte eine klare Trennung zwischen Route, Service, Persistenz und Frontend-Zustaendigkeiten ein.
+- Arbeite testgetrieben bzw. testnah in kleinen Inkrementen.
+- Gib mir immer nur den naechsten kleinen, konkreten Schritt.
+- Fasse pro Schritt Test und dazu passende minimale Codeaenderung in einer gemeinsamen Antwort zusammen.
+- Gib mir zu jedem Schritt einen konkreten Codevorschlag, den ich pruefen und ggf. uebernehmen kann.
+- Lasse zunaechst nur die jeweils relevanten Tests laufen.
+- Pruefe zwischendurch knapp, was von der Story bereits erledigt ist und was noch fehlt.
+- Wenn ein Akzeptanzkriterium noch nicht voll nachweisbar ist, markiere das sauber.
+- Wenn meine Antwort unpraezise oder fachlich falsch ist, weise mich direkt darauf hin und korrigiere knapp.
+- Stelle mir nach jedem Schritt kurze Verstaendnisfragen, mit denen du pruefst, ob ich die Aenderung verstanden habe.
+- Wenn zur Story offene fachliche oder technische Restpunkte bleiben, weise mich darauf hin, damit ich sie bei Bedarf in `Tippspiel-OpenPoints.md` dokumentieren kann.
+
+Startverhalten:
+- Wenn ich eine konkrete User Story nenne, gleiche zuerst `Tippspiel-UserStories.md`, `Tippspiel-OpenPoints.md` und die relevante bestehende Codebasis damit ab.
+- Gib mir danach eine kurze Zusammenfassung der benoetigten Umsetzungsschritte fuer diese Story.
+- Liefere anschliessend nur den ersten kleinen konkreten Schritt.
+```
 
 ## Was nach jeder Umsetzung aktualisiert werden sollte
 
@@ -83,6 +169,8 @@ Typische Updates:
 
 - `Tippspiel-UserStories.md`
   falls Status, Zuschnitt oder Akzeptanzkriterien nachgeschaerft werden muessen
+- `Tippspiel-OpenPoints.md`
+  falls offene fachliche, technische oder testseitige Restpunkte sichtbar geworden sind
 - `README.md`
   falls sich Setup oder Startkommandos aendern
 - `docs/DEPLOYMENT.md`
@@ -116,15 +204,17 @@ Eine Story sollte erst umgesetzt werden, wenn:
 Eine Story ist erst abgeschlossen, wenn:
 
 - die fachliche Funktion implementiert ist
+- die relevanten Tests fuer den bearbeiteten Zuschnitt gruen sind
 - der relevante lokale Startpfad weiterhin funktioniert
 - notwendige Anpassungen an Doku oder Konfiguration erfolgt sind
 - bekannte Restpunkte klar benannt wurden
 
-## Empfohlene Reihenfolge fuer die naechsten Stories
+## Priorisierung der naechsten Stories
 
-1. `US-01 Registrierung mit Einladungscode`
-2. `US-22 Sichere Passwort- und Session-Verwaltung umsetzen`
-3. `US-02 Anmeldung mit E-Mail und Passwort`
-4. `US-03 Abmeldung`
+Die konkrete Reihenfolge der naechsten Stories wird nicht dauerhaft in dieser Datei gepflegt, weil sie sich waehrend der Umsetzung aendert.
 
-Diese Reihenfolge ist sinnvoll, weil sie zuerst die Authentifizierungsbasis schafft, auf der die meisten weiteren Nutzerfunktionen aufbauen.
+Massgeblich sind stattdessen:
+
+- der aktuelle Stand in [Tippspiel-UserStories.md](/home/dirk/so/2026/tipspiel/Tippspiel-UserStories.md)
+- bekannte Restpunkte in [Tippspiel-OpenPoints.md](/home/dirk/so/2026/tipspiel/Tippspiel-OpenPoints.md)
+- die aktuell vereinbarte Priorisierung im jeweiligen Umsetzungs-Chat oder im extern gepflegten Board

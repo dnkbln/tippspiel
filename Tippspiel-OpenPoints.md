@@ -33,6 +33,9 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-07 Spielzeiten in Berlin anzeigen
 
+- Frontend-Anzeige in `Europe/Berlin` ist noch nicht umgesetzt.
+  Das Backend liefert Spielzeiten als UTC-ISO-Strings aus; die nutzerseitige Formatierung muss spaeter im Frontend explizit mit der Zeitzone `Europe/Berlin` erfolgen.
+
 ### US-08 Wettbewerb nach Start einfrieren
 
 ## Tipps abgeben und verwalten
@@ -81,6 +84,27 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-26 Punkte fuer K.o.-Spiele automatisch berechnen
 
+## Frontend-Ergaenzung
+
+### US-29 Frontend fuer Nutzerkonto und Zugriff
+
+### US-30 Frontend-Grundgeruest fuer Navigation und geschuetzte Bereiche
+
+- Der Frontend-Authzustand wird beim App-Start noch nicht aus einer bestehenden serverseitigen Session rekonstruiert.
+  Aktuell arbeiten Navigation und Router-Guard gegen den lokalen `auth`-Store. Ohne vorheriges explizites Setzen des Stores behandelt das Frontend den Nutzer nach einem Reload zunaechst als Gast, auch wenn backendseitig bereits eine gueltige Session existiert.
+- Das Akzeptanzkriterium zur zentralen Anzeige von Backend-Fehlermeldungen ist erst architektonisch vorbereitet, aber noch nicht mit echten API-Aufrufen nachgewiesen.
+  `App.vue`, `app`-Store und `read-api-error-message.ts` sind vorhanden, aber die Verbindung zu realen Frontend-Requests folgt erst mit `US-31` und `US-32`.
+
+### US-31 Registrierung im Frontend
+
+### US-32 Anmeldung und Abmeldung im Frontend
+
+### US-33 Importierte Spiele im Frontend anzeigen
+
+### US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
+
+### US-35 Admin-Import fuer Spielplan im Frontend
+
 ## Betrieb und technische Anforderungen
 
 ### US-27 Anwendung ohne Docker in WSL betreiben
@@ -88,3 +112,7 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 ### US-28 Sichere Basis fuer spaetere Erweiterungen schaffen
 
 ## Offene Detailentscheidungen fuer spaetere Verfeinerung
+
+- konkrete Punktwerte fuer `exaktes Ergebnis`, `Differenz` und `Tendenz`
+- exakte Bewertungslogik fuer K.o.-Spiele bei Unentschieden nach 120 Minuten
+- finales JSON-Schema fuer Spielplan- und Ergebnisimport
