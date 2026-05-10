@@ -396,6 +396,21 @@ Akzeptanzkriterien:
 - Die Schnittstellen zwischen Frontend und Backend sind klar definiert.
 - Das Backend verwendet `Fastify`, `Prisma` und `PostgreSQL` als technische Basis des MVP.
 
+### US-36 Frontend und Backend produktionsnah hinter Reverse Proxy betreiben
+
+Als Betreiber moechte ich Frontend und Backend produktionsnah ueber einen gemeinsamen oeffentlichen Einstiegspunkt betreiben, damit das Backend nicht direkt aus dem Netzwerk erreichbar ist und Browser, API und Session-Cookies unter einer kontrollierten Origin laufen.
+
+Akzeptanzkriterien:
+
+- Das gebaute Frontend wird produktionsnah als statische Anwendung ausgeliefert und nicht ueber den Vite-Dev-Server betrieben.
+- Ein Reverse Proxy, z. B. `Caddy` oder `nginx`, nimmt die oeffentlichen HTTP(S)-Anfragen entgegen.
+- Der Reverse Proxy liefert das Frontend fuer `/` aus und leitet API-Pfade wie `/auth`, `/competitions` und `/admin` intern an das Backend weiter.
+- Das Backend lauscht im produktionsnahen Betrieb nur auf einer internen Adresse, z. B. `127.0.0.1:3000`, und ist nicht direkt oeffentlich erreichbar.
+- Die Frontend-API-Aufrufe verwenden relative Pfade, damit keine Backend-Hostnamen im Frontend hart codiert werden.
+- Session-Cookies sind fuer den produktionsnahen Betrieb passend konfiguriert, insbesondere `HttpOnly`, `Secure`, `SameSite` und ohne unnoetig breites `Domain`-Attribut.
+- CORS wird im produktionsnahen Zielbetrieb nicht als Ersatz fuer den Reverse Proxy verwendet; falls CORS benoetigt wird, ist es explizit auf erlaubte Origins begrenzt.
+- Die lokale Entwicklung bleibt ueber den Vite-Proxy gegen `localhost:3000` moeglich.
+
 ## Offene Detailentscheidungen fuer spaetere Verfeinerung
 
 Diese Punkte sind bewusst noch nicht als umsetzungsreife User Story ausformuliert und muessen im Fachkonzept konkretisiert werden:
