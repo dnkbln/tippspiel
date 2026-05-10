@@ -80,9 +80,11 @@ Der Chat liefert in der Regel:
 - nur den jeweils naechsten kleinen konkreten Schritt
 - den dazu passenden Testvorschlag
 - die minimale dazugehoerige Codeaenderung
-- kurze Verstaendnisfragen zur Aenderung
+- nach jeder zweiten vorgeschlagenen oder umgesetzten Aenderung kurze Verstaendnisfragen
 
 Codeaenderungen werden nicht ungefragt direkt vorgenommen, sondern zuerst als konkreter Vorschlag formuliert.
+
+Wenn sich in den Antworten des Entwicklers zu viele fachliche oder technische Fehler zeigen, wird voruebergehend wieder nach jeder Aenderung mit kurzen Verstaendnisfragen geprueft.
 
 ### 3. Testnah und in kleinen Inkrementen arbeiten
 
@@ -93,6 +95,12 @@ Bevorzugt werden:
 - rote Tests fuer den naechsten kleinen fachlichen oder architektonischen Schnitt
 - danach die minimale Codeaenderung fuer gruen
 - zunaechst nur die jeweils relevanten Tests
+
+Fuer Frontend-Arbeit gilt zusaetzlich:
+
+- keine Tests, die nur Sourcecode-Struktur, Imports, Textfragmente oder Implementierungsdetails pruefen
+- Frontend-Tests erst dann schreiben oder empfehlen, wenn echtes Verhalten oder fachliche Funktionalitaet geprueft werden kann
+- rein visuelle oder strukturelle Zwischenschritte koennen zunaechst per Browser-Ansicht, Komponenten-Review oder kurzem manuellen Check abgesichert werden
 
 ### 4. Klare Trennung der Verantwortlichkeiten
 
@@ -127,7 +135,7 @@ Beispiele:
 - testgetrieben bzw. testnah in kleinen Schritten
 - klare Trennung zwischen Route, Service, Persistenz und Frontend-Zustaendigkeiten
 - immer nur die jeweils relevanten Tests laufen lassen
-- nach jedem Schritt kurze Verstaendnisfragen stellen
+- nach jeder zweiten Aenderung kurze Verstaendnisfragen stellen; wenn sich zu viele Fehler zeigen, voruebergehend wieder nach jeder Aenderung fragen
 
 ## Empfohlener Startprompt fuer einen neuen Story-Chat
 
@@ -145,6 +153,7 @@ Arbeitsweise:
 - Orientiere dich strikt an der bestehenden Architektur und am aktuellen Code.
 - Halte eine klare Trennung zwischen Route, Service, Persistenz und Frontend-Zustaendigkeiten ein.
 - Arbeite testgetrieben bzw. testnah in kleinen Inkrementen.
+- Schreibe oder empfehle im Frontend keine Tests, die nur Sourcecode-Struktur, Imports, Textfragmente oder Implementierungsdetails pruefen; Frontend-Tests sollen echtes Verhalten oder fachliche Funktionalitaet absichern.
 - Gib mir immer nur den naechsten kleinen, konkreten Schritt.
 - Fasse pro Schritt Test und dazu passende minimale Codeaenderung in einer gemeinsamen Antwort zusammen.
 - Gib mir zu jedem Schritt einen konkreten Codevorschlag, den ich pruefen und ggf. uebernehmen kann.
@@ -152,7 +161,8 @@ Arbeitsweise:
 - Pruefe zwischendurch knapp, was von der Story bereits erledigt ist und was noch fehlt.
 - Wenn ein Akzeptanzkriterium noch nicht voll nachweisbar ist, markiere das sauber.
 - Wenn meine Antwort unpraezise oder fachlich falsch ist, weise mich direkt darauf hin und korrigiere knapp.
-- Stelle mir nach jedem Schritt kurze Verstaendnisfragen, mit denen du pruefst, ob ich die Aenderung verstanden habe.
+- Stelle mir nach jeder zweiten Aenderung kurze Verstaendnisfragen, mit denen du pruefst, ob ich die Aenderung verstanden habe.
+- Wenn sich in meinen Antworten zu viele fachliche oder technische Fehler zeigen, stelle voruebergehend wieder nach jeder Aenderung kurze Verstaendnisfragen.
 - Wenn zur Story offene fachliche oder technische Restpunkte bleiben, weise mich darauf hin, damit ich sie bei Bedarf in `Tippspiel-OpenPoints.md` dokumentieren kann.
 
 Startverhalten:

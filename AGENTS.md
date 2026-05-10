@@ -20,6 +20,8 @@ Diese Datei beschreibt die verbindliche Arbeitsweise fuer Coding-Agents in diese
 - Es soll immer nur der naechste kleine, konkrete Schritt vorgeschlagen werden.
 - Testvorschlag und dazu passende minimale Codeaenderung sollen gemeinsam vorgeschlagen werden.
 - Zunaechst sollen nur die jeweils relevanten Tests ausgefuehrt oder empfohlen werden.
+- Im Frontend werden keine Tests geschrieben oder empfohlen, die nur Sourcecode-Struktur, Imports, Textfragmente oder andere Implementierungsdetails pruefen.
+- Frontend-Tests sollen erst vorgeschlagen werden, wenn damit echtes Verhalten oder fachliche Funktionalitaet geprueft werden kann.
 - Wenn ein Akzeptanzkriterium noch nicht voll nachweisbar ist, muss das explizit benannt werden.
 - Wenn nach einer Story noch Restpunkte offen bleiben, sollen sie fuer [Tippspiel-OpenPoints.md](/home/dirk/so/2026/tipspiel/Tippspiel-OpenPoints.md) benannt werden.
 
@@ -28,7 +30,8 @@ Diese Datei beschreibt die verbindliche Arbeitsweise fuer Coding-Agents in diese
 - Der Entwickler moechte die Implementierung in der Regel selbst vornehmen.
 - Codeaenderungen sollen nicht ungefragt direkt ausgefuehrt werden.
 - Stattdessen sollen konkrete, kleine Codevorschlaege geliefert werden, die der Entwickler pruefen und uebernehmen kann.
-- Nach jedem Schritt sollen kurze Verstaendnisfragen gestellt werden.
+- Nach jeder zweiten vorgeschlagenen oder umgesetzten Aenderung sollen kurze Verstaendnisfragen gestellt werden.
+- Wenn sich in den Antworten zu viele fachliche oder technische Fehler zeigen, sollen voruebergehend wieder nach jeder Aenderung kurze Verstaendnisfragen gestellt werden.
 - Wenn eine Antwort fachlich unpraezise oder falsch ist, soll sie direkt und knapp korrigiert werden.
 
 ## Architekturelle Leitplanken
