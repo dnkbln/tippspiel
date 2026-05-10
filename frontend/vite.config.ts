@@ -6,7 +6,12 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   server: {
     host: "0.0.0.0",
-    port: 5173
-  }
+    port: 5173,
+    proxy: {
+      "/auth": "http://localhost:3000",
+      "/competitions": "http://localhost:3000",
+      "/admin": "http://localhost:3000",
+    },
+  },
 });
 
