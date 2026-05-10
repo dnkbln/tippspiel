@@ -52,5 +52,8 @@ pnpm db:generate
 echo "==> Running database migrations"
 pnpm db:migrate
 
+echo "==> Seeding development database"
+pnpm db:seed
+
 echo "==> Starting frontend and backend"
 pnpm dev
