@@ -3,7 +3,7 @@
     <header class="border-b border-slate-200 bg-white">
       <nav
         aria-label="Hauptnavigation"
-        class="mx-auto flex max-w-5xl gap-4 px-6 py-4"
+        class="mx-auto flex max-w-5xl items-center gap-4 px-6 py-4"
       >
         <router-link
           v-for="item in navigationItems"
@@ -13,6 +13,15 @@
         >
           {{ item.label }}
         </router-link>
+
+        <button
+          v-if="authStore.isAuthenticated"
+          type="button"
+          class="ml-auto rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          @click="submitLogout"
+        >
+          Abmelden
+        </button>
       </nav>
     </header>
 
@@ -32,13 +41,16 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 
+import { logoutUser } from "./api/logout-user";
 import { getNavigationItems } from "./navigation";
 import { useAppStore } from "./stores/app";
 import { useAuthStore } from "./stores/auth";
 
 const appStore = useAppStore();
 const authStore = useAuthStore();
+const router = useRouter();
 
 const navigationItems = computed(() =>
   getNavigationItems({
@@ -46,4 +58,17 @@ const navigationItems = computed(() =>
     isAdmin: authStore.isAdmin,
   }),
 );
+
+async function submitLogout() {
+  appStore.clearGlobalError();
+
+  try {
+    await logoutUser();
+  } catch {
+    appStore.setGlobalError("Abmeldung konnte serverseitig nicht bestaetigt werden.");
+  } finally {
+    authStore.clearRole();
+    await router.push("/");
+  }
+}
 </script>

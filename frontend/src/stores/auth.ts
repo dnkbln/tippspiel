@@ -17,11 +17,16 @@ export const useAuthStore = defineStore("auth", () => {
     role.value = nextRole;
   }
 
+  function clearRole() {
+    role.value = null;
+  }
+
   return {
     role,
     isAuthenticated,
     isAdmin,
     authState,
     setRole,
+    clearRole,
   };
 });

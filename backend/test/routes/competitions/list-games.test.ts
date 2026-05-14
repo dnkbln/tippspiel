@@ -157,4 +157,62 @@ describe("GET /competitions/:competitionId/games", () => {
     await app.close();
   });
 
+  it("returns games with placeholders when teams are not fixed yet", async () => {
+    const app = await createApp();
+
+    requireAuthMock.mockResolvedValue({
+      id: "user-1",
+      email: "max@example.com",
+      displayName: "Max",
+      role: "USER",
+    });
+
+    listTournamentGamesMock.mockResolvedValue([
+      {
+        id: "game-1",
+        startsAt: new Date("2026-06-28T17:00:00.000Z"),
+        homeTeam: null,
+        awayTeam: null,
+        homeTeamPlaceholder: "Sieger Gruppe A",
+        awayTeamPlaceholder: "Zweiter Gruppe B",
+        round: {
+          id: "round-1",
+          name: "Achtelfinale",
+          slug: "achtelfinale",
+          order: 2,
+        },
+      },
+    ]);
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/competitions/competition-1/games",
+      headers: {
+        cookie: "session=session-token",
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({
+      games: [
+        {
+          id: "game-1",
+          startsAt: "2026-06-28T17:00:00.000Z",
+          homeTeam: null,
+          awayTeam: null,
+          homeTeamPlaceholder: "Sieger Gruppe A",
+          awayTeamPlaceholder: "Zweiter Gruppe B",
+          round: {
+            id: "round-1",
+            name: "Achtelfinale",
+            slug: "achtelfinale",
+            order: 2,
+          },
+        },
+      ],
+    });
+
+    await app.close();
+  });
+
 });

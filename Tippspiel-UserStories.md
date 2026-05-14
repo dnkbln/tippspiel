@@ -62,6 +62,28 @@ Akzeptanzkriterien:
 - Der Nutzer kann sich danach mit dem neuen Passwort anmelden.
 - Die Funktion ist nur fuer Admins verfuegbar.
 
+### US-37 Initialen Admin per Bootstrap-Token anlegen
+
+Als Betreiber moechte ich beim erstmaligen System-Setup einen initialen Admin ueber einen einmaligen Bootstrap-Token anlegen koennen, damit Admin-Funktionen sicher aktiviert werden koennen, ohne dass normale Nutzer Admin-Rechte vergeben duerfen.
+
+Akzeptanzkriterien:
+
+- Das System kann in einem Zustand ohne vorhandenen Admin starten.
+- Fuer diesen Initialzustand wird ein einmaliger Bootstrap-Token erzeugt oder ueber einen sicheren Deployment-Prozess bereitgestellt.
+- Der Bootstrap-Token wird nicht dauerhaft im Klartext gespeichert.
+- Falls der Token serverseitig persistiert wird, wird nur ein Hash gespeichert.
+- Der Token darf nicht in Git-Repositories, Container-Images oder dauerhaft gueltigen Logs landen.
+- Das Backend stellt einen Setup-Endpunkt zum Anlegen des ersten Admins bereit, z. B. `POST /setup/initial-admin`.
+- Der Setup-Endpunkt akzeptiert den Bootstrap-Token nur ueber einen expliziten Authorization-Header, z. B. `Authorization: Bootstrap <one-time-token>`.
+- Der Setup-Endpunkt ist nur nutzbar, solange noch kein initialer Admin angelegt wurde und das Bootstrap-Setup nicht abgeschlossen ist.
+- Bei gueltigem Bootstrap-Token kann genau ein Admin mit mindestens E-Mail-Adresse und Passwort angelegt werden.
+- Der angelegte Nutzer erhaelt die Rolle `ADMIN`.
+- Nach erfolgreicher Admin-Anlage wird das Bootstrap-Setup dauerhaft als abgeschlossen markiert.
+- Nach erfolgreicher Admin-Anlage wird der gespeicherte Bootstrap-Token-Hash entfernt oder unbrauchbar gemacht.
+- Nach erfolgreicher Admin-Anlage lehnt der Setup-Endpunkt weitere Aufrufe ab.
+- Selbstregistrierung erzeugt weiterhin ausschliesslich normale Nutzer mit Rolle `USER`.
+- Ungueltige, fehlende oder bereits verwendete Bootstrap-Token werden mit einer generischen Fehlermeldung abgelehnt.
+
 ## Spielplan und Turnierdaten
 
 ### US-06 Spielplan per JSON importieren
@@ -93,6 +115,19 @@ Akzeptanzkriterien:
 
 - Nach Wettbewerbsstart koennen Spielplan, Teams und Punkteschema nicht mehr geaendert werden.
 - Nach Wettbewerbsstart duerfen nur noch Ergebnisse gepflegt werden.
+
+### US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
+
+Als Admin moechte ich Platzhalter in K.o.-Spielen durch die tatsaechlich qualifizierten Teams ersetzen koennen, damit der Spielplan nach der Gruppenphase und nach jeder K.o.-Runde dem realen Turnierverlauf entspricht.
+
+Akzeptanzkriterien:
+
+- Der importierte Spielplan darf K.o.-Spiele mit Platzhaltern wie `Sieger Gruppe A`, `Zweiter Gruppe B`, `Bester Gruppendritter (...)`, `Sieger Spiel 74` oder `Verlierer Spiel 101` enthalten.
+- Ein Admin kann fuer ein noch nicht begonnenes K.o.-Spiel die Platzhalter fuer Heimteam und Auswaertsteam durch echte Teams des Wettbewerbs ersetzen.
+- Das Ersetzen von Platzhaltern gilt auch nach Wettbewerbsstart nicht als verbotene Strukturaenderung im Sinne von `US-08`.
+- Bereits begonnene oder abgeschlossene Spiele koennen auf diesem Weg nicht mehr geaendert werden.
+- Ein K.o.-Spiel ist fuer Nutzer erst dann tippbar, wenn beide Spielteilnehmer als echte Teams feststehen.
+- Die Anzeige des Spielplans zeigt vor der Festlegung die Platzhalter und nach der Festlegung die echten Teams.
 
 ## Tipps abgeben und verwalten
 

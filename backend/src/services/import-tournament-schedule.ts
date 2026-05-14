@@ -62,10 +62,16 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     throw new AppError("VALIDATION_ERROR", 400, "games is required");
   }
 
+  const competitionName = competition.name.trim();
+  const competitionSlug = competition.slug.trim();
+  const teams = candidate.teams;
+  const rounds = candidate.rounds;
+  const games = candidate.games;
+
   const seenTeamSlugs = new Set<string>();
 
-  for (let index = 0; index < candidate.teams.length; index += 1) {
-    const team = candidate.teams[index];
+  for (let index = 0; index < teams.length; index += 1) {
+    const team = teams[index];
 
     if (!team || typeof team !== "object" || Array.isArray(team)) {
       throw new AppError(
@@ -107,8 +113,8 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
   const seenRoundSlugs = new Set<string>();
   const seenRoundOrders = new Set<number>();
 
-  for (let index = 0; index < candidate.rounds.length; index += 1) {
-    const round = candidate.rounds[index];
+  for (let index = 0; index < rounds.length; index += 1) {
+    const round = rounds[index];
 
     if (!round || typeof round !== "object" || Array.isArray(round)) {
       throw new AppError(
@@ -173,16 +179,16 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
   }
 
   const roundSlugs = new Set(
-    candidate.rounds.map((round) => (round as Record<string, unknown>).slug as string),
+    rounds.map((round) => (round as Record<string, unknown>).slug as string),
   );
 
   const teamSlugs = new Set(
-    candidate.teams.map((team) => (team as Record<string, unknown>).slug as string),
+    teams.map((team) => (team as Record<string, unknown>).slug as string),
   );
 
 
-  for (let index = 0; index < candidate.games.length; index += 1) {
-    const game = candidate.games[index];
+  for (let index = 0; index < games.length; index += 1) {
+    const game = games[index];
 
     if (!game || typeof game !== "object" || Array.isArray(game)) {
       throw new AppError(
@@ -205,25 +211,59 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
       );
     }
 
-    if (
-      typeof gameRecord.homeTeamSlug !== "string" ||
-      !gameRecord.homeTeamSlug.trim()
-    ) {
+    const homeTeamSlug =
+      typeof gameRecord.homeTeamSlug === "string"
+        ? gameRecord.homeTeamSlug.trim()
+        : "";
+    const homeTeamPlaceholder =
+      typeof gameRecord.homeTeamPlaceholder === "string"
+        ? gameRecord.homeTeamPlaceholder.trim()
+        : "";
+
+    const hasHomeTeamSlug = Boolean(homeTeamSlug);
+    const hasHomeTeamPlaceholder = Boolean(homeTeamPlaceholder);
+
+    if (hasHomeTeamSlug === hasHomeTeamPlaceholder) {
       throw new AppError(
         "VALIDATION_ERROR",
         400,
-        `games[${index}].homeTeamSlug is required`,
+        `games[${index}] must define exactly one of homeTeamSlug or homeTeamPlaceholder`,
       );
     }
 
-    if (
-      typeof gameRecord.awayTeamSlug !== "string" ||
-      !gameRecord.awayTeamSlug.trim()
-    ) {
+    if (hasHomeTeamSlug && !teamSlugs.has(homeTeamSlug)) {
       throw new AppError(
         "VALIDATION_ERROR",
         400,
-        `games[${index}].awayTeamSlug is required`,
+        `games[${index}].homeTeamSlug must reference an existing team`,
+      );
+    }
+
+    const awayTeamSlug =
+      typeof gameRecord.awayTeamSlug === "string"
+        ? gameRecord.awayTeamSlug.trim()
+        : "";
+    const awayTeamPlaceholder =
+      typeof gameRecord.awayTeamPlaceholder === "string"
+        ? gameRecord.awayTeamPlaceholder.trim()
+        : "";
+
+    const hasAwayTeamSlug = Boolean(awayTeamSlug);
+    const hasAwayTeamPlaceholder = Boolean(awayTeamPlaceholder);
+
+    if (hasAwayTeamSlug === hasAwayTeamPlaceholder) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}] must define exactly one of awayTeamSlug or awayTeamPlaceholder`,
+      );
+    }
+
+    if (hasAwayTeamSlug && !teamSlugs.has(awayTeamSlug)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}].awayTeamSlug must reference an existing team`,
       );
     }
 
@@ -245,23 +285,7 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
       );
     }
 
-    if (!teamSlugs.has(gameRecord.homeTeamSlug)) {
-      throw new AppError(
-        "VALIDATION_ERROR",
-        400,
-        `games[${index}].homeTeamSlug must reference an existing team`,
-      );
-    }
-
-    if (!teamSlugs.has(gameRecord.awayTeamSlug)) {
-      throw new AppError(
-        "VALIDATION_ERROR",
-        400,
-        `games[${index}].awayTeamSlug must reference an existing team`,
-      );
-    }
-
-    if (gameRecord.homeTeamSlug === gameRecord.awayTeamSlug) {
+    if (hasHomeTeamSlug && hasAwayTeamSlug && homeTeamSlug === awayTeamSlug) {
       throw new AppError(
         "VALIDATION_ERROR",
         400,
@@ -273,13 +297,13 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
   await prisma.$transaction(async (tx) => {
     const createdCompetition = await tx.competition.create({
       data: {
-        name: competition.name.trim(),
-        slug: competition.slug.trim(),
+        name: competitionName,
+        slug: competitionSlug,
       },
     });
 
     await tx.team.createMany({
-      data: candidate.teams.map((team) => {
+      data: teams.map((team) => {
         const teamRecord = team as Record<string, unknown>;
 
         return {
@@ -291,7 +315,7 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     });
 
     await tx.round.createMany({
-      data: candidate.rounds.map((round) => {
+      data: rounds.map((round) => {
         const roundRecord = round as Record<string, unknown>;
 
         return {
@@ -319,14 +343,32 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     const roundBySlug = new Map(persistedRounds.map((round) => [round.slug, round]));
 
     await tx.game.createMany({
-      data: candidate.games.map((game) => {
+      data: games.map((game) => {
         const gameRecord = game as Record<string, unknown>;
+        const homeTeamSlug =
+          typeof gameRecord.homeTeamSlug === "string"
+            ? gameRecord.homeTeamSlug.trim()
+            : null;
+        const awayTeamSlug =
+          typeof gameRecord.awayTeamSlug === "string"
+            ? gameRecord.awayTeamSlug.trim()
+            : null;
+        const homeTeamPlaceholder =
+          typeof gameRecord.homeTeamPlaceholder === "string"
+            ? gameRecord.homeTeamPlaceholder.trim()
+            : null;
+        const awayTeamPlaceholder =
+          typeof gameRecord.awayTeamPlaceholder === "string"
+            ? gameRecord.awayTeamPlaceholder.trim()
+            : null;
 
         return {
           competitionId: createdCompetition.id,
           roundId: roundBySlug.get(gameRecord.roundSlug as string)!.id,
-          homeTeamId: teamBySlug.get(gameRecord.homeTeamSlug as string)!.id,
-          awayTeamId: teamBySlug.get(gameRecord.awayTeamSlug as string)!.id,
+          homeTeamId: homeTeamSlug ? teamBySlug.get(homeTeamSlug)!.id : null,
+          awayTeamId: awayTeamSlug ? teamBySlug.get(awayTeamSlug)!.id : null,
+          homeTeamPlaceholder,
+          awayTeamPlaceholder,
           startsAt: parseImportDateTime(
             gameRecord.startsAt as string,
             "games[].startsAt",

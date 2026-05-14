@@ -1,0 +1,1115 @@
+{
+  "competition": {
+    "name": "Fussball-WM 2026",
+    "slug": "fussball-wm-2026"
+  },
+  "teams": [
+    {
+      "name": "Mexiko",
+      "slug": "mexiko"
+    },
+    {
+      "name": "Südafrika",
+      "slug": "suedafrika"
+    },
+    {
+      "name": "Südkorea",
+      "slug": "suedkorea"
+    },
+    {
+      "name": "Tschechien",
+      "slug": "tschechien"
+    },
+    {
+      "name": "Kanada",
+      "slug": "kanada"
+    },
+    {
+      "name": "Bosnien und Herzegowina",
+      "slug": "bosnien-und-herzegowina"
+    },
+    {
+      "name": "USA",
+      "slug": "usa"
+    },
+    {
+      "name": "Paraguay",
+      "slug": "paraguay"
+    },
+    {
+      "name": "Katar",
+      "slug": "katar"
+    },
+    {
+      "name": "Schweiz",
+      "slug": "schweiz"
+    },
+    {
+      "name": "Brasilien",
+      "slug": "brasilien"
+    },
+    {
+      "name": "Marokko",
+      "slug": "marokko"
+    },
+    {
+      "name": "Haiti",
+      "slug": "haiti"
+    },
+    {
+      "name": "Schottland",
+      "slug": "schottland"
+    },
+    {
+      "name": "Australien",
+      "slug": "australien"
+    },
+    {
+      "name": "Türkei",
+      "slug": "tuerkei"
+    },
+    {
+      "name": "Deutschland",
+      "slug": "deutschland"
+    },
+    {
+      "name": "Curaçao",
+      "slug": "curacao"
+    },
+    {
+      "name": "Niederlande",
+      "slug": "niederlande"
+    },
+    {
+      "name": "Japan",
+      "slug": "japan"
+    },
+    {
+      "name": "Elfenbeinküste",
+      "slug": "elfenbeinkueste"
+    },
+    {
+      "name": "Ecuador",
+      "slug": "ecuador"
+    },
+    {
+      "name": "Schweden",
+      "slug": "schweden"
+    },
+    {
+      "name": "Tunesien",
+      "slug": "tunesien"
+    },
+    {
+      "name": "Spanien",
+      "slug": "spanien"
+    },
+    {
+      "name": "Kap Verde",
+      "slug": "kap-verde"
+    },
+    {
+      "name": "Belgien",
+      "slug": "belgien"
+    },
+    {
+      "name": "Ägypten",
+      "slug": "aegypten"
+    },
+    {
+      "name": "Saudi-Arabien",
+      "slug": "saudi-arabien"
+    },
+    {
+      "name": "Uruguay",
+      "slug": "uruguay"
+    },
+    {
+      "name": "Iran",
+      "slug": "iran"
+    },
+    {
+      "name": "Neuseeland",
+      "slug": "neuseeland"
+    },
+    {
+      "name": "Frankreich",
+      "slug": "frankreich"
+    },
+    {
+      "name": "Senegal",
+      "slug": "senegal"
+    },
+    {
+      "name": "Irak",
+      "slug": "irak"
+    },
+    {
+      "name": "Norwegen",
+      "slug": "norwegen"
+    },
+    {
+      "name": "Argentinien",
+      "slug": "argentinien"
+    },
+    {
+      "name": "Algerien",
+      "slug": "algerien"
+    },
+    {
+      "name": "Österreich",
+      "slug": "oesterreich"
+    },
+    {
+      "name": "Jordanien",
+      "slug": "jordanien"
+    },
+    {
+      "name": "Portugal",
+      "slug": "portugal"
+    },
+    {
+      "name": "DR Kongo",
+      "slug": "dr-kongo"
+    },
+    {
+      "name": "England",
+      "slug": "england"
+    },
+    {
+      "name": "Kroatien",
+      "slug": "kroatien"
+    },
+    {
+      "name": "Ghana",
+      "slug": "ghana"
+    },
+    {
+      "name": "Panama",
+      "slug": "panama"
+    },
+    {
+      "name": "Usbekistan",
+      "slug": "usbekistan"
+    },
+    {
+      "name": "Kolumbien",
+      "slug": "kolumbien"
+    },
+    {
+      "name": "Zweiter Gruppe A",
+      "slug": "zweiter-gruppe-a"
+    },
+    {
+      "name": "Zweiter Gruppe B",
+      "slug": "zweiter-gruppe-b"
+    },
+    {
+      "name": "Sieger Gruppe E",
+      "slug": "sieger-gruppe-e"
+    },
+    {
+      "name": "Bester Gruppendritter (A/B/C/D/F)",
+      "slug": "bester-gruppendritter-a-b-c-d-f"
+    },
+    {
+      "name": "Sieger Gruppe F",
+      "slug": "sieger-gruppe-f"
+    },
+    {
+      "name": "Zweiter Gruppe C",
+      "slug": "zweiter-gruppe-c"
+    },
+    {
+      "name": "Sieger Gruppe C",
+      "slug": "sieger-gruppe-c"
+    },
+    {
+      "name": "Zweiter Gruppe F",
+      "slug": "zweiter-gruppe-f"
+    },
+    {
+      "name": "Sieger Gruppe I",
+      "slug": "sieger-gruppe-i"
+    },
+    {
+      "name": "Bester Gruppendritter (C/D/F/G/H)",
+      "slug": "bester-gruppendritter-c-d-f-g-h"
+    },
+    {
+      "name": "Zweiter Gruppe E",
+      "slug": "zweiter-gruppe-e"
+    },
+    {
+      "name": "Zweiter Gruppe I",
+      "slug": "zweiter-gruppe-i"
+    },
+    {
+      "name": "Sieger Gruppe A",
+      "slug": "sieger-gruppe-a"
+    },
+    {
+      "name": "Bester Gruppendritter (C/E/F/H/I)",
+      "slug": "bester-gruppendritter-c-e-f-h-i"
+    },
+    {
+      "name": "Sieger Gruppe L",
+      "slug": "sieger-gruppe-l"
+    },
+    {
+      "name": "Bester Gruppendritter (E/H/I/J/K)",
+      "slug": "bester-gruppendritter-e-h-i-j-k"
+    },
+    {
+      "name": "Sieger Gruppe D",
+      "slug": "sieger-gruppe-d"
+    },
+    {
+      "name": "Bester Gruppendritter (B/E/F/I/J)",
+      "slug": "bester-gruppendritter-b-e-f-i-j"
+    },
+    {
+      "name": "Sieger Gruppe G",
+      "slug": "sieger-gruppe-g"
+    },
+    {
+      "name": "Bester Gruppendritter (A/E/H/I/J)",
+      "slug": "bester-gruppendritter-a-e-h-i-j"
+    },
+    {
+      "name": "Zweiter Gruppe K",
+      "slug": "zweiter-gruppe-k"
+    },
+    {
+      "name": "Zweiter Gruppe L",
+      "slug": "zweiter-gruppe-l"
+    },
+    {
+      "name": "Sieger Gruppe H",
+      "slug": "sieger-gruppe-h"
+    },
+    {
+      "name": "Zweiter Gruppe J",
+      "slug": "zweiter-gruppe-j"
+    },
+    {
+      "name": "Sieger Gruppe B",
+      "slug": "sieger-gruppe-b"
+    },
+    {
+      "name": "Bester Gruppendritter (D/E/I/J/L)",
+      "slug": "bester-gruppendritter-d-e-i-j-l"
+    },
+    {
+      "name": "Sieger Gruppe J",
+      "slug": "sieger-gruppe-j"
+    },
+    {
+      "name": "Zweiter Gruppe H",
+      "slug": "zweiter-gruppe-h"
+    },
+    {
+      "name": "Sieger Gruppe K",
+      "slug": "sieger-gruppe-k"
+    },
+    {
+      "name": "Zweiter Gruppe D",
+      "slug": "zweiter-gruppe-d"
+    },
+    {
+      "name": "Zweiter Gruppe G",
+      "slug": "zweiter-gruppe-g"
+    },
+    {
+      "name": "Sieger Spiel 74",
+      "slug": "sieger-spiel-74"
+    },
+    {
+      "name": "Sieger Spiel 77",
+      "slug": "sieger-spiel-77"
+    },
+    {
+      "name": "Sieger Spiel 73",
+      "slug": "sieger-spiel-73"
+    },
+    {
+      "name": "Sieger Spiel 75",
+      "slug": "sieger-spiel-75"
+    },
+    {
+      "name": "Sieger Spiel 76",
+      "slug": "sieger-spiel-76"
+    },
+    {
+      "name": "Sieger Spiel 78",
+      "slug": "sieger-spiel-78"
+    },
+    {
+      "name": "Sieger Spiel 79",
+      "slug": "sieger-spiel-79"
+    },
+    {
+      "name": "Sieger Spiel 80",
+      "slug": "sieger-spiel-80"
+    },
+    {
+      "name": "Sieger Spiel 83",
+      "slug": "sieger-spiel-83"
+    },
+    {
+      "name": "Sieger Spiel 84",
+      "slug": "sieger-spiel-84"
+    },
+    {
+      "name": "Sieger Spiel 81",
+      "slug": "sieger-spiel-81"
+    },
+    {
+      "name": "Sieger Spiel 82",
+      "slug": "sieger-spiel-82"
+    },
+    {
+      "name": "Sieger Spiel 86",
+      "slug": "sieger-spiel-86"
+    },
+    {
+      "name": "Sieger Spiel 88",
+      "slug": "sieger-spiel-88"
+    },
+    {
+      "name": "Sieger Spiel 85",
+      "slug": "sieger-spiel-85"
+    },
+    {
+      "name": "Sieger Spiel 87",
+      "slug": "sieger-spiel-87"
+    },
+    {
+      "name": "Sieger Spiel 89",
+      "slug": "sieger-spiel-89"
+    },
+    {
+      "name": "Sieger Spiel 90",
+      "slug": "sieger-spiel-90"
+    },
+    {
+      "name": "Sieger Spiel 93",
+      "slug": "sieger-spiel-93"
+    },
+    {
+      "name": "Sieger Spiel 94",
+      "slug": "sieger-spiel-94"
+    },
+    {
+      "name": "Sieger Spiel 91",
+      "slug": "sieger-spiel-91"
+    },
+    {
+      "name": "Sieger Spiel 92",
+      "slug": "sieger-spiel-92"
+    },
+    {
+      "name": "Sieger Spiel 95",
+      "slug": "sieger-spiel-95"
+    },
+    {
+      "name": "Sieger Spiel 96",
+      "slug": "sieger-spiel-96"
+    },
+    {
+      "name": "Sieger Spiel 97",
+      "slug": "sieger-spiel-97"
+    },
+    {
+      "name": "Sieger Spiel 98",
+      "slug": "sieger-spiel-98"
+    },
+    {
+      "name": "Sieger Spiel 99",
+      "slug": "sieger-spiel-99"
+    },
+    {
+      "name": "Sieger Spiel 100",
+      "slug": "sieger-spiel-100"
+    },
+    {
+      "name": "Verlierer Spiel 101",
+      "slug": "verlierer-spiel-101"
+    },
+    {
+      "name": "Verlierer Spiel 102",
+      "slug": "verlierer-spiel-102"
+    },
+    {
+      "name": "Sieger Spiel 101",
+      "slug": "sieger-spiel-101"
+    },
+    {
+      "name": "Sieger Spiel 102",
+      "slug": "sieger-spiel-102"
+    }
+  ],
+  "rounds": [
+    {
+      "name": "Gruppenphase",
+      "slug": "gruppenphase",
+      "order": 1
+    },
+    {
+      "name": "Sechzehntelfinale",
+      "slug": "sechzehntelfinale",
+      "order": 2
+    },
+    {
+      "name": "Achtelfinale",
+      "slug": "achtelfinale",
+      "order": 3
+    },
+    {
+      "name": "Viertelfinale",
+      "slug": "viertelfinale",
+      "order": 4
+    },
+    {
+      "name": "Halbfinale",
+      "slug": "halbfinale",
+      "order": 5
+    },
+    {
+      "name": "Spiel um Platz 3",
+      "slug": "spiel-um-platz-3",
+      "order": 6
+    },
+    {
+      "name": "Finale",
+      "slug": "finale",
+      "order": 7
+    }
+  ],
+  "games": [
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "mexiko",
+      "awayTeamSlug": "suedafrika",
+      "startsAt": "2026-06-11T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "suedkorea",
+      "awayTeamSlug": "tschechien",
+      "startsAt": "2026-06-12T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "kanada",
+      "awayTeamSlug": "bosnien-und-herzegowina",
+      "startsAt": "2026-06-12T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "usa",
+      "awayTeamSlug": "paraguay",
+      "startsAt": "2026-06-13T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "katar",
+      "awayTeamSlug": "schweiz",
+      "startsAt": "2026-06-13T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "brasilien",
+      "awayTeamSlug": "marokko",
+      "startsAt": "2026-06-14T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "haiti",
+      "awayTeamSlug": "schottland",
+      "startsAt": "2026-06-14T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "australien",
+      "awayTeamSlug": "tuerkei",
+      "startsAt": "2026-06-14T06:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "deutschland",
+      "awayTeamSlug": "curacao",
+      "startsAt": "2026-06-14T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "niederlande",
+      "awayTeamSlug": "japan",
+      "startsAt": "2026-06-14T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "elfenbeinkueste",
+      "awayTeamSlug": "ecuador",
+      "startsAt": "2026-06-15T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "schweden",
+      "awayTeamSlug": "tunesien",
+      "startsAt": "2026-06-15T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "spanien",
+      "awayTeamSlug": "kap-verde",
+      "startsAt": "2026-06-15T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "belgien",
+      "awayTeamSlug": "aegypten",
+      "startsAt": "2026-06-15T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "saudi-arabien",
+      "awayTeamSlug": "uruguay",
+      "startsAt": "2026-06-16T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "iran",
+      "awayTeamSlug": "neuseeland",
+      "startsAt": "2026-06-16T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "frankreich",
+      "awayTeamSlug": "senegal",
+      "startsAt": "2026-06-16T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "irak",
+      "awayTeamSlug": "norwegen",
+      "startsAt": "2026-06-17T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "argentinien",
+      "awayTeamSlug": "algerien",
+      "startsAt": "2026-06-17T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "oesterreich",
+      "awayTeamSlug": "jordanien",
+      "startsAt": "2026-06-17T06:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "portugal",
+      "awayTeamSlug": "dr-kongo",
+      "startsAt": "2026-06-17T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "england",
+      "awayTeamSlug": "kroatien",
+      "startsAt": "2026-06-17T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "ghana",
+      "awayTeamSlug": "panama",
+      "startsAt": "2026-06-18T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "usbekistan",
+      "awayTeamSlug": "kolumbien",
+      "startsAt": "2026-06-18T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "tschechien",
+      "awayTeamSlug": "suedafrika",
+      "startsAt": "2026-06-18T18:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "schweiz",
+      "awayTeamSlug": "bosnien-und-herzegowina",
+      "startsAt": "2026-06-18T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "kanada",
+      "awayTeamSlug": "katar",
+      "startsAt": "2026-06-19T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "mexiko",
+      "awayTeamSlug": "suedkorea",
+      "startsAt": "2026-06-19T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "usa",
+      "awayTeamSlug": "australien",
+      "startsAt": "2026-06-19T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "schottland",
+      "awayTeamSlug": "marokko",
+      "startsAt": "2026-06-20T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "brasilien",
+      "awayTeamSlug": "haiti",
+      "startsAt": "2026-06-20T02:30:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "tuerkei",
+      "awayTeamSlug": "paraguay",
+      "startsAt": "2026-06-20T05:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "niederlande",
+      "awayTeamSlug": "schweden",
+      "startsAt": "2026-06-20T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "deutschland",
+      "awayTeamSlug": "elfenbeinkueste",
+      "startsAt": "2026-06-20T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "ecuador",
+      "awayTeamSlug": "curacao",
+      "startsAt": "2026-06-21T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "tunesien",
+      "awayTeamSlug": "japan",
+      "startsAt": "2026-06-21T06:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "spanien",
+      "awayTeamSlug": "saudi-arabien",
+      "startsAt": "2026-06-21T18:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "belgien",
+      "awayTeamSlug": "iran",
+      "startsAt": "2026-06-21T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "uruguay",
+      "awayTeamSlug": "kap-verde",
+      "startsAt": "2026-06-22T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "neuseeland",
+      "awayTeamSlug": "aegypten",
+      "startsAt": "2026-06-22T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "argentinien",
+      "awayTeamSlug": "oesterreich",
+      "startsAt": "2026-06-22T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "frankreich",
+      "awayTeamSlug": "irak",
+      "startsAt": "2026-06-22T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "norwegen",
+      "awayTeamSlug": "senegal",
+      "startsAt": "2026-06-23T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "jordanien",
+      "awayTeamSlug": "algerien",
+      "startsAt": "2026-06-23T05:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "portugal",
+      "awayTeamSlug": "usbekistan",
+      "startsAt": "2026-06-23T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "england",
+      "awayTeamSlug": "ghana",
+      "startsAt": "2026-06-23T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "panama",
+      "awayTeamSlug": "kroatien",
+      "startsAt": "2026-06-24T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "kolumbien",
+      "awayTeamSlug": "dr-kongo",
+      "startsAt": "2026-06-24T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "schweiz",
+      "awayTeamSlug": "kanada",
+      "startsAt": "2026-06-24T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "bosnien-und-herzegowina",
+      "awayTeamSlug": "katar",
+      "startsAt": "2026-06-24T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "marokko",
+      "awayTeamSlug": "haiti",
+      "startsAt": "2026-06-25T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "schottland",
+      "awayTeamSlug": "brasilien",
+      "startsAt": "2026-06-25T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "suedafrika",
+      "awayTeamSlug": "suedkorea",
+      "startsAt": "2026-06-25T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "tschechien",
+      "awayTeamSlug": "mexiko",
+      "startsAt": "2026-06-25T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "curacao",
+      "awayTeamSlug": "elfenbeinkueste",
+      "startsAt": "2026-06-25T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "ecuador",
+      "awayTeamSlug": "deutschland",
+      "startsAt": "2026-06-25T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "tunesien",
+      "awayTeamSlug": "niederlande",
+      "startsAt": "2026-06-26T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "japan",
+      "awayTeamSlug": "schweden",
+      "startsAt": "2026-06-26T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "tuerkei",
+      "awayTeamSlug": "usa",
+      "startsAt": "2026-06-26T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "paraguay",
+      "awayTeamSlug": "australien",
+      "startsAt": "2026-06-26T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "norwegen",
+      "awayTeamSlug": "frankreich",
+      "startsAt": "2026-06-26T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "senegal",
+      "awayTeamSlug": "irak",
+      "startsAt": "2026-06-26T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "kap-verde",
+      "awayTeamSlug": "saudi-arabien",
+      "startsAt": "2026-06-27T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "uruguay",
+      "awayTeamSlug": "spanien",
+      "startsAt": "2026-06-27T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "neuseeland",
+      "awayTeamSlug": "belgien",
+      "startsAt": "2026-06-27T05:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "aegypten",
+      "awayTeamSlug": "iran",
+      "startsAt": "2026-06-27T05:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "panama",
+      "awayTeamSlug": "england",
+      "startsAt": "2026-06-27T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "kroatien",
+      "awayTeamSlug": "ghana",
+      "startsAt": "2026-06-27T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "kolumbien",
+      "awayTeamSlug": "portugal",
+      "startsAt": "2026-06-28T01:30:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "dr-kongo",
+      "awayTeamSlug": "usbekistan",
+      "startsAt": "2026-06-28T01:30:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "algerien",
+      "awayTeamSlug": "oesterreich",
+      "startsAt": "2026-06-28T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "gruppenphase",
+      "homeTeamSlug": "jordanien",
+      "awayTeamSlug": "argentinien",
+      "startsAt": "2026-06-28T04:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "zweiter-gruppe-a",
+      "awayTeamSlug": "zweiter-gruppe-b",
+      "startsAt": "2026-06-28T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-e",
+      "awayTeamSlug": "bester-gruppendritter-a-b-c-d-f",
+      "startsAt": "2026-06-29T22:30:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-f",
+      "awayTeamSlug": "zweiter-gruppe-c",
+      "startsAt": "2026-06-30T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-c",
+      "awayTeamSlug": "zweiter-gruppe-f",
+      "startsAt": "2026-06-29T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-i",
+      "awayTeamSlug": "bester-gruppendritter-c-d-f-g-h",
+      "startsAt": "2026-06-30T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "zweiter-gruppe-e",
+      "awayTeamSlug": "zweiter-gruppe-i",
+      "startsAt": "2026-06-30T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-a",
+      "awayTeamSlug": "bester-gruppendritter-c-e-f-h-i",
+      "startsAt": "2026-07-01T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-l",
+      "awayTeamSlug": "bester-gruppendritter-e-h-i-j-k",
+      "startsAt": "2026-07-01T18:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-d",
+      "awayTeamSlug": "bester-gruppendritter-b-e-f-i-j",
+      "startsAt": "2026-07-02T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-g",
+      "awayTeamSlug": "bester-gruppendritter-a-e-h-i-j",
+      "startsAt": "2026-07-01T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "zweiter-gruppe-k",
+      "awayTeamSlug": "zweiter-gruppe-l",
+      "startsAt": "2026-07-03T01:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-h",
+      "awayTeamSlug": "zweiter-gruppe-j",
+      "startsAt": "2026-07-02T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-b",
+      "awayTeamSlug": "bester-gruppendritter-d-e-i-j-l",
+      "startsAt": "2026-07-03T05:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-j",
+      "awayTeamSlug": "zweiter-gruppe-h",
+      "startsAt": "2026-07-04T00:00:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "sieger-gruppe-k",
+      "awayTeamSlug": "bester-gruppendritter-d-e-i-j-l",
+      "startsAt": "2026-07-04T03:30:00+02:00"
+    },
+    {
+      "roundSlug": "sechzehntelfinale",
+      "homeTeamSlug": "zweiter-gruppe-d",
+      "awayTeamSlug": "zweiter-gruppe-g",
+      "startsAt": "2026-07-03T20:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-74",
+      "awayTeamSlug": "sieger-spiel-77",
+      "startsAt": "2026-07-04T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-73",
+      "awayTeamSlug": "sieger-spiel-75",
+      "startsAt": "2026-07-04T19:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-76",
+      "awayTeamSlug": "sieger-spiel-78",
+      "startsAt": "2026-07-05T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-79",
+      "awayTeamSlug": "sieger-spiel-80",
+      "startsAt": "2026-07-06T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-83",
+      "awayTeamSlug": "sieger-spiel-84",
+      "startsAt": "2026-07-06T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-81",
+      "awayTeamSlug": "sieger-spiel-82",
+      "startsAt": "2026-07-07T02:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-86",
+      "awayTeamSlug": "sieger-spiel-88",
+      "startsAt": "2026-07-07T18:00:00+02:00"
+    },
+    {
+      "roundSlug": "achtelfinale",
+      "homeTeamSlug": "sieger-spiel-85",
+      "awayTeamSlug": "sieger-spiel-87",
+      "startsAt": "2026-07-07T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "viertelfinale",
+      "homeTeamSlug": "sieger-spiel-89",
+      "awayTeamSlug": "sieger-spiel-90",
+      "startsAt": "2026-07-09T22:00:00+02:00"
+    },
+    {
+      "roundSlug": "viertelfinale",
+      "homeTeamSlug": "sieger-spiel-93",
+      "awayTeamSlug": "sieger-spiel-94",
+      "startsAt": "2026-07-10T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "viertelfinale",
+      "homeTeamSlug": "sieger-spiel-91",
+      "awayTeamSlug": "sieger-spiel-92",
+      "startsAt": "2026-07-11T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "viertelfinale",
+      "homeTeamSlug": "sieger-spiel-95",
+      "awayTeamSlug": "sieger-spiel-96",
+      "startsAt": "2026-07-12T03:00:00+02:00"
+    },
+    {
+      "roundSlug": "halbfinale",
+      "homeTeamSlug": "sieger-spiel-97",
+      "awayTeamSlug": "sieger-spiel-98",
+      "startsAt": "2026-07-14T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "halbfinale",
+      "homeTeamSlug": "sieger-spiel-99",
+      "awayTeamSlug": "sieger-spiel-100",
+      "startsAt": "2026-07-15T21:00:00+02:00"
+    },
+    {
+      "roundSlug": "spiel-um-platz-3",
+      "homeTeamSlug": "verlierer-spiel-101",
+      "awayTeamSlug": "verlierer-spiel-102",
+      "startsAt": "2026-07-18T23:00:00+02:00"
+    },
+    {
+      "roundSlug": "finale",
+      "homeTeamSlug": "sieger-spiel-101",
+      "awayTeamSlug": "sieger-spiel-102",
+      "startsAt": "2026-07-19T21:00:00+02:00"
+    }
+  ]
+}

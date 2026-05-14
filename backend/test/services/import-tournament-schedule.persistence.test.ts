@@ -364,6 +364,8 @@ describe("importTournamentSchedule persistence", () => {
           roundId: "round-1",
           homeTeamId: "team-1",
           awayTeamId: "team-2",
+          homeTeamPlaceholder: null,
+          awayTeamPlaceholder: null,
           startsAt: new Date("2026-06-14T19:00:00+02:00"),
         },
       ],
@@ -392,6 +394,82 @@ describe("importTournamentSchedule persistence", () => {
     ).resolves.toBeUndefined();
 
     expect(prismaMock.$transaction).toHaveBeenCalledTimes(1);
+  });
+
+  it("creates games with team placeholders", async () => {
+    prismaMock.competition.create.mockResolvedValue({
+      id: "competition-1",
+      name: "Fussball-WM 2026",
+      slug: "fussball-wm-2026",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.team.createMany.mockResolvedValue({ count: 2 });
+    prismaMock.round.createMany.mockResolvedValue({ count: 1 });
+
+    prismaMock.team.findMany.mockResolvedValue([
+      {
+        id: "team-1",
+        competitionId: "competition-1",
+        name: "Deutschland",
+        slug: "deutschland",
+      },
+    ]);
+
+    prismaMock.round.findMany.mockResolvedValue([
+      {
+        id: "round-1",
+        competitionId: "competition-1",
+        name: "Achtelfinale",
+        slug: "achtelfinale",
+        order: 2,
+      },
+    ]);
+
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          {
+            name: "Deutschland",
+            slug: "deutschland",
+          },
+        ],
+        rounds: [
+          {
+            name: "Achtelfinale",
+            slug: "achtelfinale",
+            order: 2,
+          },
+        ],
+        games: [
+          {
+            roundSlug: "achtelfinale",
+            homeTeamPlaceholder: "Sieger Gruppe A",
+            awayTeamPlaceholder: "Zweiter Gruppe B",
+            startsAt: "2026-06-28T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(prismaMock.game.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          competitionId: "competition-1",
+          roundId: "round-1",
+          homeTeamId: null,
+          awayTeamId: null,
+          homeTeamPlaceholder: "Sieger Gruppe A",
+          awayTeamPlaceholder: "Zweiter Gruppe B",
+          startsAt: new Date("2026-06-28T19:00:00+02:00"),
+        },
+      ],
+    });
   });
 
 });

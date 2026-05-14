@@ -126,4 +126,57 @@ describe("listTournamentGames", () => {
       },
     });
   });
+
+  it("returns games with placeholders when teams are not fixed yet", async () => {
+    prismaMock.game.findMany.mockResolvedValue([
+      {
+        id: "game-1",
+        startsAt: new Date("2026-06-28T17:00:00.000Z"),
+        homeTeam: null,
+        awayTeam: null,
+        homeTeamPlaceholder: "Sieger Gruppe A",
+        awayTeamPlaceholder: "Zweiter Gruppe B",
+        round: {
+          id: "round-1",
+          name: "Achtelfinale",
+          slug: "achtelfinale",
+          order: 2,
+        },
+      },
+    ]);
+
+    const result = await listTournamentGames("competition-1");
+
+    expect(result).toEqual([
+      {
+        id: "game-1",
+        startsAt: new Date("2026-06-28T17:00:00.000Z"),
+        homeTeam: null,
+        awayTeam: null,
+        homeTeamPlaceholder: "Sieger Gruppe A",
+        awayTeamPlaceholder: "Zweiter Gruppe B",
+        round: {
+          id: "round-1",
+          name: "Achtelfinale",
+          slug: "achtelfinale",
+          order: 2,
+        },
+      },
+    ]);
+
+    expect(prismaMock.game.findMany).toHaveBeenCalledWith({
+      where: {
+        competitionId: "competition-1",
+      },
+      include: {
+        round: true,
+        homeTeam: true,
+        awayTeam: true,
+      },
+      orderBy: {
+        startsAt: "asc",
+      },
+    });
+  });
+
 });

@@ -33,6 +33,14 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model BootstrapSetup {
+  id            String    @id @default("initial")
+  tokenHash     String?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
 model InvitationCode {
   id        String   @id @default(cuid())
   code      String   @unique
@@ -84,17 +92,19 @@ model Round {
 }
 
 model Game {
-  id            String      @id @default(cuid())
-  competitionId String
-  roundId       String
-  homeTeamId    String
-  awayTeamId    String
-  startsAt      DateTime
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id                  String      @id @default(cuid())
+  competitionId       String
+  roundId             String
+  homeTeamId          String?
+  awayTeamId          String?
+  homeTeamPlaceholder String?
+  awayTeamPlaceholder String?
+  startsAt            DateTime
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
 
   competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
   round       Round       @relation(fields: [roundId], references: [id], onDelete: Cascade)
-  homeTeam    Team        @relation("GameHomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
-  awayTeam    Team        @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
+  homeTeam    Team?       @relation("GameHomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
+  awayTeam    Team?       @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
 }

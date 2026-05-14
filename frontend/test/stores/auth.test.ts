@@ -47,4 +47,19 @@ describe("auth store", () => {
     });
   });
 
+  it("returns to guest state when the role is cleared", () => {
+    const authStore = useAuthStore();
+
+    authStore.setRole("ADMIN");
+    authStore.clearRole();
+
+    expect(authStore.role).toBeNull();
+    expect(authStore.isAuthenticated).toBe(false);
+    expect(authStore.isAdmin).toBe(false);
+    expect(authStore.authState).toEqual({
+      isAuthenticated: false,
+      isAdmin: false,
+    });
+  });
+
 });

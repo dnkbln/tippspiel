@@ -24,6 +24,11 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-05 Passwort durch Admin zuruecksetzen
 
+### US-37 Initialen Admin per Bootstrap-Token anlegen
+
+- Sicherer Provisionierungsprozess fuer den initialen Bootstrap-Token-Hash fehlt noch.
+  Der Setup-Endpunkt erwartet einen gespeicherten Token-Hash in `BootstrapSetup.tokenHash`, aber es gibt noch keinen dokumentierten oder implementierten Betriebsweg, der diesen Datensatz erzeugt, ohne den Klartext-Token in Git, Container-Images oder dauerhafte Logs zu schreiben.
+
 ## Spielplan und Turnierdaten
 
 ### US-06 Spielplan per JSON importieren
@@ -37,6 +42,13 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
   Das Backend liefert Spielzeiten als UTC-ISO-Strings aus; die nutzerseitige Formatierung muss spaeter im Frontend explizit mit der Zeitzone `Europe/Berlin` erfolgen.
 
 ### US-08 Wettbewerb nach Start einfrieren
+
+### US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
+
+- Abgeschlossene Spiele koennen noch nicht separat vom Spielbeginn blockiert werden.
+  Das Backend verhindert aktuell Aenderungen ab `startsAt`, aber ein eigener Ergebnis- oder Spielstatus existiert noch nicht.
+- Das Akzeptanzkriterium "Ein K.o.-Spiel ist fuer Nutzer erst dann tippbar, wenn beide Spielteilnehmer als echte Teams feststehen" ist backendseitig noch nicht vollstaendig nachweisbar.
+  Die Tippabgabe ist in den spaeteren Tipp-Stories noch nicht umgesetzt.
 
 ## Tipps abgeben und verwalten
 

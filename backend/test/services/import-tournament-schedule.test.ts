@@ -386,7 +386,7 @@ describe("importTournamentSchedule", () => {
     });
   });
 
-  it("throws when games[0].homeTeamSlug is missing", async () => {
+  it("throws when games[0] has neither homeTeamSlug nor homeTeamPlaceholder", async () => {
     await expect(
       importTournamentSchedule({
         competition: {
@@ -421,11 +421,11 @@ describe("importTournamentSchedule", () => {
     ).rejects.toMatchObject({
       code: "VALIDATION_ERROR",
       statusCode: 400,
-      message: "games[0].homeTeamSlug is required",
+      message: "games[0] must define exactly one of homeTeamSlug or homeTeamPlaceholder",
     });
   });
 
-  it("throws when games[0].awayTeamSlug is missing", async () => {
+  it("throws when games[0] has neither awayTeamSlug nor awayTeamPlaceholder", async () => {
     await expect(
       importTournamentSchedule({
         competition: {
@@ -460,7 +460,7 @@ describe("importTournamentSchedule", () => {
     ).rejects.toMatchObject({
       code: "VALIDATION_ERROR",
       statusCode: 400,
-      message: "games[0].awayTeamSlug is required",
+      message: "games[0] must define exactly one of awayTeamSlug or awayTeamPlaceholder",
     });
   });
 
@@ -953,6 +953,8 @@ describe("importTournamentSchedule", () => {
           roundId: "round-1",
           homeTeamId: "team-1",
           awayTeamId: "team-2",
+          homeTeamPlaceholder: null,
+          awayTeamPlaceholder: null,
           startsAt: new Date("2026-06-14T17:00:00.000Z"),
         },
       ],
@@ -996,6 +998,88 @@ describe("importTournamentSchedule", () => {
       code: "VALIDATION_ERROR",
       statusCode: 400,
       message: "games[0].startsAt must include a timezone offset",
+    });
+  });
+
+  it("throws when games[0] has both homeTeamSlug and homeTeamPlaceholder", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          {
+            name: "Deutschland",
+            slug: "deutschland",
+          },
+          {
+            name: "Frankreich",
+            slug: "frankreich",
+          },
+        ],
+        rounds: [
+          {
+            name: "Achtelfinale",
+            slug: "achtelfinale",
+            order: 2,
+          },
+        ],
+        games: [
+          {
+            roundSlug: "achtelfinale",
+            homeTeamSlug: "deutschland",
+            homeTeamPlaceholder: "Sieger Gruppe A",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-28T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0] must define exactly one of homeTeamSlug or homeTeamPlaceholder",
+    });
+  });
+
+  it("throws when games[0] has both awayTeamSlug and awayTeamPlaceholder", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          {
+            name: "Deutschland",
+            slug: "deutschland",
+          },
+          {
+            name: "Frankreich",
+            slug: "frankreich",
+          },
+        ],
+        rounds: [
+          {
+            name: "Achtelfinale",
+            slug: "achtelfinale",
+            order: 2,
+          },
+        ],
+        games: [
+          {
+            roundSlug: "achtelfinale",
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            awayTeamPlaceholder: "Zweiter Gruppe B",
+            startsAt: "2026-06-28T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0] must define exactly one of awayTeamSlug or awayTeamPlaceholder",
     });
   });
 
