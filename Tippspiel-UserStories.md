@@ -129,6 +129,20 @@ Akzeptanzkriterien:
 - Ein K.o.-Spiel ist fuer Nutzer erst dann tippbar, wenn beide Spielteilnehmer als echte Teams feststehen.
 - Die Anzeige des Spielplans zeigt vor der Festlegung die Platzhalter und nach der Festlegung die echten Teams.
 
+### US-39 Verfuegbare Wettbewerbe im Backend abrufen
+
+Als angemeldeter Nutzer moechte ich alle verfuegbaren Wettbewerbe abrufen koennen, damit ich einen Wettbewerb auswaehlen und anschliessend dessen Spiele anzeigen kann.
+
+Akzeptanzkriterien:
+
+- Das Backend stellt einen geschuetzten Endpunkt zum Abrufen der verfuegbaren Wettbewerbe bereit, z. B. `GET /competitions`.
+- Der Endpunkt ist nur fuer angemeldete Nutzer erreichbar.
+- Pro Wettbewerb werden mindestens `id`, `name` und `slug` ausgeliefert.
+- Die Antwort enthaelt keine unnoetigen Detaildaten wie Teams, Runden oder Spiele.
+- Die Wettbewerbe werden in einer stabilen Reihenfolge ausgeliefert, z. B. nach `createdAt` oder `name`.
+- Wenn noch keine Wettbewerbe vorhanden sind, liefert der Endpunkt eine leere Liste.
+- Die ausgelieferte `id` kann vom Frontend fuer den bestehenden Spielabruf `GET /competitions/:competitionId/games` verwendet werden.
+
 ## Tipps abgeben und verwalten
 
 ### US-09 Gruppenspiel tippen

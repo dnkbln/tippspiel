@@ -49,5 +49,6 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-36 Frontend und Backend produktionsnah hinter Reverse Proxy betreiben
 - [x] US-37 Initialen Admin per Bootstrap-Token anlegen
 - [x] US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
+- [ ] US-39 Verfuegbare Wettbewerbe im Backend abrufen
 
-11/38
+11/39

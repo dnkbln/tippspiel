@@ -50,6 +50,13 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 - Das Akzeptanzkriterium "Ein K.o.-Spiel ist fuer Nutzer erst dann tippbar, wenn beide Spielteilnehmer als echte Teams feststehen" ist backendseitig noch nicht vollstaendig nachweisbar.
   Die Tippabgabe ist in den spaeteren Tipp-Stories noch nicht umgesetzt.
 
+### US-39 Verfuegbare Wettbewerbe im Backend abrufen
+
+- Backend-Endpunkt zum Abrufen vorhandener Wettbewerbe fehlt noch.
+  Der bestehende Spielabruf benoetigt bereits eine `competitionId`, aber das Backend bietet noch keinen Weg, diese ID aus den vorhandenen Wettbewerben zu ermitteln.
+- Frontend-Navigation verwendet aktuell noch eine Demo-Competition-ID.
+  Eine echte Wettbewerbsauswahl oder automatische Auswahl kann erst auf Basis des neuen Backend-Endpunkts umgesetzt werden.
+
 ## Tipps abgeben und verwalten
 
 ### US-09 Gruppenspiel tippen
