@@ -45,9 +45,9 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-32 Anmeldung und Abmeldung im Frontend
 - [ ] US-33 Importierte Spiele im Frontend anzeigen
 - [ ] US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
-- [ ] US-35 Admin-Import fuer Spielplan im Frontend
+- [x] US-35 Admin-Import fuer Spielplan im Frontend
 - [ ] US-36 Frontend und Backend produktionsnah hinter Reverse Proxy betreiben
 - [x] US-37 Initialen Admin per Bootstrap-Token anlegen
 - [x] US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
 
-10/38
+11/38
