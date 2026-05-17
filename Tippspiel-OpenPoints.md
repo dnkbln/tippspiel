@@ -123,8 +123,6 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-41 Competition-Verwaltung im Frontend
 
-- Die Story ist noch nicht umgesetzt.
-
 ## Betrieb und technische Anforderungen
 
 ### US-27 Anwendung ohne Docker in WSL betreiben

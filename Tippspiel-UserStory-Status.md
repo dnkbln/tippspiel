@@ -51,6 +51,6 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
 - [x] US-39 Verfuegbare Wettbewerbe im Backend abrufen
 - [x] US-40 Competition im Backend umbenennen und loeschen
-- [ ] US-41 Competition-Verwaltung im Frontend
+- [x] US-41 Competition-Verwaltung im Frontend
 
-14/41
+15/41
