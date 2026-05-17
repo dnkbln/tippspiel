@@ -15,7 +15,7 @@ export function getNavigationItems(authState: AuthState): NavigationItem[] {
     return items;
   }
 
-  items.push({ label: "Spielliste", to: "/competitions/demo/games" });
+  items.push({ label: "Spielliste", to: "/competitions" });
 
   if (authState.isAdmin) {
     items.push({ label: "Admin-Import", to: "/admin/import" });

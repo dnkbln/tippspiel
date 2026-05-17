@@ -32,7 +32,7 @@ describe("router", () => {
   it("redirects unauthenticated users from competition games to login", async () => {
     const router = createAppRouter(createMemoryHistory());
 
-    await router.push("/competitions/competition-1/games");
+    await router.push("/competitions");
 
     expect(router.currentRoute.value.name).toBe("login");
   });

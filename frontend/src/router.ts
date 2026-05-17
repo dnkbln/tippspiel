@@ -54,6 +54,12 @@ const routes: RouteRecordRaw[] = [
     meta: { access: "public" satisfies RouteAccess },
   },
   {
+    path: "/competitions",
+    name: "competitions",
+    component: CompetitionGamesView,
+    meta: { access: "authenticated" satisfies RouteAccess },
+  },
+  {
     path: "/competitions/:competitionId/games",
     name: "competition-games",
     component: CompetitionGamesView,

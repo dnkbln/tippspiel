@@ -143,6 +143,23 @@ Akzeptanzkriterien:
 - Wenn noch keine Wettbewerbe vorhanden sind, liefert der Endpunkt eine leere Liste.
 - Die ausgelieferte `id` kann vom Frontend fuer den bestehenden Spielabruf `GET /competitions/:competitionId/games` verwendet werden.
 
+### US-40 Competition im Backend umbenennen und loeschen
+
+Als Admin moechte ich den Namen einer importierten Competition nachtraeglich aendern und eine falsch importierte Competition loeschen koennen, damit Importfehler korrigierbar bleiben.
+
+Akzeptanzkriterien:
+
+- Das Backend stellt einen nur fuer Admins verfuegbaren Endpunkt zum Aendern des Competition-Namens bereit, z. B. `PATCH /admin/competitions/:competitionId`.
+- Der neue Name muss eine nicht-leere Zeichenkette sein und wird getrimmt gespeichert.
+- Die `id` und der `slug` der Competition bleiben bei einer Namensaenderung unveraendert.
+- Nach der Aenderung liefert `GET /competitions` den neuen Namen aus.
+- Das Backend stellt einen nur fuer Admins verfuegbaren Endpunkt zum Loeschen einer Competition bereit, z. B. `DELETE /admin/competitions/:competitionId`.
+- Beim Loeschen werden die zur Competition gehoerenden importierten Teams, Runden und Spiele konsistent entfernt.
+- Eine geloeschte Competition erscheint nicht mehr in `GET /competitions`.
+- Der Abruf von Spielen fuer eine geloeschte oder unbekannte Competition liefert eine nachvollziehbare Fehlermeldung.
+- Das Loeschen einer Competition ist nur erlaubt, solange noch kein Spiel der Competition begonnen hat.
+- Normale Nutzer duerfen weder Competition-Namen aendern noch Competitions loeschen.
+
 ## Tipps abgeben und verwalten
 
 ### US-09 Gruppenspiel tippen
@@ -365,21 +382,25 @@ Akzeptanzkriterien:
 - Das Frontend bietet eine sichtbare Moeglichkeit zur aktiven Abmeldung ueber den Backend-Endpunkt aus `US-03`.
 - Nach der Abmeldung behandelt das Frontend den Nutzer wieder als nicht angemeldet und zeigt geschuetzte Bereiche nicht mehr an.
 
-### US-33 Importierte Spiele im Frontend anzeigen
+### US-33 Wettbewerb auswaehlen und importierte Spiele im Frontend anzeigen
 
-Als angemeldeter Nutzer moechte ich die importierten Spiele eines Wettbewerbs im Frontend sehen, damit ich die verfuegbaren Partien spaeter fuer meine Tipps vor Augen habe.
+Als angemeldeter Nutzer moechte ich im Frontend einen verfuegbaren Wettbewerb auswaehlen und dessen importierte Spiele sehen, damit ich die passenden Partien spaeter fuer meine Tipps vor Augen habe.
 
 Akzeptanzkriterien:
 
-- Das Frontend ruft fuer einen ausgewaehlten Wettbewerb die Spielliste ueber den geschuetzten Backend-Endpunkt aus `US-06` ab.
+- Das Frontend ruft die verfuegbaren Wettbewerbe ueber den geschuetzten Backend-Endpunkt aus `US-39` ab.
+- Der Nutzer kann einen der verfuegbaren Wettbewerbe auswaehlen.
+- Nach Auswahl eines Wettbewerbs ruft das Frontend dessen Spielliste ueber `GET /competitions/:competitionId/games` ab.
+- Das Frontend verwendet keine fest verdrahtete Demo-Competition-ID.
 - Pro Spiel werden mindestens Runde, Heimteam, Auswaertsteam und Anstosszeit angezeigt.
 - Die Spiele werden in aufsteigender Reihenfolge nach Anstoss dargestellt.
-- Falls der Backend-Aufruf mit `401` antwortet, behandelt das Frontend den Nutzer als nicht angemeldet.
+- Falls noch keine Wettbewerbe vorhanden sind, zeigt das Frontend einen klaren Leerzustand.
 - Falls noch keine Spiele vorhanden sind, zeigt das Frontend einen klaren Leerzustand.
+- Falls der Wettbewerbs- oder Spielabruf mit `401` antwortet, behandelt das Frontend den Nutzer als nicht angemeldet.
 
 ### US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
 
-Als Nutzer moechte ich die importierten Anstosszeiten im Frontend in `Europe/Berlin` sehen, damit ich weiss, bis wann ich tippen muss.
+Als Nutzer moechte ich die Anstosszeiten der Spiele des ausgewaehlten Wettbewerbs im Frontend in `Europe/Berlin` sehen, damit ich weiss, bis wann ich tippen muss.
 
 Akzeptanzkriterien:
 
@@ -400,6 +421,23 @@ Akzeptanzkriterien:
 - Das Frontend nutzt den Admin-Endpunkt aus `US-06`.
 - Eine erfolgreiche Verarbeitung wird im Frontend klar bestaetigt.
 - Validierungs- und Berechtigungsfehler aus dem Backend werden fuer den Admin nachvollziehbar angezeigt.
+
+### US-41 Competition-Verwaltung im Frontend
+
+Als Admin moechte ich im Frontend den Namen einer importierten Competition aendern und eine falsch importierte Competition loeschen koennen, damit ich diese Verwaltungsaufgaben ohne direkte API-Nutzung erledigen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend zeigt Admins in der Competition-Auswahl oder in einem Admin-Bereich Verwaltungsaktionen fuer Competitions an.
+- Admins koennen den Namen einer Competition ueber ein Formular oder einen Inline-Dialog aendern.
+- Das Frontend nutzt dafuer den Backend-Endpunkt aus `US-40`.
+- Nach erfolgreicher Namensaenderung wird der neue Name in der Competition-Auswahl angezeigt.
+- Admins koennen eine Competition loeschen.
+- Vor dem Loeschen zeigt das Frontend eine klare Bestaetigung, weil die Aktion nicht rueckgaengig gemacht werden kann.
+- Nach erfolgreichem Loeschen verschwindet die Competition aus der Auswahl.
+- Wenn die aktuell ausgewaehlte Competition geloescht wurde, navigiert das Frontend in einen stabilen Zustand, z. B. zur allgemeinen Competition-Uebersicht.
+- Validierungs-, Berechtigungs- und Fachfehler aus dem Backend werden nachvollziehbar angezeigt.
+- Normale Nutzer sehen keine Verwaltungsaktionen fuer Umbenennen oder Loeschen.
 
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 

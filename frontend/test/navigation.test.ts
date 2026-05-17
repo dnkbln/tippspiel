@@ -24,7 +24,7 @@ describe("getNavigationItems", () => {
       }),
     ).toEqual([
       { label: "Startseite", to: "/" },
-      { label: "Spielliste", to: "/competitions/demo/games" },
+      { label: "Spielliste", to: "/competitions" },
     ]);
   });
 
@@ -36,7 +36,7 @@ describe("getNavigationItems", () => {
       }),
     ).toEqual([
       { label: "Startseite", to: "/" },
-      { label: "Spielliste", to: "/competitions/demo/games" },
+      { label: "Spielliste", to: "/competitions" },
       { label: "Admin-Import", to: "/admin/import" },
     ]);
   });

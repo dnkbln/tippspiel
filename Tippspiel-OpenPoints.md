@@ -52,10 +52,9 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-39 Verfuegbare Wettbewerbe im Backend abrufen
 
-- Backend-Endpunkt zum Abrufen vorhandener Wettbewerbe fehlt noch.
-  Der bestehende Spielabruf benoetigt bereits eine `competitionId`, aber das Backend bietet noch keinen Weg, diese ID aus den vorhandenen Wettbewerben zu ermitteln.
-- Frontend-Navigation verwendet aktuell noch eine Demo-Competition-ID.
-  Eine echte Wettbewerbsauswahl oder automatische Auswahl kann erst auf Basis des neuen Backend-Endpunkts umgesetzt werden.
+### US-40 Competition im Backend umbenennen und loeschen
+
+- Die Story ist noch nicht umgesetzt.
 
 ## Tipps abgeben und verwalten
 
@@ -118,11 +117,15 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-32 Anmeldung und Abmeldung im Frontend
 
-### US-33 Importierte Spiele im Frontend anzeigen
+### US-33 Wettbewerb auswaehlen und importierte Spiele im Frontend anzeigen
 
 ### US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
 
 ### US-35 Admin-Import fuer Spielplan im Frontend
+
+### US-41 Competition-Verwaltung im Frontend
+
+- Die Story ist noch nicht umgesetzt.
 
 ## Betrieb und technische Anforderungen
 
