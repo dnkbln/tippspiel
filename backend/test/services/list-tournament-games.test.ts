@@ -1,8 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AppError } from "../../src/errors/app-error.js";
 
 const { prismaMock } = vi.hoisted(() => {
   return {
     prismaMock: {
+      competition: {
+        findUnique: vi.fn(),
+      },
       game: {
         findMany: vi.fn(),
       },
@@ -24,6 +28,11 @@ describe("listTournamentGames", () => {
   });
 
   it("returns imported games ordered by kickoff time", async () => {
+
+    prismaMock.competition.findUnique.mockResolvedValue({
+      id: "competition-1",
+    });
+
     prismaMock.game.findMany.mockResolvedValue([
       {
         id: "game-early",
@@ -128,6 +137,11 @@ describe("listTournamentGames", () => {
   });
 
   it("returns games with placeholders when teams are not fixed yet", async () => {
+
+    prismaMock.competition.findUnique.mockResolvedValue({
+      id: "competition-1",
+    });
+
     prismaMock.game.findMany.mockResolvedValue([
       {
         id: "game-1",
@@ -177,6 +191,16 @@ describe("listTournamentGames", () => {
         startsAt: "asc",
       },
     });
+  });
+
+  it("throws when the competition does not exist", async () => {
+    prismaMock.competition.findUnique.mockResolvedValue(null);
+
+    await expect(listTournamentGames("competition-1")).rejects.toEqual(
+      new AppError("NOT_FOUND", 404, "competition not found"),
+    );
+
+    expect(prismaMock.game.findMany).not.toHaveBeenCalled();
   });
 
 });

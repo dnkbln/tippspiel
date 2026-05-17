@@ -50,7 +50,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-37 Initialen Admin per Bootstrap-Token anlegen
 - [x] US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
 - [x] US-39 Verfuegbare Wettbewerbe im Backend abrufen
-- [ ] US-40 Competition im Backend umbenennen und loeschen
+- [x] US-40 Competition im Backend umbenennen und loeschen
 - [ ] US-41 Competition-Verwaltung im Frontend
 
-13/41
+14/41

@@ -54,8 +54,6 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-40 Competition im Backend umbenennen und loeschen
 
-- Die Story ist noch nicht umgesetzt.
-
 ## Tipps abgeben und verwalten
 
 ### US-09 Gruppenspiel tippen

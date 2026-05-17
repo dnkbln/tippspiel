@@ -215,4 +215,37 @@ describe("GET /competitions/:competitionId/games", () => {
     await app.close();
   });
 
+  it("returns 404 when the competition does not exist", async () => {
+    const app = await createApp();
+
+    requireAuthMock.mockResolvedValue({
+      id: "user-1",
+      email: "max@example.com",
+      displayName: "Max",
+      role: "USER",
+    });
+
+    listTournamentGamesMock.mockRejectedValue(
+      new AppError("NOT_FOUND", 404, "competition not found"),
+    );
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/competitions/competition-1/games",
+      headers: {
+        cookie: "session=session-token",
+      },
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toEqual({
+      error: {
+        code: "NOT_FOUND",
+        message: "competition not found",
+      },
+    });
+
+    await app.close();
+  });
+
 });
