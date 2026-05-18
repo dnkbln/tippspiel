@@ -52,5 +52,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-39 Verfuegbare Wettbewerbe im Backend abrufen
 - [x] US-40 Competition im Backend umbenennen und loeschen
 - [x] US-41 Competition-Verwaltung im Frontend
+- [x] US-42 Gruppen und Gruppenspieltage im Backend importieren und ausliefern
+- [ ] US-43 Gruppentabelle im Backend berechnen und ausliefern
 
-15/41
+16/43

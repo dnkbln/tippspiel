@@ -160,6 +160,28 @@ Akzeptanzkriterien:
 - Das Loeschen einer Competition ist nur erlaubt, solange noch kein Spiel der Competition begonnen hat.
 - Normale Nutzer duerfen weder Competition-Namen aendern noch Competitions loeschen.
 
+### US-42 Gruppen und Gruppenspieltage im Backend importieren und ausliefern
+
+Als Nutzer moechte ich, dass Gruppenspiele im Spielplan ihrer Gruppe und ihrem Gruppenspieltag zugeordnet sind, damit die Spiele spaeter in der Oberflaeche sinnvoll nach Runde, Gruppe und Gruppenspieltag gruppiert angezeigt werden koennen.
+
+Akzeptanzkriterien:
+
+- Der Spielplan-Import kann Gruppen fuer einen Wettbewerb enthalten.
+- Eine Gruppe enthaelt mindestens `name`, `slug` und `order`.
+- Teams koennen beim Import genau einer Gruppe zugeordnet werden.
+- Gruppenspiele koennen beim Import einer Gruppe zugeordnet werden, z. B. ueber `groupSlug`.
+- Gruppenspiele koennen beim Import einem Gruppenspieltag zugeordnet werden, z. B. ueber `groupRound`.
+- `groupRound` ist fuer Gruppenspiele eine positive ganze Zahl.
+- `groupRound` wird als fachlicher Sortierwert gespeichert, nicht als Anzeige-Text.
+- Die spaetere Darstellung als `1. Spieltag`, `2. Spieltag` usw. erfolgt unabhaengig vom Import.
+- K.o.-Spiele haben keine Gruppe und keinen Gruppenspieltag.
+- Der Import validiert, dass ein verwendeter `groupSlug` auf eine vorhandene Gruppe des Wettbewerbs verweist.
+- Der Import validiert, dass die Teams eines Gruppenspiels zur angegebenen Gruppe gehoeren.
+- Der Import weist Gruppenspiele ohne gueltige Gruppeninformation nachvollziehbar ab.
+- Der Spielabruf `GET /competitions/:competitionId/games` liefert pro Spiel zusaetzlich `group` und `groupRound` aus.
+- Bei K.o.-Spielen werden `group` und `groupRound` als `null` ausgeliefert.
+- Die ausgelieferten Daten ermoeglichen eine stabile Sortierung nach `round.order`, `group.order`, `groupRound` und `startsAt`.
+
 ## Tipps abgeben und verwalten
 
 ### US-09 Gruppenspiel tippen
@@ -243,6 +265,23 @@ Akzeptanzkriterien:
 - Die Rangliste zeigt mindestens Anzeigename und Gesamtpunkte.
 - Die Sortierung erfolgt nach Gesamtpunkten absteigend.
 - E-Mail-Adressen werden nicht angezeigt.
+
+### US-43 Gruppentabelle im Backend berechnen und ausliefern
+
+Als Nutzer moechte ich den aktuellen Stand innerhalb einer Gruppe abrufen koennen, damit ich den Turnierverlauf in der Gruppenphase nachvollziehen kann.
+
+Akzeptanzkriterien:
+
+- Das Backend stellt einen geschuetzten Endpunkt zum Abrufen einer Gruppentabelle bereit, z. B. `GET /competitions/:competitionId/groups/:groupSlug/standings`.
+- Der Endpunkt ist nur fuer angemeldete Nutzer erreichbar.
+- Die Gruppe muss zum angegebenen Wettbewerb gehoeren.
+- Fuer unbekannte Wettbewerbe oder Gruppen wird eine nachvollziehbare Fehlermeldung zurueckgegeben.
+- Die Tabelle wird aus den erfassten Ergebnissen der Gruppenspiele berechnet.
+- K.o.-Spiele werden fuer Gruppentabellen nicht beruecksichtigt.
+- Pro Team werden mindestens `team`, `played`, `won`, `drawn`, `lost`, `goalsFor`, `goalsAgainst`, `goalDifference`, `points` und `rank` ausgeliefert.
+- Teams ohne abgeschlossenes Gruppenspiel erscheinen mit Nullwerten in der Tabelle.
+- Die Sortierung der Tabelle erfolgt stabil nach den festgelegten Gruppenregeln.
+- Solange die finalen Tie-Breaker-Regeln noch nicht fachlich festgelegt sind, werden offene Detailregeln in `Tippspiel-OpenPoints.md` dokumentiert.
 
 ## Ergebnispflege
 
@@ -504,4 +543,5 @@ Diese Punkte sind bewusst noch nicht als umsetzungsreife User Story ausformulier
 
 - konkrete Punktwerte fuer `exaktes Ergebnis`, `Differenz` und `Tendenz`
 - exakte Bewertungslogik fuer K.o.-Spiele bei Unentschieden nach 120 Minuten
+- exakte Sortier- und Tie-Breaker-Regeln fuer Gruppentabellen
 - finales JSON-Schema fuer Spielplan- und Ergebnisimport

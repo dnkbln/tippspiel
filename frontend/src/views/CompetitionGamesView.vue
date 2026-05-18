@@ -17,7 +17,7 @@
       <span class="text-sm font-medium text-slate-700">Wettbewerb</span>
       <select
         v-model="selectedCompetitionId"
-        class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2"
+        class="mt-1 block w-full h-10 cursor-pointer appearance-auto rounded-md border border-slate-300 bg-white px-3 py-2"
         @change="selectCompetition"
       >
         <option value="">Bitte auswaehlen</option>
@@ -149,6 +149,11 @@ async function loadCompetitions() {
   try {
     const result = await listCompetitions();
     competitions.value = result.competitions;
+    if (!selectedCompetitionId.value && result.competitions.length === 1) {
+      selectedCompetitionId.value = result.competitions[0].id;
+      await router.push(`/competitions/${selectedCompetitionId.value}/games`);
+    }
+
   } catch (error) {
     if (error instanceof ApiError) {
       if (error.status === 401) {

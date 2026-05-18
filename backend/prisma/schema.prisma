@@ -54,15 +54,35 @@ model Competition {
   name      String
   slug      String   @unique
   teams     Team[]
+  groups    Group[]
   rounds    Round[]
   games     Game[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Group {
+  id            String   @id @default(cuid())
+  competitionId String
+  name          String
+  slug          String
+  order         Int
+  teams         Team[]
+  games         Game[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, slug])
+  @@unique([competitionId, order])
+}
+
 model Team {
   id            String      @id @default(cuid())
   competitionId String
+  groupId       String?
+  group         Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
   name          String
   slug          String
   homeGames     Game[]      @relation("GameHomeTeam")
@@ -94,6 +114,8 @@ model Round {
 model Game {
   id                  String      @id @default(cuid())
   competitionId       String
+  groupId             String?
+  groupRound          Int?
   roundId             String
   homeTeamId          String?
   awayTeamId          String?
@@ -104,6 +126,7 @@ model Game {
   updatedAt           DateTime    @updatedAt
 
   competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  group       Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
   round       Round       @relation(fields: [roundId], references: [id], onDelete: Cascade)
   homeTeam    Team?       @relation("GameHomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
   awayTeam    Team?       @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)

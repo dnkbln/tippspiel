@@ -6,6 +6,13 @@ export type CompetitionGameTeam = {
   slug: string;
 };
 
+export type CompetitionGameGroup = {
+  id: string;
+  name: string;
+  slug: string;
+  order: number;
+};
+
 export type CompetitionGameRound = {
   id: string;
   name: string;
@@ -17,6 +24,8 @@ export type CompetitionGame = {
   id: string;
   startsAt: string;
   round: CompetitionGameRound;
+  group: CompetitionGameGroup | null;
+  groupRound: number | null;
   homeTeam: CompetitionGameTeam | null;
   awayTeam: CompetitionGameTeam | null;
   homeTeamPlaceholder?: string | null;

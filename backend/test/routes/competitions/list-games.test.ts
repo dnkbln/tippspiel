@@ -41,6 +41,13 @@ describe("GET /competitions/:competitionId/games", () => {
       {
         id: "game-1",
         startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        group: {
+          id: "group-1",
+          name: "Gruppe A",
+          slug: "gruppe-a",
+          order: 1,
+        },
+        groupRound: 1,
         round: {
           id: "round-1",
           name: "Gruppenphase",
@@ -74,6 +81,13 @@ describe("GET /competitions/:competitionId/games", () => {
         {
           id: "game-1",
           startsAt: "2026-06-14T17:00:00.000Z",
+          group: {
+            id: "group-1",
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+          },
+          groupRound: 1,
           round: {
             id: "round-1",
             name: "Gruppenphase",
@@ -171,6 +185,8 @@ describe("GET /competitions/:competitionId/games", () => {
       {
         id: "game-1",
         startsAt: new Date("2026-06-28T17:00:00.000Z"),
+        group: null,
+        groupRound: null,
         homeTeam: null,
         awayTeam: null,
         homeTeamPlaceholder: "Sieger Gruppe A",
@@ -198,6 +214,8 @@ describe("GET /competitions/:competitionId/games", () => {
         {
           id: "game-1",
           startsAt: "2026-06-28T17:00:00.000Z",
+          group: null,
+          groupRound: null,
           homeTeam: null,
           awayTeam: null,
           homeTeamPlaceholder: "Sieger Gruppe A",

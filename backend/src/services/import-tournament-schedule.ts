@@ -25,7 +25,27 @@ function parseImportDateTime(value: string, path: string): Date {
   return parsedDate;
 }
 
-export async function importTournamentSchedule(input: unknown): Promise<void> {
+type CompetitionInput = {
+  name: string;
+  slug: string;
+};
+
+type ValidatedGroups = {
+  groups: unknown[];
+  groupSlugs: Set<string>;
+  teamGroupBySlug: Map<string, string>;
+};
+
+type ValidatedImport = {
+  competition: CompetitionInput;
+  teams: unknown[];
+  groups: unknown[];
+  rounds: unknown[];
+  games: unknown[];
+  teamGroupBySlug: Map<string, string>;
+};
+
+function validateImportPayload(input: unknown): Record<string, unknown> {
   if (!input || typeof input !== "object") {
     throw new AppError(
       "VALIDATION_ERROR",
@@ -40,6 +60,30 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     throw new AppError("VALIDATION_ERROR", 400, "competition is required");
   }
 
+  if (!Array.isArray(candidate.teams)) {
+    throw new AppError("VALIDATION_ERROR", 400, "teams is required");
+  }
+
+  if (!Array.isArray(candidate.rounds)) {
+    throw new AppError("VALIDATION_ERROR", 400, "rounds is required");
+  }
+
+  if (candidate.groups !== undefined && !Array.isArray(candidate.groups)) {
+    throw new AppError("VALIDATION_ERROR", 400, "groups must be an array");
+  }
+
+  if (!Array.isArray(candidate.games)) {
+    throw new AppError("VALIDATION_ERROR", 400, "games is required");
+  }
+
+  return candidate;
+}
+
+function validateCompetition(candidate: Record<string, unknown>): CompetitionInput {
+  if (!candidate.competition || typeof candidate.competition !== "object") {
+    throw new AppError("VALIDATION_ERROR", 400, "competition is required");
+  }
+
   const competition = candidate.competition as Record<string, unknown>;
 
   if (typeof competition.name !== "string" || !competition.name.trim()) {
@@ -50,24 +94,13 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     throw new AppError("VALIDATION_ERROR", 400, "competition.slug is required");
   }
 
-  if (!Array.isArray(candidate.teams)) {
-    throw new AppError("VALIDATION_ERROR", 400, "teams is required");
-  }
+  return {
+    name: competition.name.trim(),
+    slug: competition.slug.trim(),
+  };
+}
 
-  if (!Array.isArray(candidate.rounds)) {
-    throw new AppError("VALIDATION_ERROR", 400, "rounds is required");
-  }
-
-  if (!Array.isArray(candidate.games)) {
-    throw new AppError("VALIDATION_ERROR", 400, "games is required");
-  }
-
-  const competitionName = competition.name.trim();
-  const competitionSlug = competition.slug.trim();
-  const teams = candidate.teams;
-  const rounds = candidate.rounds;
-  const games = candidate.games;
-
+function validateTeams(teams: unknown[]): Set<string> {
   const seenTeamSlugs = new Set<string>();
 
   for (let index = 0; index < teams.length; index += 1) {
@@ -110,6 +143,12 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     seenTeamSlugs.add(teamRecord.slug);
   }
 
+  return new Set(
+    teams.map((team) => (team as Record<string, unknown>).slug as string),
+  );
+}
+
+function validateRounds(rounds: unknown[]): Set<string> {
   const seenRoundSlugs = new Set<string>();
   const seenRoundOrders = new Set<number>();
 
@@ -178,15 +217,144 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
     seenRoundOrders.add(roundRecord.order);
   }
 
-  const roundSlugs = new Set(
+  return new Set(
     rounds.map((round) => (round as Record<string, unknown>).slug as string),
   );
+}
 
-  const teamSlugs = new Set(
-    teams.map((team) => (team as Record<string, unknown>).slug as string),
-  );
+function validateGroups(
+  candidateGroups: unknown[] | undefined,
+  teamSlugs: Set<string>,
+): ValidatedGroups {
+  const groups = candidateGroups ?? [];
+  const seenGroupSlugs = new Set<string>();
+  const seenGroupOrders = new Set<number>();
+  const teamGroupBySlug = new Map<string, string>();
 
+  for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
+    const group = groups[groupIndex];
 
+    if (!group || typeof group !== "object" || Array.isArray(group)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}] must be an object`,
+      );
+    }
+
+    const groupRecord = group as Record<string, unknown>;
+
+    if (typeof groupRecord.name !== "string" || !groupRecord.name.trim()) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].name is required`,
+      );
+    }
+
+    if (typeof groupRecord.slug !== "string" || !groupRecord.slug.trim()) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].slug is required`,
+      );
+    }
+
+    const groupSlug = groupRecord.slug.trim();
+
+    if (seenGroupSlugs.has(groupSlug)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].slug duplicates "${groupSlug}"`,
+      );
+    }
+    seenGroupSlugs.add(groupSlug);
+
+    if (typeof groupRecord.order !== "number") {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].order is required`,
+      );
+    }
+
+    if (!Number.isInteger(groupRecord.order)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].order must be an integer`,
+      );
+    }
+
+    if (seenGroupOrders.has(groupRecord.order)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].order duplicates ${groupRecord.order}`,
+      );
+    }
+    seenGroupOrders.add(groupRecord.order);
+
+    if (!Array.isArray(groupRecord.teamSlugs)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `groups[${groupIndex}].teamSlugs is required`,
+      );
+    }
+
+    for (
+      let teamSlugIndex = 0;
+      teamSlugIndex < groupRecord.teamSlugs.length;
+      teamSlugIndex += 1
+    ) {
+      const teamSlug = groupRecord.teamSlugs[teamSlugIndex];
+
+      if (typeof teamSlug !== "string" || !teamSlug.trim()) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          400,
+          `groups[${groupIndex}].teamSlugs[${teamSlugIndex}] must be a non-empty string`,
+        );
+      }
+
+      const trimmedTeamSlug = teamSlug.trim();
+
+      if (!teamSlugs.has(trimmedTeamSlug)) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          400,
+          `groups[${groupIndex}].teamSlugs[${teamSlugIndex}] must reference an existing team`,
+        );
+      }
+
+      if (teamGroupBySlug.has(trimmedTeamSlug)) {
+        throw new AppError(
+          "VALIDATION_ERROR",
+          400,
+          `groups[${groupIndex}].teamSlugs[${teamSlugIndex}] assigns team "${trimmedTeamSlug}" to multiple groups`,
+        );
+      }
+
+      teamGroupBySlug.set(trimmedTeamSlug, groupSlug);
+    }
+  }
+
+  return {
+    groups,
+    groupSlugs: seenGroupSlugs,
+    teamGroupBySlug,
+  };
+}
+
+function validateGames(
+  games: unknown[],
+  roundSlugs: Set<string>,
+  teamSlugs: Set<string>,
+  groupSlugs: Set<string>,
+  teamGroupBySlug: Map<string, string>,
+): void {
   for (let index = 0; index < games.length; index += 1) {
     const game = games[index];
 
@@ -285,6 +453,80 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
       );
     }
 
+    const groupSlug =
+      typeof gameRecord.groupSlug === "string" ? gameRecord.groupSlug.trim() : "";
+    const hasGroupSlug = Boolean(groupSlug);
+    const hasGroupRound = gameRecord.groupRound !== undefined;
+
+    if (hasGroupSlug !== hasGroupRound) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}] must define groupSlug and groupRound together`,
+      );
+    }
+
+    if (groupSlug && !groupSlugs.has(groupSlug)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}].groupSlug must reference an existing group`,
+      );
+    }
+
+    if (
+      hasGroupSlug &&
+      (
+        typeof gameRecord.groupRound !== "number" ||
+        !Number.isInteger(gameRecord.groupRound) ||
+        gameRecord.groupRound < 1
+      )
+    ) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}].groupRound must be a positive integer`,
+      );
+    }
+
+    if (
+      hasGroupSlug &&
+      hasHomeTeamSlug &&
+      teamGroupBySlug.get(homeTeamSlug) !== groupSlug
+    ) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}].homeTeamSlug must reference a team from group ${groupSlug}`,
+      );
+    }
+
+    if (
+      hasGroupSlug &&
+      hasAwayTeamSlug &&
+      teamGroupBySlug.get(awayTeamSlug) !== groupSlug
+    ) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}].awayTeamSlug must reference a team from group ${groupSlug}`,
+      );
+    }
+
+    const isGroupGame =
+      hasHomeTeamSlug &&
+      hasAwayTeamSlug &&
+      teamGroupBySlug.has(homeTeamSlug) &&
+      teamGroupBySlug.has(awayTeamSlug);
+
+    if (isGroupGame && !hasGroupSlug) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}] must define groupSlug and groupRound for group games`,
+      );
+    }
+
     if (hasHomeTeamSlug && hasAwayTeamSlug && homeTeamSlug === awayTeamSlug) {
       throw new AppError(
         "VALIDATION_ERROR",
@@ -292,24 +534,72 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
         `games[${index}] must reference two different teams`,
       );
     }
+
+    const isPlaceholderGame = hasHomeTeamPlaceholder || hasAwayTeamPlaceholder;
+
+    if (isPlaceholderGame && (hasGroupSlug || hasGroupRound)) {
+      throw new AppError(
+        "VALIDATION_ERROR",
+        400,
+        `games[${index}] must not define groupSlug or groupRound for placeholder games`,
+      );
+    }
+
   }
+}
+
+async function persistTournamentSchedule(importData: ValidatedImport): Promise<void> {
+  const {
+    competition,
+    teams,
+    groups,
+    rounds,
+    games,
+    teamGroupBySlug,
+  } = importData;
 
   await prisma.$transaction(async (tx) => {
     const createdCompetition = await tx.competition.create({
       data: {
-        name: competitionName,
-        slug: competitionSlug,
+        name: competition.name,
+        slug: competition.slug,
       },
     });
+
+    await tx.group.createMany({
+      data: groups.map((group) => {
+        const groupRecord = group as Record<string, unknown>;
+
+        return {
+          competitionId: createdCompetition.id,
+          name: (groupRecord.name as string).trim(),
+          slug: (groupRecord.slug as string).trim(),
+          order: groupRecord.order as number,
+        };
+      }),
+    });
+
+    const persistedGroups = await tx.group.findMany({
+      where: {
+        competitionId: createdCompetition.id,
+      },
+    });
+
+    const groupBySlug = new Map(
+      persistedGroups.map((group) => [group.slug, group]),
+    );
 
     await tx.team.createMany({
       data: teams.map((team) => {
         const teamRecord = team as Record<string, unknown>;
+        const teamSlug = (teamRecord.slug as string).trim();
+        const groupSlug = teamGroupBySlug.get(teamSlug);
 
         return {
           competitionId: createdCompetition.id,
+          groupId: groupSlug ? groupBySlug.get(groupSlug)!.id : null,
           name: (teamRecord.name as string).trim(),
-          slug: (teamRecord.slug as string).trim(),
+          slug: teamSlug,
         };
       }),
     });
@@ -361,10 +651,19 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
           typeof gameRecord.awayTeamPlaceholder === "string"
             ? gameRecord.awayTeamPlaceholder.trim()
             : null;
+        const groupSlug =
+          typeof gameRecord.groupSlug === "string"
+            ? gameRecord.groupSlug.trim()
+            : null;
 
         return {
           competitionId: createdCompetition.id,
           roundId: roundBySlug.get(gameRecord.roundSlug as string)!.id,
+          groupId: groupSlug ? groupBySlug.get(groupSlug)!.id : null,
+          groupRound:
+            typeof gameRecord.groupRound === "number"
+              ? gameRecord.groupRound
+              : null,
           homeTeamId: homeTeamSlug ? teamBySlug.get(homeTeamSlug)!.id : null,
           awayTeamId: awayTeamSlug ? teamBySlug.get(awayTeamSlug)!.id : null,
           homeTeamPlaceholder,
@@ -376,6 +675,32 @@ export async function importTournamentSchedule(input: unknown): Promise<void> {
         };
       }),
     });
+  });
+}
+
+export async function importTournamentSchedule(input: unknown): Promise<void> {
+  const candidate = validateImportPayload(input);
+  const competition = validateCompetition(candidate);
+  const teams = candidate.teams as unknown[];
+  const rounds = candidate.rounds as unknown[];
+  const games = candidate.games as unknown[];
+  const teamSlugs = validateTeams(teams);
+  const roundSlugs = validateRounds(rounds);
+  const {
+    groups,
+    groupSlugs,
+    teamGroupBySlug,
+  } = validateGroups(candidate.groups as unknown[] | undefined, teamSlugs);
+
+  validateGames(games, roundSlugs, teamSlugs, groupSlugs, teamGroupBySlug);
+
+  await persistTournamentSchedule({
+    competition,
+    teams,
+    groups,
+    rounds,
+    games,
+    teamGroupBySlug,
   });
 
 }

@@ -21,11 +21,15 @@ export async function listTournamentGames(competitionId: string) {
     },
     include: {
       round: true,
+      group: true,
       homeTeam: true,
       awayTeam: true,
     },
-    orderBy: {
-      startsAt: "asc",
-    },
+    orderBy: [
+      { round: { order: "asc" } },
+      { group: { order: "asc" } },
+      { groupRound: "asc" },
+      { startsAt: "asc" },
+    ],
   });
 }

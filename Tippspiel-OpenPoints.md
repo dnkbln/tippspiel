@@ -54,6 +54,8 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-40 Competition im Backend umbenennen und loeschen
 
+### US-42 Gruppen und Gruppenspieltage im Backend importieren und ausliefern
+
 ## Tipps abgeben und verwalten
 
 ### US-09 Gruppenspiel tippen
@@ -73,6 +75,11 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 ### US-15 Tipps anderer Nutzer erst ab Spielbeginn sehen
 
 ### US-16 Rangliste nach Punkten sehen
+
+### US-43 Gruppentabelle im Backend berechnen und ausliefern
+
+- Exakte Sortier- und Tie-Breaker-Regeln fuer Gruppentabellen sind noch fachlich festzulegen.
+  Bis dahin kann eine erste Backend-Implementierung nur eine einfache stabile Sortierung, z. B. nach Punkten, Tordifferenz, erzielten Toren und Teamname, nachweisen.
 
 ## Ergebnispflege
 
@@ -133,4 +140,5 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 - konkrete Punktwerte fuer `exaktes Ergebnis`, `Differenz` und `Tendenz`
 - exakte Bewertungslogik fuer K.o.-Spiele bei Unentschieden nach 120 Minuten
+- exakte Sortier- und Tie-Breaker-Regeln fuer Gruppentabellen
 - finales JSON-Schema fuer Spielplan- und Ergebnisimport

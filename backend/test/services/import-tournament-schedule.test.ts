@@ -7,6 +7,10 @@ const { prismaMock } = vi.hoisted(() => {
       competition: {
         create: vi.fn(),
       },
+      group: {
+        createMany: vi.fn(),
+        findMany: vi.fn(),
+      },
       team: {
         createMany: vi.fn(),
         findMany: vi.fn(),
@@ -44,8 +48,10 @@ describe("importTournamentSchedule", () => {
       updatedAt: new Date(),
     });
     prismaMock.team.createMany.mockResolvedValue({ count: 0 });
-    prismaMock.round.createMany.mockResolvedValue({ count: 0 });
     prismaMock.team.findMany.mockResolvedValue([]);
+    prismaMock.group.createMany.mockResolvedValue({ count: 0 });
+    prismaMock.group.findMany.mockResolvedValue([]);
+    prismaMock.round.createMany.mockResolvedValue({ count: 0 });
     prismaMock.round.findMany.mockResolvedValue([]);
     prismaMock.game.createMany.mockResolvedValue({ count: 0 });
   });
@@ -951,6 +957,8 @@ describe("importTournamentSchedule", () => {
         {
           competitionId: "competition-1",
           roundId: "round-1",
+          groupId: null,
+          groupRound: null,
           homeTeamId: "team-1",
           awayTeamId: "team-2",
           homeTeamPlaceholder: null,
@@ -1080,6 +1088,397 @@ describe("importTournamentSchedule", () => {
       code: "VALIDATION_ERROR",
       statusCode: 400,
       message: "games[0] must define exactly one of awayTeamSlug or awayTeamPlaceholder",
+    });
+  });
+
+  it("throws when groups is not an array", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [],
+        groups: "gruppe-a",
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "groups must be an array",
+    });
+  });
+
+  it("throws when a group references an unknown team", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          {
+            name: "Deutschland",
+            slug: "deutschland",
+          },
+        ],
+        groups: [
+          {
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+            teamSlugs: ["frankreich"],
+          },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "groups[0].teamSlugs[0] must reference an existing team",
+    });
+  });
+
+  it("throws when a team is assigned to multiple groups", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["deutschland"] },
+          { name: "Gruppe B", slug: "gruppe-b", order: 2, teamSlugs: ["deutschland"] },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: 'groups[1].teamSlugs[0] assigns team "deutschland" to multiple groups',
+    });
+  });
+
+  it("throws when a group team slug is not a string", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [{ name: "Deutschland", slug: "deutschland" }],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: [42] },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "groups[0].teamSlugs[0] must be a non-empty string",
+    });
+  });
+
+  it("throws when a group game references an unknown group", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["deutschland", "frankreich"] },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupSlug: "gruppe-x",
+            groupRound: 1,
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0].groupSlug must reference an existing group",
+    });
+  });
+
+  it("throws when groupRound is not a positive integer", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["deutschland", "frankreich"] },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupSlug: "gruppe-a",
+            groupRound: 0,
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0].groupRound must be a positive integer",
+    });
+  });
+
+  it("throws when groupRound is set without groupSlug", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["deutschland", "frankreich"] },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupRound: 1,
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0] must define groupSlug and groupRound together",
+    });
+  });
+
+  it("throws when groupSlug is set without groupRound", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["deutschland", "frankreich"] },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupSlug: "gruppe-a",
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0] must define groupSlug and groupRound together",
+    });
+  });
+
+  it("throws when the home team of a group game is not assigned to the referenced group", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["frankreich"] },
+          { name: "Gruppe B", slug: "gruppe-b", order: 2, teamSlugs: ["deutschland"] },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupSlug: "gruppe-a",
+            groupRound: 1,
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0].homeTeamSlug must reference a team from group gruppe-a",
+    });
+  });
+
+  it("throws when the away team of a group game is not assigned to the referenced group", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: ["deutschland"] },
+          { name: "Gruppe B", slug: "gruppe-b", order: 2, teamSlugs: ["frankreich"] },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupSlug: "gruppe-a",
+            groupRound: 1,
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0].awayTeamSlug must reference a team from group gruppe-a",
+    });
+  });
+
+  it("throws when groups[0].name is missing", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [],
+        groups: [{ slug: "gruppe-a", order: 1, teamSlugs: [] }],
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "groups[0].name is required",
+    });
+  });
+
+  it("throws when group slugs are duplicated", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: [] },
+          { name: "Gruppe A2", slug: "gruppe-a", order: 2, teamSlugs: [] },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: 'groups[1].slug duplicates "gruppe-a"',
+    });
+  });
+
+  it("throws when group orders are duplicated", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [],
+        groups: [
+          { name: "Gruppe A", slug: "gruppe-a", order: 1, teamSlugs: [] },
+          { name: "Gruppe B", slug: "gruppe-b", order: 1, teamSlugs: [] },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "groups[1].order duplicates 1",
+    });
+  });
+
+  it("throws when a group game has no group information", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          {
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+            teamSlugs: ["deutschland", "frankreich"],
+          },
+        ],
+        rounds: [{ name: "Gruppenphase", slug: "gruppenphase", order: 1 }],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0] must define groupSlug and groupRound for group games",
+    });
+  });
+
+  it("throws when a placeholder game defines group information", async () => {
+    await expect(
+      importTournamentSchedule({
+        competition: { name: "Fussball-WM 2026", slug: "fussball-wm-2026" },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          {
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+            teamSlugs: ["deutschland", "frankreich"],
+          },
+        ],
+        rounds: [{ name: "Achtelfinale", slug: "achtelfinale", order: 2 }],
+        games: [
+          {
+            roundSlug: "achtelfinale",
+            groupSlug: "gruppe-a",
+            groupRound: 1,
+            homeTeamPlaceholder: "Sieger Gruppe A",
+            awayTeamPlaceholder: "Zweiter Gruppe B",
+            startsAt: "2026-06-28T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "games[0] must not define groupSlug or groupRound for placeholder games",
     });
   });
 

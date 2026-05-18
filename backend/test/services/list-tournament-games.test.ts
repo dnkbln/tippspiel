@@ -27,7 +27,7 @@ describe("listTournamentGames", () => {
     vi.clearAllMocks();
   });
 
-  it("returns imported games ordered by kickoff time", async () => {
+  it("returns imported games ordered by round, group, groupRound and kickoff time", async () => {
 
     prismaMock.competition.findUnique.mockResolvedValue({
       id: "competition-1",
@@ -37,6 +37,13 @@ describe("listTournamentGames", () => {
       {
         id: "game-early",
         startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        group: {
+          id: "group-1",
+          name: "Gruppe A",
+          slug: "gruppe-a",
+          order: 1,
+        },
+        groupRound: 1,
         round: {
           id: "round-1",
           name: "Gruppenphase",
@@ -57,6 +64,13 @@ describe("listTournamentGames", () => {
       {
         id: "game-late",
         startsAt: new Date("2026-06-14T20:00:00.000Z"),
+        group: {
+          id: "group-1",
+          name: "Gruppe A",
+          slug: "gruppe-a",
+          order: 1,
+        },
+        groupRound: 1,
         round: {
           id: "round-1",
           name: "Gruppenphase",
@@ -79,9 +93,16 @@ describe("listTournamentGames", () => {
     const result = await listTournamentGames("competition-1");
 
     expect(result).toEqual([
-            {
+      {
         id: "game-early",
         startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        groupRound: 1,
+        group: {
+          id: "group-1",
+          name: "Gruppe A",
+          slug: "gruppe-a",
+          order: 1,
+        },
         round: {
           id: "round-1",
           name: "Gruppenphase",
@@ -102,6 +123,13 @@ describe("listTournamentGames", () => {
       {
         id: "game-late",
         startsAt: new Date("2026-06-14T20:00:00.000Z"),
+        groupRound: 1,
+        group: {
+          id: "group-1",
+          name: "Gruppe A",
+          slug: "gruppe-a",
+          order: 1,
+        },
         round: {
           id: "round-1",
           name: "Gruppenphase",
@@ -127,12 +155,16 @@ describe("listTournamentGames", () => {
       },
       include: {
         round: true,
+        group: true,
         homeTeam: true,
         awayTeam: true,
       },
-      orderBy: {
-        startsAt: "asc",
-      },
+      orderBy: [
+        { round: { order: "asc" } },
+        { group: { order: "asc" } },
+        { groupRound: "asc" },
+        { startsAt: "asc" },
+      ],
     });
   });
 
@@ -146,6 +178,8 @@ describe("listTournamentGames", () => {
       {
         id: "game-1",
         startsAt: new Date("2026-06-28T17:00:00.000Z"),
+        groupRound: null,
+        group: null,
         homeTeam: null,
         awayTeam: null,
         homeTeamPlaceholder: "Sieger Gruppe A",
@@ -165,6 +199,8 @@ describe("listTournamentGames", () => {
       {
         id: "game-1",
         startsAt: new Date("2026-06-28T17:00:00.000Z"),
+        groupRound: null,
+        group: null,
         homeTeam: null,
         awayTeam: null,
         homeTeamPlaceholder: "Sieger Gruppe A",
@@ -184,12 +220,16 @@ describe("listTournamentGames", () => {
       },
       include: {
         round: true,
+        group: true,
         homeTeam: true,
         awayTeam: true,
       },
-      orderBy: {
-        startsAt: "asc",
-      },
+      orderBy: [
+        { round: { order: "asc" } },
+        { group: { order: "asc" } },
+        { groupRound: "asc" },
+        { startsAt: "asc" },
+      ],
     });
   });
 

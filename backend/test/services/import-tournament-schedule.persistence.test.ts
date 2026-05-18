@@ -7,6 +7,10 @@ const { prismaMock } = vi.hoisted(() => {
       competition: {
         create: vi.fn(),
       },
+      group: {
+        createMany: vi.fn(),
+        findMany: vi.fn(),
+      },
       team: {
         createMany: vi.fn(),
         findMany: vi.fn(),
@@ -41,6 +45,9 @@ describe("importTournamentSchedule persistence", () => {
     prismaMock.team.findMany.mockResolvedValue([]);
     prismaMock.round.findMany.mockResolvedValue([]);
     prismaMock.game.createMany.mockResolvedValue({ count: 0 });
+    prismaMock.group.createMany.mockResolvedValue({ count: 0 });
+    prismaMock.group.findMany.mockResolvedValue([]);
+
   });
 
   it("creates the competition for a valid payload", async () => {
@@ -121,11 +128,13 @@ describe("importTournamentSchedule persistence", () => {
       data: [
         {
           competitionId: "competition-1",
+          groupId: null,
           name: "Deutschland",
           slug: "deutschland",
         },
         {
           competitionId: "competition-1",
+          groupId: null,
           name: "Frankreich",
           slug: "frankreich",
         },
@@ -362,6 +371,8 @@ describe("importTournamentSchedule persistence", () => {
         {
           competitionId: "competition-1",
           roundId: "round-1",
+          groupId: null,
+          groupRound: null,
           homeTeamId: "team-1",
           awayTeamId: "team-2",
           homeTeamPlaceholder: null,
@@ -462,11 +473,218 @@ describe("importTournamentSchedule persistence", () => {
         {
           competitionId: "competition-1",
           roundId: "round-1",
+          groupId: null,
+          groupRound: null,
           homeTeamId: null,
           awayTeamId: null,
           homeTeamPlaceholder: "Sieger Gruppe A",
           awayTeamPlaceholder: "Zweiter Gruppe B",
           startsAt: new Date("2026-06-28T19:00:00+02:00"),
+        },
+      ],
+    });
+  });
+
+  it("creates groups for a valid payload", async () => {
+    prismaMock.competition.create.mockResolvedValue({
+      id: "competition-1",
+      name: "Fussball-WM 2026",
+      slug: "fussball-wm-2026",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          {
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+            teamSlugs: [],
+          },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(prismaMock.group.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          competitionId: "competition-1",
+          name: "Gruppe A",
+          slug: "gruppe-a",
+          order: 1,
+        },
+      ],
+    });
+  });
+
+  it("creates teams with groupId when teams are assigned to groups", async () => {
+    prismaMock.competition.create.mockResolvedValue({
+      id: "competition-1",
+      name: "Fussball-WM 2026",
+      slug: "fussball-wm-2026",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.group.findMany.mockResolvedValue([
+      {
+        id: "group-1",
+        competitionId: "competition-1",
+        name: "Gruppe A",
+        slug: "gruppe-a",
+        order: 1,
+      },
+    ]);
+
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          {
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+            teamSlugs: ["deutschland", "frankreich"],
+          },
+        ],
+        rounds: [],
+        games: [],
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(prismaMock.team.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          competitionId: "competition-1",
+          groupId: "group-1",
+          name: "Deutschland",
+          slug: "deutschland",
+        },
+        {
+          competitionId: "competition-1",
+          groupId: "group-1",
+          name: "Frankreich",
+          slug: "frankreich",
+        },
+      ],
+    });
+  });
+
+  it("creates group games with groupId and groupRound", async () => {
+    prismaMock.competition.create.mockResolvedValue({
+      id: "competition-1",
+      name: "Fussball-WM 2026",
+      slug: "fussball-wm-2026",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    prismaMock.group.findMany.mockResolvedValue([
+      {
+        id: "group-1",
+        competitionId: "competition-1",
+        name: "Gruppe A",
+        slug: "gruppe-a",
+        order: 1,
+      },
+    ]);
+
+    prismaMock.team.findMany.mockResolvedValue([
+      {
+        id: "team-1",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        name: "Deutschland",
+        slug: "deutschland",
+      },
+      {
+        id: "team-2",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        name: "Frankreich",
+        slug: "frankreich",
+      },
+    ]);
+
+    prismaMock.round.findMany.mockResolvedValue([
+      {
+        id: "round-1",
+        competitionId: "competition-1",
+        name: "Gruppenphase",
+        slug: "gruppenphase",
+        order: 1,
+      },
+    ]);
+
+    await expect(
+      importTournamentSchedule({
+        competition: {
+          name: "Fussball-WM 2026",
+          slug: "fussball-wm-2026",
+        },
+        teams: [
+          { name: "Deutschland", slug: "deutschland" },
+          { name: "Frankreich", slug: "frankreich" },
+        ],
+        groups: [
+          {
+            name: "Gruppe A",
+            slug: "gruppe-a",
+            order: 1,
+            teamSlugs: ["deutschland", "frankreich"],
+          },
+        ],
+        rounds: [
+          {
+            name: "Gruppenphase",
+            slug: "gruppenphase",
+            order: 1,
+          },
+        ],
+        games: [
+          {
+            roundSlug: "gruppenphase",
+            groupSlug: "gruppe-a",
+            groupRound: 1,
+            homeTeamSlug: "deutschland",
+            awayTeamSlug: "frankreich",
+            startsAt: "2026-06-14T19:00:00+02:00",
+          },
+        ],
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(prismaMock.game.createMany).toHaveBeenCalledWith({
+      data: [
+        {
+          competitionId: "competition-1",
+          roundId: "round-1",
+          groupId: "group-1",
+          groupRound: 1,
+          homeTeamId: "team-1",
+          awayTeamId: "team-2",
+          homeTeamPlaceholder: null,
+          awayTeamPlaceholder: null,
+          startsAt: new Date("2026-06-14T19:00:00+02:00"),
         },
       ],
     });
