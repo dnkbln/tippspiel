@@ -37,6 +37,11 @@ describe("listTournamentGames", () => {
       {
         id: "game-early",
         startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        homeGoals: 2,
+        awayGoals: 1,
+        resultDecision: "REGULAR_TIME",
+        advancingTeamId: null,
+        resultEnteredAt: new Date("2026-06-14T20:00:00.000Z"),
         group: {
           id: "group-1",
           name: "Gruppe A",
@@ -64,6 +69,11 @@ describe("listTournamentGames", () => {
       {
         id: "game-late",
         startsAt: new Date("2026-06-14T20:00:00.000Z"),
+        homeGoals: 2,
+        awayGoals: 1,
+        resultDecision: "REGULAR_TIME",
+        advancingTeamId: null,
+        resultEnteredAt: new Date("2026-06-14T23:00:00.000Z"),
         group: {
           id: "group-1",
           name: "Gruppe A",
@@ -96,6 +106,11 @@ describe("listTournamentGames", () => {
       {
         id: "game-early",
         startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        homeGoals: 2,
+        awayGoals: 1,
+        resultDecision: "REGULAR_TIME",
+        advancingTeamId: null,
+        resultEnteredAt: new Date("2026-06-14T20:00:00.000Z"),
         groupRound: 1,
         group: {
           id: "group-1",
@@ -123,6 +138,11 @@ describe("listTournamentGames", () => {
       {
         id: "game-late",
         startsAt: new Date("2026-06-14T20:00:00.000Z"),
+        homeGoals: 2,
+        awayGoals: 1,
+        resultDecision: "REGULAR_TIME",
+        advancingTeamId: null,
+        resultEnteredAt: new Date("2026-06-14T23:00:00.000Z"),
         groupRound: 1,
         group: {
           id: "group-1",

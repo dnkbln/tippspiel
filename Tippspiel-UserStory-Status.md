@@ -27,7 +27,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-14 Meine offenen Tipps schnell finden
 - [ ] US-15 Tipps anderer Nutzer erst ab Spielbeginn sehen
 - [ ] US-16 Rangliste nach Punkten sehen
-- [ ] US-17 Ergebnis manuell eintragen
+- [x] US-17 Ergebnis manuell eintragen
 - [ ] US-18 Ergebnisse per JSON importieren
 - [ ] US-19 Externe Ergebnisquelle spaeter anbinden koennen
 - [ ] US-20 REST-Backend fuer das Tippspiel bereitstellen
@@ -55,4 +55,4 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-42 Gruppen und Gruppenspieltage im Backend importieren und ausliefern
 - [ ] US-43 Gruppentabelle im Backend berechnen und ausliefern
 
-16/43
+17/43

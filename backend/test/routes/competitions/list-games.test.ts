@@ -41,6 +41,11 @@ describe("GET /competitions/:competitionId/games", () => {
       {
         id: "game-1",
         startsAt: new Date("2026-06-14T17:00:00.000Z"),
+        homeGoals: 2,
+        awayGoals: 1,
+        resultDecision: "REGULAR_TIME",
+        advancingTeamId: null,
+        resultEnteredAt: "2026-06-14T20:00:00.000Z",
         group: {
           id: "group-1",
           name: "Gruppe A",
@@ -81,6 +86,11 @@ describe("GET /competitions/:competitionId/games", () => {
         {
           id: "game-1",
           startsAt: "2026-06-14T17:00:00.000Z",
+          homeGoals: 2,
+          awayGoals: 1,
+          resultDecision: "REGULAR_TIME",
+          advancingTeamId: null,
+          resultEnteredAt: "2026-06-14T20:00:00.000Z",
           group: {
             id: "group-1",
             name: "Gruppe A",

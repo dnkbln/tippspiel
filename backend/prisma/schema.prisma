@@ -12,6 +12,12 @@ enum UserRole {
   USER
 }
 
+enum GameResultDecision {
+  REGULAR_TIME
+  EXTRA_TIME
+  PENALTIES
+}
+
 model User {
   id           String    @id @default(cuid())
   email        String    @unique
@@ -79,18 +85,20 @@ model Group {
 }
 
 model Team {
-  id            String      @id @default(cuid())
-  competitionId String
-  groupId       String?
-  group         Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
-  name          String
-  slug          String
-  homeGames     Game[]      @relation("GameHomeTeam")
-  awayGames     Game[]      @relation("GameAwayTeam")
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id              String      @id @default(cuid())
+  competitionId   String
+  groupId         String?
+  group           Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  name            String
+  slug            String
+  homeGames       Game[]      @relation("GameHomeTeam")
+  awayGames       Game[]      @relation("GameAwayTeam")
+  advancingGames  Game[]      @relation("GameAdvancingTeam")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
 
   @@unique([competitionId, slug])
 }
@@ -124,10 +132,16 @@ model Game {
   startsAt            DateTime
   createdAt           DateTime    @default(now())
   updatedAt           DateTime    @updatedAt
+  homeGoals        Int?
+  awayGoals        Int?
+  resultDecision   GameResultDecision?
+  advancingTeamId  String?
+  resultEnteredAt  DateTime?
 
-  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
-  group       Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
-  round       Round       @relation(fields: [roundId], references: [id], onDelete: Cascade)
-  homeTeam    Team?       @relation("GameHomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
-  awayTeam    Team?       @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
+  competition     Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  group           Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  round           Round       @relation(fields: [roundId], references: [id], onDelete: Cascade)
+  homeTeam        Team?       @relation("GameHomeTeam", fields: [homeTeamId], references: [id], onDelete: Restrict)
+  awayTeam        Team?       @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
+  advancingTeam   Team?       @relation("GameAdvancingTeam", fields: [advancingTeamId], references: [id], onDelete: Restrict)
 }
