@@ -478,6 +478,24 @@ Akzeptanzkriterien:
 - Validierungs-, Berechtigungs- und Fachfehler aus dem Backend werden nachvollziehbar angezeigt.
 - Normale Nutzer sehen keine Verwaltungsaktionen fuer Umbenennen oder Loeschen.
 
+### US-44 Spielplan im Frontend nach Turnierabschnitt oder Datum anzeigen
+
+Als Nutzer moechte ich die Spiele eines Wettbewerbs wahlweise nach Turnierabschnitt oder nach einem ausgewaehlten Datum sehen, damit ich mich schneller in Gruppenphase, K.o.-Phase und Tagesprogramm orientieren kann.
+
+Akzeptanzkriterien:
+
+- Die bestehende Spielplanansicht bietet zwei Sichten: `Turnieransicht` und `Tagesansicht`.
+- Die `Turnieransicht` ist die Standardansicht.
+- In der Gruppenphase werden Spiele nach Gruppen gruppiert angezeigt.
+- Innerhalb einer Gruppe werden die Spiele stabil nach Gruppenspieltag und Anstosszeit sortiert.
+- K.o.-Spiele werden nach K.o.-Runde gruppiert angezeigt, z. B. Achtelfinale, Viertelfinale, Halbfinale, Finale.
+- Die Gruppierung verwendet die bereits ausgelieferten Felder `round`, `group` und `groupRound` aus `GET /competitions/:competitionId/games`.
+- Die `Tagesansicht` bietet eine Datumseingabe.
+- Nach Auswahl eines Datums werden nur Spiele angezeigt, deren Anstoss in `Europe/Berlin` auf diesen Kalendertag faellt.
+- Wenn fuer das ausgewaehlte Datum keine Spiele vorhanden sind, zeigt das Frontend einen klaren Leerzustand.
+- Die Anzeige der Anstosszeiten baut auf der Berliner Zeitformatierung aus `US-34` auf.
+- Der bestehende Wettbewerbsabruf und Spielabruf bleiben unveraendert.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
 Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Tipp und dem echten Ergebnis berechnet werden, damit die Rangliste ohne manuelle Nacharbeit aktuell ist.

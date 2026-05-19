@@ -1,11 +1,8 @@
+import { GameResultDecision } from "@prisma/client";
 import { AppError } from "../errors/app-error.js";
 import { prisma } from "../lib/prisma.js";
 
-const resultDecisions = new Set([
-  "REGULAR_TIME",
-  "EXTRA_TIME",
-  "PENALTIES",
-]);
+const resultDecisions = new Set<string>(Object.values(GameResultDecision));
 
 export async function setGameResult(
   gameId: string,
@@ -56,6 +53,8 @@ export async function setGameResult(
     );
   }
 
+  const resultDecision = candidate.resultDecision as GameResultDecision;
+
   const game = await prisma.game.findUnique({
     where: {
       id: gameId,
@@ -66,7 +65,7 @@ export async function setGameResult(
     throw new AppError("NOT_FOUND", 404, "game not found");
   }
 
-  if (game.groupId && candidate.resultDecision !== "REGULAR_TIME") {
+  if (game.groupId && resultDecision !== "REGULAR_TIME") {
     throw new AppError(
       "VALIDATION_ERROR",
       400,
@@ -79,7 +78,7 @@ export async function setGameResult(
       ? candidate.advancingTeamId.trim()
       : null;
 
-  if (candidate.resultDecision === "PENALTIES" && !advancingTeamId) {
+  if (resultDecision === "PENALTIES" && !advancingTeamId) {
     throw new AppError(
       "VALIDATION_ERROR",
       400,
@@ -100,7 +99,7 @@ export async function setGameResult(
   }
 
   if (
-    candidate.resultDecision === "PENALTIES" &&
+    resultDecision === "PENALTIES" &&
     candidate.homeGoals !== candidate.awayGoals
   ) {
     throw new AppError(
@@ -112,7 +111,7 @@ export async function setGameResult(
 
   if (
     !game.groupId &&
-    candidate.resultDecision !== "PENALTIES" &&
+    resultDecision !== "PENALTIES" &&
     candidate.homeGoals === candidate.awayGoals
   ) {
     throw new AppError(
@@ -122,7 +121,7 @@ export async function setGameResult(
     );
   }
 
-  if (candidate.resultDecision !== "PENALTIES" && advancingTeamId) {
+  if (resultDecision !== "PENALTIES" && advancingTeamId) {
     throw new AppError(
       "VALIDATION_ERROR",
       400,
@@ -130,7 +129,7 @@ export async function setGameResult(
     );
   }
 
-  if (candidate.resultDecision === "PENALTIES" && !advancingTeamId) {
+  if (resultDecision === "PENALTIES" && !advancingTeamId) {
     throw new AppError(
       "VALIDATION_ERROR",
       400,
@@ -153,7 +152,7 @@ export async function setGameResult(
     data: {
       homeGoals: candidate.homeGoals,
       awayGoals: candidate.awayGoals,
-      resultDecision: candidate.resultDecision,
+      resultDecision,
       advancingTeamId,
       resultEnteredAt: new Date(),
     },

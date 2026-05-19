@@ -53,6 +53,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-40 Competition im Backend umbenennen und loeschen
 - [x] US-41 Competition-Verwaltung im Frontend
 - [x] US-42 Gruppen und Gruppenspieltage im Backend importieren und ausliefern
-- [ ] US-43 Gruppentabelle im Backend berechnen und ausliefern
+- [x] US-43 Gruppentabelle im Backend berechnen und ausliefern
+- [ ] US-44 Spielplan im Frontend nach Turnierabschnitt oder Datum anzeigen
 
-17/43
+18/44
