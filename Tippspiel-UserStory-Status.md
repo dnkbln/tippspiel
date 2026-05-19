@@ -44,7 +44,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-31 Registrierung im Frontend
 - [x] US-32 Anmeldung und Abmeldung im Frontend
 - [x] US-33 Wettbewerb auswaehlen und importierte Spiele im Frontend anzeigen
-- [ ] US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
+- [x] US-34 Spielzeiten im Frontend in Berliner Zeit anzeigen
 - [x] US-35 Admin-Import fuer Spielplan im Frontend
 - [ ] US-36 Frontend und Backend produktionsnah hinter Reverse Proxy betreiben
 - [x] US-37 Initialen Admin per Bootstrap-Token anlegen
@@ -55,5 +55,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-42 Gruppen und Gruppenspieltage im Backend importieren und ausliefern
 - [x] US-43 Gruppentabelle im Backend berechnen und ausliefern
 - [ ] US-44 Spielplan im Frontend nach Turnierabschnitt oder Datum anzeigen
+- [ ] US-45 Ergebnisse im Frontend durch Admin erfassen
+- [ ] US-46 Startseite optisch passend gestalten
 
-18/44
+19/46

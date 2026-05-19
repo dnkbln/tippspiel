@@ -496,6 +496,36 @@ Akzeptanzkriterien:
 - Die Anzeige der Anstosszeiten baut auf der Berliner Zeitformatierung aus `US-34` auf.
 - Der bestehende Wettbewerbsabruf und Spielabruf bleiben unveraendert.
 
+### US-45 Ergebnisse im Frontend durch Admin erfassen
+
+Als Admin moechte ich Spielergebnisse im Frontend eintragen koennen, damit ich die bereits vorhandene Backend-Ergebnispflege ohne direkte API-Nutzung bedienen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet Admins eine Moeglichkeit, fuer ein ausgewaehltes Spiel das Ergebnis zu erfassen oder zu aktualisieren.
+- Normale Nutzer sehen keine Bedienmoeglichkeit zur Ergebnispflege.
+- Fuer jedes Spiel koennen Heimtore und Auswaertstore eingegeben werden.
+- Bei K.o.-Spielen kann zusaetzlich ein weiterkommendes Team gesetzt werden, wenn das Ergebnis unentschieden ist.
+- Das Frontend nutzt den bestehenden Backend-Endpunkt aus `US-17`.
+- Nach erfolgreichem Speichern ist das Ergebnis in der Spielanzeige sichtbar oder nach erneutem Laden der Spiele nachvollziehbar aktualisiert.
+- Validierungs-, Berechtigungs- und Fachfehler aus dem Backend werden nachvollziehbar angezeigt.
+- Die Ergebnispflege veraendert keine Spielplanstruktur, Teams, Runden oder Competition-Daten.
+
+### US-46 Startseite optisch passend gestalten
+
+Als Nutzer moechte ich eine optisch passende Startseite sehen, damit die Anwendung nicht mehr wie ein technischer Platzhalter wirkt und ich mich direkt im Tippspiel-Kontext orientieren kann.
+
+Akzeptanzkriterien:
+
+- Die Startseite enthaelt keine technischen Platzhaltertexte wie Frontend-Skelett, Healthcheck oder Nullstand mehr.
+- Die Startseite macht den Zweck der Anwendung als Tippspiel klar erkennbar.
+- Die visuelle Gestaltung passt fachlich zu einem Fussball-Tippspiel und bleibt konsistent mit der bestehenden Navigation.
+- Nicht angemeldete Nutzer finden von der Startseite aus klare Einstiege zu Registrierung und Anmeldung.
+- Angemeldete Nutzer finden von der Startseite aus einen klaren Einstieg zu den Wettbewerben oder zur Spielliste.
+- Admins finden bei angemeldetem Admin-Zustand einen klaren Einstieg zu den vorhandenen Admin-Funktionen.
+- Die Startseite ist auf Desktop- und Mobilansichten sinnvoll nutzbar.
+- Die Gestaltung ersetzt nur die Startseite und veraendert keine bestehenden fachlichen Backend- oder Frontend-Funktionen.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
 Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Tipp und dem echten Ergebnis berechnet werden, damit die Rangliste ohne manuelle Nacharbeit aktuell ist.

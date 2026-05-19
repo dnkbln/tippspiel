@@ -89,7 +89,7 @@
             <td class="px-3 py-2">{{ game.round.name }}</td>
             <td class="px-3 py-2">{{ game.homeTeam?.name ?? game.homeTeamPlaceholder ?? "Offen" }}</td>
             <td class="px-3 py-2">{{ game.awayTeam?.name ?? game.awayTeamPlaceholder ?? "Offen" }}</td>
-            <td class="px-3 py-2">{{ game.startsAt }}</td>
+            <td class="px-3 py-2">{{ formatBerlinDateTime(game.startsAt) }}</td>
           </tr>
         </tbody>
       </table>
@@ -103,6 +103,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { ApiError } from "../api/register-user";
+import { formatBerlinDateTime } from "../lib/format-berlin-date-time";
 import {
   listCompetitions,
   type Competition,

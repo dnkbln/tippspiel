@@ -38,9 +38,6 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-07 Spielzeiten in Berlin anzeigen
 
-- Frontend-Anzeige in `Europe/Berlin` ist noch nicht umgesetzt.
-  Das Backend liefert Spielzeiten als UTC-ISO-Strings aus; die nutzerseitige Formatierung muss spaeter im Frontend explizit mit der Zeitzone `Europe/Berlin` erfolgen.
-
 ### US-08 Wettbewerb nach Start einfrieren
 
 ### US-38 K.o.-Spielteilnehmer nach Turnierverlauf festlegen
