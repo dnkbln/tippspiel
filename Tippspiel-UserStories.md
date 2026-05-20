@@ -365,8 +365,15 @@ Als Admin moechte ich das Punkteschema vor Wettbewerbsstart festlegen koennen, d
 
 Akzeptanzkriterien:
 
+- Das Punkteschema wird nicht ueber den Spielplan-Import angelegt oder geaendert.
+- Admins koennen das Punkteschema einer Competition separat verwalten.
 - Fuer `exaktes Ergebnis`, `Tordifferenz` und `Tendenz` koennen Punktwerte gesetzt werden.
+- Die Punktwerte sind ganze Zahlen groesser oder gleich `0`.
+- Als Default-Werte koennen `3` Punkte fuer `exaktes Ergebnis`, `2` Punkte fuer `Tordifferenz` und `1` Punkt fuer `Tendenz` vorgeschlagen werden.
+- Wirksam ist nur ein fuer die Competition gespeichertes Punkteschema.
+- Eine Competition ohne gespeichertes Punkteschema ist erlaubt; Punkte koennen dann noch nicht berechnet werden.
 - Das Schema gilt fuer den gesamten Wettbewerb.
+- Das Schema gilt fuer Gruppen- und K.o.-Spiele gleichermassen.
 - Nach Wettbewerbsstart ist das Schema nicht mehr aenderbar.
 
 ## Frontend-Ergaenzung
@@ -526,6 +533,23 @@ Akzeptanzkriterien:
 - Die Startseite ist auf Desktop- und Mobilansichten sinnvoll nutzbar.
 - Die Gestaltung ersetzt nur die Startseite und veraendert keine bestehenden fachlichen Backend- oder Frontend-Funktionen.
 
+### US-47 Punkteschema im Frontend verwalten
+
+Als Admin moechte ich das Punkteschema einer Competition im Frontend verwalten koennen, damit ich die Bewertungsregeln ohne direkte API-Nutzung vor Wettbewerbsstart festlegen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet Admins fuer eine ausgewaehlte Competition eine sichtbare Verwaltungsmoeglichkeit fuer das Punkteschema.
+- Normale Nutzer sehen keine Verwaltungsmoeglichkeit fuer das Punkteschema.
+- Wenn fuer die Competition noch kein Punkteschema gespeichert ist, zeigt das Frontend die Default-Werte `3` fuer `exaktes Ergebnis`, `2` fuer `Tordifferenz` und `1` fuer `Tendenz` als Vorschlag an.
+- Admins koennen Punktwerte fuer `exaktes Ergebnis`, `Tordifferenz` und `Tendenz` erfassen oder aendern.
+- Das Frontend validiert, dass die Punktwerte ganze Zahlen groesser oder gleich `0` sind.
+- Das Frontend speichert das Punkteschema ueber den Backend-Endpunkt aus `US-24`.
+- Nach erfolgreichem Speichern zeigt das Frontend das gespeicherte Punkteschema nachvollziehbar an.
+- Wenn das Backend eine Aenderung ablehnt, weil der Wettbewerb bereits begonnen hat, zeigt das Frontend eine nachvollziehbare Fehlermeldung.
+- Das Frontend aendert das Punkteschema nicht ueber den Spielplan-Import.
+- Validierungs-, Berechtigungs- und Fachfehler aus dem Backend werden nachvollziehbar angezeigt.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
 Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Tipp und dem echten Ergebnis berechnet werden, damit die Rangliste ohne manuelle Nacharbeit aktuell ist.
@@ -533,8 +557,10 @@ Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Ti
 Akzeptanzkriterien:
 
 - Exaktes Ergebnis, Tordifferenz und Tendenz werden gemaess Regelwerk geprueft.
+- Ein nicht exakt getipptes Unentschieden wird als `Tendenz` bewertet, nicht als `Tordifferenz`.
 - Pro Tipp wird die passende Punktzahl eindeutig bestimmt.
 - Die berechneten Punkte fliessen in die Rangliste ein.
+- Wird ein Ergebnis nachtraeglich geaendert, werden die Punkte fuer die betroffenen Tipps neu berechnet.
 
 ### US-26 Punkte fuer K.o.-Spiele automatisch berechnen
 
@@ -544,7 +570,13 @@ Akzeptanzkriterien:
 
 - Bewertet wird das Ergebnis nach regulaerer Wertung inklusive Verlaengerung.
 - Falls das Ergebnis unentschieden ist, wird zusaetzlich das weiterkommende Team beruecksichtigt.
-- Die genaue Bewertungsregel fuer `exakt`, `Differenz` und `Tendenz` wird im Fachkonzept fest definiert.
+- Fuer K.o.-Spiele ohne Unentschieden entspricht `Tendenz` dem richtigen Gewinner nach regulaerer Wertung inklusive Verlaengerung.
+- Fuer K.o.-Spiele mit Unentschieden nach Verlaengerung entspricht `Tendenz` dem richtigen Weiterkommer.
+- Wenn bei einem K.o.-Spiel mit Unentschieden nach Verlaengerung das Ergebnis exakt getippt wurde und der Weiterkommer richtig ist, werden Punkte fuer `exaktes Ergebnis` vergeben.
+- Wenn bei einem K.o.-Spiel mit Unentschieden nach Verlaengerung das Ergebnis exakt getippt wurde, aber der Weiterkommer falsch ist, werden Punkte in Hoehe der `Tordifferenz`-Wertung vergeben.
+- Wenn bei einem K.o.-Spiel mit Unentschieden nach Verlaengerung ein anderes Unentschieden getippt wurde und der Weiterkommer richtig ist, werden Punkte fuer `Tendenz` vergeben.
+- Wenn bei einem K.o.-Spiel mit Unentschieden nach Verlaengerung ein anderes Unentschieden getippt wurde und der Weiterkommer falsch ist, werden `0` Punkte vergeben.
+- Wird ein Ergebnis nachtraeglich geaendert, werden die Punkte fuer die betroffenen Tipps neu berechnet.
 
 ## Betrieb und technische Anforderungen
 
@@ -589,7 +621,6 @@ Akzeptanzkriterien:
 
 Diese Punkte sind bewusst noch nicht als umsetzungsreife User Story ausformuliert und muessen im Fachkonzept konkretisiert werden:
 
-- konkrete Punktwerte fuer `exaktes Ergebnis`, `Differenz` und `Tendenz`
-- exakte Bewertungslogik fuer K.o.-Spiele bei Unentschieden nach 120 Minuten
 - exakte Sortier- und Tie-Breaker-Regeln fuer Gruppentabellen
+- globales Default-Punkteschema fuer Competitions ohne eigenes gespeichertes Schema
 - finales JSON-Schema fuer Spielplan- und Ergebnisimport

@@ -34,7 +34,11 @@ Das Punkteschema gilt global fuer den gesamten Wettbewerb. Es soll vor Beginn fe
 - richtige Tordifferenz
 - richtige Tendenz
 
-Fuer die K.o.-Phase muss "Tendenz" fachlich als richtiger Gewinner bzw. richtiger Weiterkommer interpretiert werden, nicht nur als klassisches `1/X/2`. Das ist aus meiner Sicht der richtige Ansatz und Teil des Konzepts.
+Das Punkteschema wird nicht mit dem Spielplan importiert, sondern eigenstaendig durch Admins pro Competition verwaltet. Als Default-Werte koennen `3` Punkte fuer ein exaktes Ergebnis, `2` Punkte fuer die richtige Tordifferenz und `1` Punkt fuer die richtige Tendenz vorgeschlagen werden. Eine Competition ohne gespeichertes Punkteschema ist erlaubt; fuer diese Competition koennen dann noch keine Punkte berechnet werden.
+
+Nicht exakt getippte Unentschieden werden als `Tendenz` bewertet, nicht als `Tordifferenz`.
+
+Fuer die K.o.-Phase muss "Tendenz" fachlich als richtiger Gewinner bzw. richtiger Weiterkommer interpretiert werden, nicht nur als klassisches `1/X/2`. Gruppen- und K.o.-Spiele verwenden dasselbe Punkteschema. Bei einem K.o.-Spiel mit Unentschieden nach Verlaengerung wird der getippte Weiterkommer zusaetzlich beruecksichtigt: exakt richtiges Ergebnis plus richtiger Weiterkommer ergibt die volle Punktzahl fuer `exaktes Ergebnis`; exakt richtiges Ergebnis plus falscher Weiterkommer ergibt eine abgewertete Exaktwertung in Hoehe der `Tordifferenz`-Punkte; anderes Unentschieden plus richtiger Weiterkommer ergibt die Punktzahl fuer `Tendenz`.
 
 ## Administration
 
@@ -97,7 +101,6 @@ Nicht Teil des ersten Wurfs sind nach aktuellem Stand:
 
 Diese Punkte sind noch zu entscheiden, blockieren das gemeinsame Verstaendnis aber nicht:
 
-- konkrete Punktwerte fuer `exakt`, `Differenz`, `Tendenz`
-- exakte Definition, wie K.o.-Punkte bei Unentschieden und falschem Weiterkommer gezaehlt werden
+- ob spaeter ein globales Default-Punkteschema fuer Competitions ohne eigenes gespeichertes Schema eingefuehrt wird
 - finales JSON-Schema fuer Spielplan- und Ergebnisimport
 - konkrete Backend-Technologie

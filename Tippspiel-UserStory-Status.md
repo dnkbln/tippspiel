@@ -57,5 +57,6 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-44 Spielplan im Frontend nach Turnierabschnitt oder Datum anzeigen
 - [ ] US-45 Ergebnisse im Frontend durch Admin erfassen
 - [ ] US-46 Startseite optisch passend gestalten
+- [ ] US-47 Punkteschema im Frontend verwalten
 
-19/46
+19/47

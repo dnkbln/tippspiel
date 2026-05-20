@@ -100,9 +100,17 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-24 Punkteschema vor Wettbewerbsstart festlegen
 
+- Spaeter entscheiden, ob es ein globales Default-Punkteschema gibt, das fuer Competitions ohne eigenes gespeichertes Punkteschema wirksam ist.
+  Bis dahin ist eine Competition ohne gespeichertes Punkteschema erlaubt, aber Punkte koennen fuer diese Competition noch nicht berechnet werden.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
+- Technische Strategie fuer die Neuberechnung bei Ergebnis-Aenderungen festlegen.
+  Fachlich muessen Ergebnis-Aenderungen die Punkte der betroffenen Tipps aktualisieren; offen ist nur, ob das synchron beim Speichern, ueber einen separaten Service-Schritt oder durch Berechnung beim Abruf erfolgt.
+
 ### US-26 Punkte fuer K.o.-Spiele automatisch berechnen
+
+- Technische Strategie fuer die Neuberechnung bei Ergebnis-Aenderungen analog zu `US-25` festlegen.
 
 ## Frontend-Ergaenzung
 
@@ -127,6 +135,11 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-41 Competition-Verwaltung im Frontend
 
+### US-47 Punkteschema im Frontend verwalten
+
+- Die Story haengt vom Backend-Endpunkt aus `US-24` ab.
+  Die Frontend-Umsetzung kann erst vollstaendig nachgewiesen werden, wenn das Punkteschema im Backend persistent verwaltet werden kann.
+
 ## Betrieb und technische Anforderungen
 
 ### US-27 Anwendung ohne Docker in WSL betreiben
@@ -135,7 +148,6 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ## Offene Detailentscheidungen fuer spaetere Verfeinerung
 
-- konkrete Punktwerte fuer `exaktes Ergebnis`, `Differenz` und `Tendenz`
-- exakte Bewertungslogik fuer K.o.-Spiele bei Unentschieden nach 120 Minuten
 - exakte Sortier- und Tie-Breaker-Regeln fuer Gruppentabellen
+- globales Default-Punkteschema fuer Competitions ohne eigenes gespeichertes Schema
 - finales JSON-Schema fuer Spielplan- und Ergebnisimport
