@@ -56,15 +56,28 @@ model InvitationCode {
 }
 
 model Competition {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  teams     Team[]
-  groups    Group[]
-  rounds    Round[]
-  games     Game[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  scoringRule CompetitionScoringRule?
+  teams       Team[]
+  groups      Group[]
+  rounds      Round[]
+  games       Game[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CompetitionScoringRule {
+  id                   String   @id @default(cuid())
+  competitionId        String   @unique
+  exactScorePoints     Int
+  goalDifferencePoints Int
+  tendencyPoints       Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
 }
 
 model Group {

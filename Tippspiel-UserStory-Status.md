@@ -34,7 +34,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-21 Relationales Datenmodell mit Migrationen verwalten
 - [ ] US-22 Sichere Passwort- und Session-Verwaltung umsetzen
 - [ ] US-23 Backend fuer spaetere OAuth-Anbindung vorbereiten
-- [ ] US-24 Punkteschema vor Wettbewerbsstart festlegen
+- [x] US-24 Punkteschema vor Wettbewerbsstart festlegen
 - [ ] US-25 Punkte fuer Gruppenspiele automatisch berechnen
 - [ ] US-26 Punkte fuer K.o.-Spiele automatisch berechnen
 - [ ] US-27 Anwendung ohne Docker in WSL betreiben
@@ -59,4 +59,4 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-46 Startseite optisch passend gestalten
 - [ ] US-47 Punkteschema im Frontend verwalten
 
-19/47
+20/47
