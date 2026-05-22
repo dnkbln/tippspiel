@@ -21,7 +21,7 @@ describe("POST /competitions/:competitionId/games/:gameId/tip", () => {
     vi.clearAllMocks();
   });
 
-  it("stores a group game tip for an authenticated user", async () => {
+  it("stores a tip for an authenticated user", async () => {
     const app = await createApp();
 
     requireAuthMock.mockResolvedValue({
@@ -37,6 +37,7 @@ describe("POST /competitions/:competitionId/games/:gameId/tip", () => {
       gameId: "game-1",
       homeGoals: 2,
       awayGoals: 1,
+      advancingTeamId: null,
     });
 
     const response = await app.inject({
@@ -59,6 +60,7 @@ describe("POST /competitions/:competitionId/games/:gameId/tip", () => {
         gameId: "game-1",
         homeGoals: 2,
         awayGoals: 1,
+        advancingTeamId: null,
       },
     });
 
@@ -69,6 +71,64 @@ describe("POST /competitions/:competitionId/games/:gameId/tip", () => {
       {
         homeGoals: 2,
         awayGoals: 1,
+      },
+    );
+
+    await app.close();
+  });
+
+  it("stores a knockout draw tip for an authenticated user", async () => {
+    const app = await createApp();
+
+    requireAuthMock.mockResolvedValue({
+      id: "user-1",
+      email: "max@example.com",
+      displayName: "Max",
+      role: "USER",
+    });
+
+    submitGroupGameTipMock.mockResolvedValue({
+      id: "tip-1",
+      userId: "user-1",
+      gameId: "game-1",
+      homeGoals: 1,
+      awayGoals: 1,
+      advancingTeamId: "team-2",
+    });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/competitions/competition-1/games/game-1/tip",
+      payload: {
+        homeGoals: 1,
+        awayGoals: 1,
+        advancingTeamId: "team-2",
+      },
+      headers: {
+        cookie: "session=session-token",
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+    expect(response.json()).toEqual({
+      tip: {
+        id: "tip-1",
+        userId: "user-1",
+        gameId: "game-1",
+        homeGoals: 1,
+        awayGoals: 1,
+        advancingTeamId: "team-2",
+      },
+    });
+
+    expect(submitGroupGameTipMock).toHaveBeenCalledWith(
+      "user-1",
+      "competition-1",
+      "game-1",
+      {
+        homeGoals: 1,
+        awayGoals: 1,
+        advancingTeamId: "team-2",
       },
     );
 

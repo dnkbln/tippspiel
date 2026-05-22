@@ -37,14 +37,6 @@ export async function submitGroupGameTip(
     );
   }
 
-  if ("advancingTeamId" in candidate) {
-    throw new AppError(
-      "VALIDATION_ERROR",
-      400,
-      "advancingTeamId is not allowed for group game tips",
-    );
-  }
-
   const game = await prisma.game.findFirst({
     where: {
       id: gameId,
@@ -56,21 +48,63 @@ export async function submitGroupGameTip(
     throw new AppError("NOT_FOUND", 404, "game not found");
   }
 
-  if (!game.groupId) {
-    throw new AppError(
-      "VALIDATION_ERROR",
-      400,
-      "only group games can be tipped with this endpoint",
-    );
-  }
-
   if (!game.homeTeamId || !game.awayTeamId) {
     throw new AppError(
       "VALIDATION_ERROR",
       400,
-      "group game tip requires fixed game participants",
+      "tip requires fixed game participants",
     );
   }
+
+  const advancingTeamId =
+    typeof candidate.advancingTeamId === "string"
+      ? candidate.advancingTeamId.trim()
+      : null;
+
+  if (game.groupId && "advancingTeamId" in candidate) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      "advancingTeamId is not allowed for group game tips",
+    );
+  }
+
+  if (
+    !game.groupId &&
+    candidate.homeGoals === candidate.awayGoals &&
+    !advancingTeamId
+  ) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      "knockout draw tips require advancingTeamId",
+    );
+  }
+
+  if (
+    advancingTeamId &&
+    advancingTeamId !== game.homeTeamId &&
+    advancingTeamId !== game.awayTeamId
+  ) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      "advancingTeamId must reference one of the game teams",
+    );
+  }
+
+  if (
+    !game.groupId &&
+    candidate.homeGoals !== candidate.awayGoals &&
+    advancingTeamId
+  ) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      "advancingTeamId is only allowed for knockout draw tips",
+    );
+  }
+
 
   return prisma.tip.create({
     data: {
@@ -78,6 +112,7 @@ export async function submitGroupGameTip(
       gameId,
       homeGoals: candidate.homeGoals,
       awayGoals: candidate.awayGoals,
+      advancingTeamId,
     },
     select: {
       id: true,
@@ -85,6 +120,7 @@ export async function submitGroupGameTip(
       gameId: true,
       homeGoals: true,
       awayGoals: true,
+      advancingTeamId: true,
     },
   });
 }

@@ -20,7 +20,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-07 Spielzeiten in Berlin anzeigen
 - [ ] US-08 Wettbewerb nach Start einfrieren
 - [x] US-09 Gruppenspiel im Backend tippen
-- [ ] US-10 K.o.-Spiel im Backend tippen
+- [x] US-10 K.o.-Spiel im Backend tippen
 - [ ] US-11 Tipp im Backend vor Anpfiff aendern
 - [ ] US-12 Tippabgabe im Backend nach Anpfiff verhindern
 - [ ] US-13 Kein Tipp bedeutet backendseitig kein Tipp
@@ -61,4 +61,4 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-47 Punkteschema im Frontend verwalten
 - [ ] US-48 Tipps im Frontend abgeben und aendern
 
-22/49
+23/49
