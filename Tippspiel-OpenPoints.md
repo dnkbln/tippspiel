@@ -55,15 +55,15 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ## Tipps abgeben und verwalten
 
-### US-09 Gruppenspiel tippen
+### US-09 Gruppenspiel im Backend tippen
 
-### US-10 K.o.-Spiel tippen
+### US-10 K.o.-Spiel im Backend tippen
 
-### US-11 Tipp vor Anpfiff aendern
+### US-11 Tipp im Backend vor Anpfiff aendern
 
-### US-12 Tippabgabe nach Anpfiff verhindern
+### US-12 Tippabgabe im Backend nach Anpfiff verhindern
 
-### US-13 Kein Tipp bedeutet kein Tipp
+### US-13 Kein Tipp bedeutet backendseitig kein Tipp
 
 ### US-14 Meine offenen Tipps schnell finden
 
@@ -137,8 +137,7 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-47 Punkteschema im Frontend verwalten
 
-- Die Story haengt vom Backend-Endpunkt aus `US-24` ab.
-  Die Frontend-Umsetzung kann erst vollstaendig nachgewiesen werden, wenn das Punkteschema im Backend persistent verwaltet werden kann.
+### US-48 Tipps im Frontend abgeben und aendern
 
 ## Betrieb und technische Anforderungen
 

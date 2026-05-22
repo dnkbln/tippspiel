@@ -48,7 +48,7 @@ Beispiele:
 - `US-01 Registrierung mit Einladungscode`
 - `US-02 Anmeldung mit E-Mail und Passwort`
 - `US-03 Abmeldung`
-- `US-09 Gruppenspiel tippen`
+- `US-09 Gruppenspiel im Backend tippen`
 
 ### 3. Neuer Chat pro User Story
 

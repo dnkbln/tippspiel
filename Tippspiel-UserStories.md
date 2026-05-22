@@ -6,6 +6,8 @@ Diese User Stories beschreiben den fachlichen Umfang des MVP. Sie sind so formul
 
 Fuer die initiale Umsetzung werden `US-01` bis `US-05` ausschliesslich im Backend realisiert. Die dazugehoerige Oberflaeche wird in der separaten Frontend-Story `US-29` beschrieben.
 
+Fuer die Tippabgabe werden `US-09` bis `US-13` ausschliesslich im Backend realisiert. Die dazugehoerige Oberflaeche wird in der separaten Frontend-Story `US-48` beschrieben.
+
 ## Nutzerkonto und Zugriff
 
 ### US-01 Registrierung mit Einladungscode im Backend
@@ -184,47 +186,49 @@ Akzeptanzkriterien:
 
 ## Tipps abgeben und verwalten
 
-### US-09 Gruppenspiel tippen
+### US-09 Gruppenspiel im Backend tippen
 
 Als Nutzer moechte ich fuer ein Gruppenspiel ein Ergebnis tippen koennen, damit mein Tipp gewertet werden kann.
 
 Akzeptanzkriterien:
 
-- Der Nutzer kann Tore fuer beide Teams eingeben.
-- Fuer Gruppenspiele wird kein weiterkommendes Team abgefragt.
+- Das Backend stellt einen geschuetzten Endpunkt zum Speichern eines Gruppenspiel-Tipps bereit.
+- Der Nutzer kann Tore fuer beide Teams uebergeben.
+- Fuer Gruppenspiele wird backendseitig kein weiterkommendes Team akzeptiert oder benoetigt.
 - Ein gespeicherter Tipp ist dem richtigen Spiel und Nutzer zugeordnet.
 
-### US-10 K.o.-Spiel tippen
+### US-10 K.o.-Spiel im Backend tippen
 
 Als Nutzer moechte ich fuer ein K.o.-Spiel ein Ergebnis tippen koennen, damit auch Spiele mit Verlaengerung und Elfmeterschiessen korrekt abgebildet werden.
 
 Akzeptanzkriterien:
 
-- Der Nutzer tippt das Ergebnis nach regulaerer Wertung inklusive Verlaengerung.
+- Das Backend stellt einen geschuetzten Endpunkt zum Speichern eines K.o.-Spiel-Tipps bereit.
+- Der Nutzer uebergibt das Ergebnis nach regulaerer Wertung inklusive Verlaengerung.
 - Nur wenn dieses Ergebnis unentschieden ist, muss zusaetzlich das weiterkommende Team angegeben werden.
-- Bei nicht unentschiedenem Ergebnis wird kein weiterkommendes Team abgefragt.
+- Bei nicht unentschiedenem Ergebnis wird backendseitig kein weiterkommendes Team akzeptiert oder benoetigt.
 
-### US-11 Tipp vor Anpfiff aendern
+### US-11 Tipp im Backend vor Anpfiff aendern
 
 Als Nutzer moechte ich meinen Tipp bis zum Spielbeginn aendern koennen, damit ich auf neue Informationen reagieren kann.
 
 Akzeptanzkriterien:
 
-- Ein bestehender Tipp kann vor dem Anpfiff aktualisiert werden.
+- Das Backend erlaubt das Aktualisieren eines bestehenden eigenen Tipps vor dem Anpfiff.
 - Massgeblich ist die in Berlin angezeigte Anstosszeit des Spiels.
 - Nach der Aenderung gilt nur die letzte gespeicherte Version.
 
-### US-12 Tippabgabe nach Anpfiff verhindern
+### US-12 Tippabgabe im Backend nach Anpfiff verhindern
 
 Als System moechte ich Tippabgabe und Tippaenderung nach Spielbeginn blockieren, damit alle Nutzer unter denselben Bedingungen spielen.
 
 Akzeptanzkriterien:
 
-- Ab dem Anpfiff koennen keine neuen Tipps mehr gespeichert werden.
-- Ab dem Anpfiff koennen bestehende Tipps nicht mehr geaendert werden.
-- Der Nutzer erhaelt eine klare Rueckmeldung, wenn die Frist abgelaufen ist.
+- Das Backend speichert ab dem Anpfiff keine neuen Tipps mehr.
+- Das Backend aendert ab dem Anpfiff keine bestehenden Tipps mehr.
+- Die API liefert eine klare Rueckmeldung, wenn die Frist abgelaufen ist.
 
-### US-13 Kein Tipp bedeutet kein Tipp
+### US-13 Kein Tipp bedeutet backendseitig kein Tipp
 
 Als Nutzer moechte ich, dass ein fehlender Tipp nicht als `0:0` oder anderer Standardwert behandelt wird, damit ich fuer nicht abgegebene Tipps keine ungewollte Wertung erhalte.
 
@@ -549,6 +553,21 @@ Akzeptanzkriterien:
 - Wenn das Backend eine Aenderung ablehnt, weil der Wettbewerb bereits begonnen hat, zeigt das Frontend eine nachvollziehbare Fehlermeldung.
 - Das Frontend aendert das Punkteschema nicht ueber den Spielplan-Import.
 - Validierungs-, Berechtigungs- und Fachfehler aus dem Backend werden nachvollziehbar angezeigt.
+
+### US-48 Tipps im Frontend abgeben und aendern
+
+Als Nutzer moechte ich meine Tipps ueber die Weboberflaeche abgeben und vor Anpfiff aendern koennen, damit ich die Backend-Funktionen aus `US-09` bis `US-13` ohne direkte API-Nutzung verwenden kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet fuer tippbare Spiele eine Eingabemoeglichkeit fuer Heimtore und Auswaertstore.
+- Bei Gruppenspielen wird kein weiterkommendes Team abgefragt.
+- Bei K.o.-Spielen wird ein weiterkommendes Team nur abgefragt, wenn das getippte Ergebnis unentschieden ist.
+- Bereits gespeicherte eigene Tipps werden angezeigt und koennen vor Anpfiff geaendert werden.
+- Nach Anpfiff ist die Tippabgabe oder Aenderung im Frontend nicht mehr moeglich oder wird mit einer nachvollziehbaren Backend-Fehlermeldung abgelehnt.
+- Spiele ohne abgegebenen Tipp werden im Frontend nicht als `0:0` oder anderer Default-Tipp dargestellt.
+- Das Frontend nutzt die Backend-Endpunkte aus `US-09` bis `US-13`.
+- Validierungs-, Frist- und Berechtigungsfehler aus dem Backend werden nachvollziehbar angezeigt.
 
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 

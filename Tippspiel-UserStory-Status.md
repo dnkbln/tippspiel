@@ -19,11 +19,11 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-06 Spielplan per JSON importieren
 - [x] US-07 Spielzeiten in Berlin anzeigen
 - [ ] US-08 Wettbewerb nach Start einfrieren
-- [ ] US-09 Gruppenspiel tippen
-- [ ] US-10 K.o.-Spiel tippen
-- [ ] US-11 Tipp vor Anpfiff aendern
-- [ ] US-12 Tippabgabe nach Anpfiff verhindern
-- [ ] US-13 Kein Tipp bedeutet kein Tipp
+- [ ] US-09 Gruppenspiel im Backend tippen
+- [ ] US-10 K.o.-Spiel im Backend tippen
+- [ ] US-11 Tipp im Backend vor Anpfiff aendern
+- [ ] US-12 Tippabgabe im Backend nach Anpfiff verhindern
+- [ ] US-13 Kein Tipp bedeutet backendseitig kein Tipp
 - [ ] US-14 Meine offenen Tipps schnell finden
 - [ ] US-15 Tipps anderer Nutzer erst ab Spielbeginn sehen
 - [ ] US-16 Rangliste nach Punkten sehen
@@ -57,6 +57,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-44 Spielplan im Frontend nach Turnierabschnitt oder Datum anzeigen
 - [ ] US-45 Ergebnisse im Frontend durch Admin erfassen
 - [ ] US-46 Startseite optisch passend gestalten
-- [ ] US-47 Punkteschema im Frontend verwalten
+- [x] US-47 Punkteschema im Frontend verwalten
+- [ ] US-48 Tipps im Frontend abgeben und aendern
 
-20/47
+21/48
