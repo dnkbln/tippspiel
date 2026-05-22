@@ -64,6 +64,51 @@
       </div>
     </form>
 
+    <form
+      class="mt-4 max-w-md rounded-md border border-slate-200 bg-white px-4 py-3"
+      @submit.prevent="submitScoringRules"
+    >
+      <section class="mt-4 max-w-md rounded-md border border-slate-200 bg-white px-4 py-3">
+        <h2 class="text-base font-semibold text-slate-900">Punkteschema</h2>
+
+        <p v-if="isLoadingScoringRules" class="mt-3 text-sm text-slate-600">
+          Punkteschema wird geladen.
+        </p>
+
+        <div v-else class="mt-3 space-y-3">
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Exaktes Ergebnis</span>
+            <input v-model="scoringExactScorePoints" type="number" min="0" step="1"
+              class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2" />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Tordifferenz</span>
+            <input v-model="scoringGoalDifferencePoints" type="number" min="0" step="1"
+              class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2" />
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Tendenz</span>
+            <input v-model="scoringTendencyPoints" type="number" min="0" step="1"
+              class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2" />
+          </label>
+        </div>
+
+        <p v-if="scoringRulesSuccessMessage"
+          class="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          {{ scoringRulesSuccessMessage }}
+        </p>
+
+        <button type="submit"
+          class="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          :disabled="isSavingScoringRules">
+          Punkteschema speichern
+        </button>
+
+      </section>
+    </form>
+
     <p v-if="selectedCompetitionId && isLoadingGames" class="mt-4 text-sm text-slate-600">
       Spiele werden geladen.
     </p>
@@ -116,6 +161,8 @@ import { useAppStore } from "../stores/app";
 import { useAuthStore } from "../stores/auth";
 import { updateCompetition } from "../api/update-competition";
 import { deleteCompetition } from "../api/delete-competition";
+import { getCompetitionScoringRules } from "../api/get-competition-scoring-rules";
+import { upsertCompetitionScoringRules } from "../api/upsert-competition-scoring-rules";
 
 const appStore = useAppStore();
 const authStore = useAuthStore();
@@ -130,6 +177,14 @@ const isLoadingCompetitions = ref(false);
 const newCompetitionName = ref("");
 const isUpdatingCompetition = ref(false);
 const isDeletingCompetition = ref(false);
+const scoringExactScorePoints = ref("");
+const scoringGoalDifferencePoints = ref("");
+const scoringTendencyPoints = ref("");
+const isLoadingScoringRules = ref(false);
+const scoringRulesSuccessMessage = ref<string | null>(null);
+const isSavingScoringRules = ref(false);
+const games = ref<CompetitionGame[]>([]);
+const isLoadingGames = ref(false);
 
 const selectedCompetition = computed(() =>
   competitions.value.find(
@@ -182,8 +237,28 @@ async function selectCompetition() {
   await router.push(`/competitions/${selectedCompetitionId.value}/games`);
 }
 
-const games = ref<CompetitionGame[]>([]);
-const isLoadingGames = ref(false);
+async function loadScoringRules(competitionId: string) {
+  appStore.clearGlobalError();
+  isLoadingScoringRules.value = true;
+
+  try {
+    const result = await getCompetitionScoringRules(competitionId);
+    const values = result.scoringRules ?? result.defaultSuggestion;
+
+    scoringExactScorePoints.value = String(values.exactScorePoints);
+    scoringGoalDifferencePoints.value = String(values.goalDifferencePoints);
+    scoringTendencyPoints.value = String(values.tendencyPoints);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      appStore.setGlobalErrorFromApiPayload(error.payload);
+      return;
+    }
+
+    appStore.setGlobalError("Unbekannter Fehler");
+  } finally {
+    isLoadingScoringRules.value = false;
+  }
+}
 
 watch(
   () => route.params.competitionId,
@@ -193,12 +268,22 @@ watch(
 
     if (!selectedCompetitionId.value) {
       games.value = [];
+      scoringExactScorePoints.value = "";
+      scoringGoalDifferencePoints.value = "";
+      scoringTendencyPoints.value = "";
+      scoringRulesSuccessMessage.value = null;
       return;
     }
 
     await loadGames(selectedCompetitionId.value);
+
+    if (authStore.isAdmin) {
+      await loadScoringRules(selectedCompetitionId.value);
+    }
   },
-  { immediate: true },
+  {
+    immediate: true,
+  },
 );
 
 async function loadGames(competitionId: string) {
@@ -298,6 +383,69 @@ async function submitCompetitionDelete() {
     appStore.setGlobalError("Unbekannter Fehler");
   } finally {
     isDeletingCompetition.value = false;
+  }
+}
+
+function parseScoringRuleValue(value: string) {
+  if (!/^\d+$/.test(value)) {
+    return null;
+  }
+
+  return Number(value);
+}
+
+async function submitScoringRules() {
+  if (!selectedCompetition.value) {
+    return;
+  }
+
+  scoringRulesSuccessMessage.value = null;
+  appStore.clearGlobalError();
+
+  const exactScorePoints = parseScoringRuleValue(scoringExactScorePoints.value);
+  const goalDifferencePoints = parseScoringRuleValue(
+    scoringGoalDifferencePoints.value,
+  );
+  const tendencyPoints = parseScoringRuleValue(scoringTendencyPoints.value);
+
+  if (
+    exactScorePoints === null ||
+    goalDifferencePoints === null ||
+    tendencyPoints === null
+  ) {
+    appStore.setGlobalError(
+      "Das Punkteschema darf nur ganze Zahlen groesser oder gleich 0 enthalten.",
+    );
+    return;
+  }
+
+  isSavingScoringRules.value = true;
+
+  try {
+    const result = await upsertCompetitionScoringRules(
+      selectedCompetition.value.id,
+      {
+        exactScorePoints,
+        goalDifferencePoints,
+        tendencyPoints,
+      },
+    );
+
+    scoringExactScorePoints.value = String(result.scoringRules.exactScorePoints);
+    scoringGoalDifferencePoints.value = String(
+      result.scoringRules.goalDifferencePoints,
+    );
+    scoringTendencyPoints.value = String(result.scoringRules.tendencyPoints);
+    scoringRulesSuccessMessage.value = "Punkteschema erfolgreich gespeichert.";
+  } catch (error) {
+    if (error instanceof ApiError) {
+      appStore.setGlobalErrorFromApiPayload(error.payload);
+      return;
+    }
+
+    appStore.setGlobalError("Unbekannter Fehler");
+  } finally {
+    isSavingScoringRules.value = false;
   }
 }
 
