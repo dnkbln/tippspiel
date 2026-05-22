@@ -65,6 +65,8 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-13 Kein Tipp bedeutet backendseitig kein Tipp
 
+### US-49 Eigene Tipps im Backend abrufen
+
 ### US-14 Meine offenen Tipps schnell finden
 
 ## Sichtbarkeit und Transparenz

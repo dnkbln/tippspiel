@@ -25,6 +25,7 @@ model User {
   passwordHash String
   role         UserRole  @default(USER)
   sessions     Session[]
+  tips         Tip[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 }
@@ -145,11 +146,12 @@ model Game {
   startsAt            DateTime
   createdAt           DateTime    @default(now())
   updatedAt           DateTime    @updatedAt
-  homeGoals        Int?
-  awayGoals        Int?
-  resultDecision   GameResultDecision?
-  advancingTeamId  String?
-  resultEnteredAt  DateTime?
+  homeGoals           Int?
+  awayGoals           Int?
+  resultDecision      GameResultDecision?
+  advancingTeamId     String?
+  resultEnteredAt     DateTime?
+  tips                Tip[]
 
   competition     Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
   group           Group?      @relation(fields: [groupId], references: [id], onDelete: SetNull)
@@ -158,3 +160,19 @@ model Game {
   awayTeam        Team?       @relation("GameAwayTeam", fields: [awayTeamId], references: [id], onDelete: Restrict)
   advancingTeam   Team?       @relation("GameAdvancingTeam", fields: [advancingTeamId], references: [id], onDelete: Restrict)
 }
+
+model Tip {
+  id        String   @id @default(cuid())
+  userId    String
+  gameId    String
+  homeGoals Int
+  awayGoals Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+}
+

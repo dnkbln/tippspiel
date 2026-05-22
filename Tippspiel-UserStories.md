@@ -238,6 +238,20 @@ Akzeptanzkriterien:
 - Fehlende Tipps erhalten keine Punkte.
 - Das System legt keinen automatischen Default-Tipp an.
 
+### US-49 Eigene Tipps im Backend abrufen
+
+Als angemeldeter Nutzer moechte ich meine bereits gespeicherten Tipps fuer einen Wettbewerb abrufen koennen, damit Frontend-Ansichten offene und bereits getippte Spiele korrekt darstellen koennen.
+
+Akzeptanzkriterien:
+
+- Das Backend stellt einen geschuetzten Endpunkt zum Abrufen der eigenen Tipps fuer eine Competition bereit, z. B. `GET /competitions/:competitionId/my-tips`.
+- Der Endpunkt liefert ausschliesslich Tipps des aktuell angemeldeten Nutzers.
+- Pro Tipp werden mindestens Spiel-ID, Heimtore, Auswaertstore und optional weiterkommendes Team ausgeliefert.
+- Fuer Spiele ohne eigenen Tipp wird kein automatischer Default-Tipp ausgeliefert.
+- Wenn fuer eine Competition noch keine eigenen Tipps gespeichert sind, liefert der Endpunkt eine leere Liste.
+- Der Endpunkt liefert keine Tipps anderer Nutzer.
+- Der Endpunkt ermoeglicht dem Frontend, offene Spiele fuer `US-14` und gespeicherte Tipps fuer `US-48` zu erkennen.
+
 ### US-14 Meine offenen Tipps schnell finden
 
 Als Nutzer moechte ich anstehende Spiele nach Kategorien wie "naechster Tag" und "naechste Runde" sehen, damit ich offene Tipps schnell erfassen kann.
