@@ -24,7 +24,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-11 Tipp im Backend vor Anpfiff aendern
 - [x] US-12 Tippabgabe im Backend nach Anpfiff verhindern
 - [x] US-13 Kein Tipp bedeutet backendseitig kein Tipp
-- [ ] US-49 Eigene Tipps im Backend abrufen
+- [x] US-49 Eigene Tipps im Backend abrufen
 - [ ] US-14 Meine offenen Tipps schnell finden
 - [ ] US-15 Tipps anderer Nutzer erst ab Spielbeginn sehen
 - [ ] US-16 Rangliste nach Punkten sehen
@@ -61,4 +61,4 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-47 Punkteschema im Frontend verwalten
 - [ ] US-48 Tipps im Frontend abgeben und aendern
 
-26/49
+27/49
