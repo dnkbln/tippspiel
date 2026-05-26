@@ -199,6 +199,43 @@ describe("POST /competitions/:competitionId/games/:gameId/tip", () => {
     await app.close();
   });
 
+  it("returns 400 when the tip deadline has passed", async () => {
+    const app = await createApp();
+
+    requireAuthMock.mockResolvedValue({
+      id: "user-1",
+      email: "max@example.com",
+      displayName: "Max",
+      role: "USER",
+    });
+
+    submitGroupGameTipMock.mockRejectedValue(
+      new AppError("VALIDATION_ERROR", 400, "tip deadline has passed"),
+    );
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/competitions/competition-1/games/game-1/tip",
+      payload: {
+        homeGoals: 2,
+        awayGoals: 1,
+      },
+      headers: {
+        cookie: "session=session-token",
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toEqual({
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "tip deadline has passed",
+      },
+    });
+
+    await app.close();
+  });
+
   it("returns 404 when the game does not exist in the competition", async () => {
     const app = await createApp();
 

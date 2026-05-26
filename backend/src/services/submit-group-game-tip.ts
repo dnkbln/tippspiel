@@ -48,6 +48,14 @@ export async function submitGroupGameTip(
     throw new AppError("NOT_FOUND", 404, "game not found");
   }
 
+  if (game.startsAt <= new Date()) {
+    throw new AppError(
+      "VALIDATION_ERROR",
+      400,
+      "tip deadline has passed",
+    );
+  }
+
   if (!game.homeTeamId || !game.awayTeamId) {
     throw new AppError(
       "VALIDATION_ERROR",
@@ -105,11 +113,21 @@ export async function submitGroupGameTip(
     );
   }
 
-
-  return prisma.tip.create({
-    data: {
+  return prisma.tip.upsert({
+    where: {
+      userId_gameId: {
+        userId,
+        gameId,
+      },
+    },
+    create: {
       userId,
       gameId,
+      homeGoals: candidate.homeGoals,
+      awayGoals: candidate.awayGoals,
+      advancingTeamId,
+    },
+    update: {
       homeGoals: candidate.homeGoals,
       awayGoals: candidate.awayGoals,
       advancingTeamId,
@@ -123,4 +141,5 @@ export async function submitGroupGameTip(
       advancingTeamId: true,
     },
   });
+
 }

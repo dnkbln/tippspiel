@@ -65,6 +65,9 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-13 Kein Tipp bedeutet backendseitig kein Tipp
 
+- Das Akzeptanzkriterium "Fehlende Tipps erhalten keine Punkte" ist noch nicht vollstaendig nachweisbar.
+  Es gibt aktuell noch keine Punkteberechnung fuer Tipps. Bei `US-25` und `US-26` muss explizit abgesichert werden, dass fehlende `Tip`-Datensaetze keine Punkte erzeugen.
+
 ### US-49 Eigene Tipps im Backend abrufen
 
 ### US-14 Meine offenen Tipps schnell finden

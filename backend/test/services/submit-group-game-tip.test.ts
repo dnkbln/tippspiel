@@ -7,6 +7,7 @@ const { prismaMock } = vi.hoisted(() => ({
     },
     tip: {
       create: vi.fn(),
+      upsert: vi.fn(),
     },
   },
 }));
@@ -31,7 +32,7 @@ describe("submitGroupGameTip", () => {
       awayTeamId: "team-2",
     });
 
-    prismaMock.tip.create.mockResolvedValue({
+    prismaMock.tip.upsert.mockResolvedValue({
       id: "tip-1",
       userId: "user-1",
       gameId: "game-1",
@@ -61,10 +62,21 @@ describe("submitGroupGameTip", () => {
       },
     });
 
-    expect(prismaMock.tip.create).toHaveBeenCalledWith({
-      data: {
+    expect(prismaMock.tip.upsert).toHaveBeenCalledWith({
+      where: {
+        userId_gameId: {
+          userId: "user-1",
+          gameId: "game-1",
+        },
+      },
+      create: {
         userId: "user-1",
         gameId: "game-1",
+        homeGoals: 2,
+        awayGoals: 1,
+        advancingTeamId: null,
+      },
+      update: {
         homeGoals: 2,
         awayGoals: 1,
         advancingTeamId: null,
@@ -163,6 +175,38 @@ describe("submitGroupGameTip", () => {
     expect(prismaMock.tip.create).not.toHaveBeenCalled();
   });
 
+  it("rejects missing homeGoals without storing a default tip", async () => {
+    await expect(
+      submitGroupGameTip("user-1", "competition-1", "game-1", {
+        awayGoals: 1,
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "homeGoals must be a non-negative integer",
+    });
+
+    expect(prismaMock.game.findFirst).not.toHaveBeenCalled();
+    expect(prismaMock.tip.upsert).not.toHaveBeenCalled();
+    expect(prismaMock.tip.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects missing awayGoals without storing a default tip", async () => {
+    await expect(
+      submitGroupGameTip("user-1", "competition-1", "game-1", {
+        homeGoals: 1,
+      }),
+    ).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      statusCode: 400,
+      message: "awayGoals must be a non-negative integer",
+    });
+
+    expect(prismaMock.game.findFirst).not.toHaveBeenCalled();
+    expect(prismaMock.tip.upsert).not.toHaveBeenCalled();
+    expect(prismaMock.tip.create).not.toHaveBeenCalled();
+  });
+
   it("rejects invalid homeGoals", async () => {
     await expect(
       submitGroupGameTip("user-1", "competition-1", "game-1", {
@@ -204,7 +248,7 @@ describe("submitGroupGameTip", () => {
       awayTeamId: "team-2",
     });
 
-    prismaMock.tip.create.mockResolvedValue({
+    prismaMock.tip.upsert.mockResolvedValue({
       id: "tip-1",
       userId: "user-1",
       gameId: "game-1",
@@ -227,10 +271,21 @@ describe("submitGroupGameTip", () => {
       advancingTeamId: null,
     });
 
-    expect(prismaMock.tip.create).toHaveBeenCalledWith({
-      data: {
+    expect(prismaMock.tip.upsert).toHaveBeenCalledWith({
+      where: {
+        userId_gameId: {
+          userId: "user-1",
+          gameId: "game-1",
+        },
+      },
+      create: {
         userId: "user-1",
         gameId: "game-1",
+        homeGoals: 2,
+        awayGoals: 1,
+        advancingTeamId: null,
+      },
+      update: {
         homeGoals: 2,
         awayGoals: 1,
         advancingTeamId: null,
@@ -255,7 +310,7 @@ describe("submitGroupGameTip", () => {
       awayTeamId: "team-2",
     });
 
-    prismaMock.tip.create.mockResolvedValue({
+    prismaMock.tip.upsert.mockResolvedValue({
       id: "tip-1",
       userId: "user-1",
       gameId: "game-1",
@@ -279,10 +334,21 @@ describe("submitGroupGameTip", () => {
       advancingTeamId: "team-2",
     });
 
-    expect(prismaMock.tip.create).toHaveBeenCalledWith({
-      data: {
+    expect(prismaMock.tip.upsert).toHaveBeenCalledWith({
+      where: {
+        userId_gameId: {
+          userId: "user-1",
+          gameId: "game-1",
+        },
+      },
+      create: {
         userId: "user-1",
         gameId: "game-1",
+        homeGoals: 1,
+        awayGoals: 1,
+        advancingTeamId: "team-2",
+      },
+      update: {
         homeGoals: 1,
         awayGoals: 1,
         advancingTeamId: "team-2",
@@ -344,6 +410,109 @@ describe("submitGroupGameTip", () => {
     });
 
     expect(prismaMock.tip.create).not.toHaveBeenCalled();
+  });
+
+  it("rejects tips at kickoff or later", async () => {
+    vi.useFakeTimers();
+
+    try {
+      vi.setSystemTime(new Date("2026-06-14T17:00:00.000Z"));
+
+      prismaMock.game.findFirst.mockResolvedValue({
+        id: "game-1",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        startsAt: new Date("2026-06-14T17:00:00.000Z"),
+      });
+
+      await expect(
+        submitGroupGameTip("user-1", "competition-1", "game-1", {
+          homeGoals: 2,
+          awayGoals: 1,
+        }),
+      ).rejects.toMatchObject({
+        code: "VALIDATION_ERROR",
+        statusCode: 400,
+        message: "tip deadline has passed",
+      });
+
+      expect(prismaMock.tip.create).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("updates an existing own tip before kickoff", async () => {
+    vi.useFakeTimers();
+
+    try {
+      vi.setSystemTime(new Date("2026-06-14T16:59:59.000Z"));
+
+      prismaMock.game.findFirst.mockResolvedValue({
+        id: "game-1",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        startsAt: new Date("2026-06-14T17:00:00.000Z"),
+      });
+
+      prismaMock.tip.upsert.mockResolvedValue({
+        id: "tip-1",
+        userId: "user-1",
+        gameId: "game-1",
+        homeGoals: 3,
+        awayGoals: 1,
+        advancingTeamId: null,
+      });
+
+      await expect(
+        submitGroupGameTip("user-1", "competition-1", "game-1", {
+          homeGoals: 3,
+          awayGoals: 1,
+        }),
+      ).resolves.toEqual({
+        id: "tip-1",
+        userId: "user-1",
+        gameId: "game-1",
+        homeGoals: 3,
+        awayGoals: 1,
+        advancingTeamId: null,
+      });
+
+      expect(prismaMock.tip.upsert).toHaveBeenCalledWith({
+        where: {
+          userId_gameId: {
+            userId: "user-1",
+            gameId: "game-1",
+          },
+        },
+        create: {
+          userId: "user-1",
+          gameId: "game-1",
+          homeGoals: 3,
+          awayGoals: 1,
+          advancingTeamId: null,
+        },
+        update: {
+          homeGoals: 3,
+          awayGoals: 1,
+          advancingTeamId: null,
+        },
+        select: {
+          id: true,
+          userId: true,
+          gameId: true,
+          homeGoals: true,
+          awayGoals: true,
+          advancingTeamId: true,
+        },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
 });
