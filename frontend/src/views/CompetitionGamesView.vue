@@ -127,6 +127,7 @@
             <th class="px-3 py-2 font-medium text-slate-700">Heimteam</th>
             <th class="px-3 py-2 font-medium text-slate-700">Auswaertsteam</th>
             <th class="px-3 py-2 font-medium text-slate-700">Anstosszeit</th>
+            <th class="px-3 py-2 font-medium text-slate-700">Ergebnis</th>
             <th class="px-3 py-2 font-medium text-slate-700">Mein Tipp</th>
           </tr>
         </thead>
@@ -136,7 +137,62 @@
             <td class="px-3 py-2">{{ game.homeTeam?.name ?? game.homeTeamPlaceholder ?? "Offen" }}</td>
             <td class="px-3 py-2">{{ game.awayTeam?.name ?? game.awayTeamPlaceholder ?? "Offen" }}</td>
             <td class="px-3 py-2">{{ formatBerlinDateTime(game.startsAt) }}</td>
+            <td class="px-3 py-2">
+              <form
+                v-if="authStore.isAdmin && resultInputs[game.id]"
+                class="flex items-center gap-2"
+                @submit.prevent="submitResult(game)"
+              >
+                <input
+                  v-model="resultInputs[game.id].homeGoals"
+                  type="number"
+                  min="0"
+                  step="1"
+                  class="w-16 rounded-md border border-slate-300 px-2 py-1"
+                  aria-label="Heimtore Ergebnis"
+                />
+                <span>:</span>
+                <input
+                  v-model="resultInputs[game.id].awayGoals"
+                  type="number"
+                  min="0"
+                  step="1"
+                  class="w-16 rounded-md border border-slate-300 px-2 py-1"
+                  aria-label="Auswaertstore Ergebnis"
+                />
 
+                <select
+                  v-if="shouldAskResultAdvancingTeam(game)"
+                  v-model="resultInputs[game.id].advancingTeamId"
+                  class="rounded-md border border-slate-300 px-2 py-1"
+                  aria-label="Weiterkommer Ergebnis"
+                >
+                  <option value="">Weiterkommer</option>
+                  <option v-if="game.homeTeam" :value="game.homeTeam.id">
+                    {{ game.homeTeam.name }}
+                  </option>
+                  <option v-if="game.awayTeam" :value="game.awayTeam.id">
+                    {{ game.awayTeam.name }}
+                  </option>
+                </select>
+
+                <button
+                  type="submit"
+                  class="rounded-md bg-slate-900 px-3 py-1 text-sm font-medium text-white disabled:opacity-60"
+                  :disabled="resultInputs[game.id].isSaving"
+                >
+                  Ergebnis speichern
+                </button>
+              </form>
+
+              <span v-else-if="game.homeGoals !== null && game.awayGoals !== null">
+                {{ game.homeGoals }}:{{ game.awayGoals }}
+                <span v-if="findTeamName(game, game.advancingTeamId)">
+                  · {{ findTeamName(game, game.advancingTeamId) }}
+                </span>
+              </span>
+              <span v-else class="text-slate-500">offen</span>
+            </td>
             <td class="px-3 py-2">
               <form
                 v-if="isGameTippable(game) && tipInputs[game.id]"
@@ -226,6 +282,11 @@ import {
   type MyCompetitionTip,
 } from "../api/list-my-competition-tips";
 import { submitCompetitionGameTip } from "../api/submit-competition-game-tip";
+import {
+  setGameResult,
+  type GameResultDecision,
+  type SetGameResultPayload,
+} from "../api/set-game-result";
 
 const appStore = useAppStore();
 const authStore = useAuthStore();
@@ -258,6 +319,14 @@ type TipInput = {
   isSaving: boolean;
 };
 const tipInputs = ref<Record<string, TipInput>>({});
+
+type ResultInput = {
+  homeGoals: string;
+  awayGoals: string;
+  advancingTeamId: string;
+  isSaving: boolean;
+};
+const resultInputs = ref<Record<string, ResultInput>>({});
 
 const tipsByGameId = computed(() =>
   Object.fromEntries(tips.value.map((tip) => [tip.gameId, tip])),
@@ -371,6 +440,7 @@ async function loadGames(competitionId: string) {
   try {
     const result = await listCompetitionGames(competitionId);
     games.value = result.games;
+    syncResultInputs();
   } catch (error) {
     games.value = [];
 
@@ -699,5 +769,97 @@ function getTipUnavailableReason(game: CompetitionGame) {
   }
 
   return null;
+}
+
+function syncResultInputs() {
+  resultInputs.value = Object.fromEntries(
+    games.value.map((game) => [
+      game.id,
+      {
+        homeGoals: game.homeGoals === null ? "" : String(game.homeGoals),
+        awayGoals: game.awayGoals === null ? "" : String(game.awayGoals),
+        advancingTeamId: game.advancingTeamId ?? "",
+        isSaving: false,
+      },
+    ]),
+  );
+}
+
+function shouldAskResultAdvancingTeam(game: CompetitionGame) {
+  const input = resultInputs.value[game.id];
+
+  if (!input || !isKnockoutGame(game)) {
+    return false;
+  }
+
+  const homeGoals = parseGoalValue(input.homeGoals);
+  const awayGoals = parseGoalValue(input.awayGoals);
+
+  return homeGoals !== null && awayGoals !== null && homeGoals === awayGoals;
+}
+
+async function submitResult(game: CompetitionGame) {
+  const input = resultInputs.value[game.id];
+
+  if (!input) {
+    return;
+  }
+
+  const homeGoals = parseGoalValue(input.homeGoals);
+  const awayGoals = parseGoalValue(input.awayGoals);
+
+  if (homeGoals === null || awayGoals === null) {
+    appStore.setGlobalError(
+      "Bitte nicht-negative ganze Zahlen als Ergebnis eintragen.",
+    );
+    return;
+  }
+
+  const isDraw = homeGoals === awayGoals;
+  const resultDecision: GameResultDecision =
+    isKnockoutGame(game) && isDraw ? "PENALTIES" : "REGULAR_TIME";
+
+  const payload: SetGameResultPayload = {
+    homeGoals,
+    awayGoals,
+    resultDecision,
+  };
+
+  if (resultDecision === "PENALTIES") {
+    if (!input.advancingTeamId) {
+      appStore.setGlobalError(
+        "Bitte waehle bei einem K.o.-Unentschieden den Weiterkommer aus.",
+      );
+      return;
+    }
+
+    payload.advancingTeamId = input.advancingTeamId;
+  }
+
+  appStore.clearGlobalError();
+  input.isSaving = true;
+
+  try {
+    await setGameResult(game.id, payload);
+
+    if (selectedCompetitionId.value) {
+      await loadGames(selectedCompetitionId.value);
+    }
+  } catch (error) {
+    if (error instanceof ApiError) {
+      if (error.status === 401) {
+        authStore.clearRole();
+        await router.push("/login");
+        return;
+      }
+
+      appStore.setGlobalErrorFromApiPayload(error.payload);
+      return;
+    }
+
+    appStore.setGlobalError("Unbekannter Fehler");
+  } finally {
+    input.isSaving = false;
+  }
 }
 </script>

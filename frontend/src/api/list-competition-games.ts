@@ -1,5 +1,10 @@
 import { ApiError } from "./register-user";
 
+export type CompetitionGameResultDecision =
+  | "REGULAR_TIME"
+  | "EXTRA_TIME"
+  | "PENALTIES";
+
 export type CompetitionGameTeam = {
   id: string;
   name: string;
@@ -30,6 +35,11 @@ export type CompetitionGame = {
   awayTeam: CompetitionGameTeam | null;
   homeTeamPlaceholder?: string | null;
   awayTeamPlaceholder?: string | null;
+  homeGoals: number | null;
+  awayGoals: number | null;
+  resultDecision: CompetitionGameResultDecision | null;
+  advancingTeamId: string | null;
+  resultEnteredAt: string | null;
 };
 
 export type ListCompetitionGamesResponse = {
