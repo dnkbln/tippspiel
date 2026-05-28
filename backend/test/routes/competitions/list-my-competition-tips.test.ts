@@ -37,6 +37,7 @@ describe("GET /competitions/:competitionId/my-tips", () => {
         homeGoals: 2,
         awayGoals: 1,
         advancingTeamId: null,
+        points: 3,
       },
     ]);
 
@@ -56,6 +57,7 @@ describe("GET /competitions/:competitionId/my-tips", () => {
           homeGoals: 2,
           awayGoals: 1,
           advancingTeamId: null,
+          points: 3,
         },
       ],
     });

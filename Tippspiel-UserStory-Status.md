@@ -36,8 +36,8 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-22 Sichere Passwort- und Session-Verwaltung umsetzen
 - [ ] US-23 Backend fuer spaetere OAuth-Anbindung vorbereiten
 - [x] US-24 Punkteschema vor Wettbewerbsstart festlegen
-- [ ] US-25 Punkte fuer Gruppenspiele automatisch berechnen
-- [ ] US-26 Punkte fuer K.o.-Spiele automatisch berechnen
+- [x] US-25 Punkte fuer Gruppenspiele automatisch berechnen
+- [x] US-26 Punkte fuer K.o.-Spiele automatisch berechnen
 - [ ] US-27 Anwendung ohne Docker in WSL betreiben
 - [ ] US-28 Sichere Basis fuer spaetere Erweiterungen schaffen
 - [ ] US-29 Frontend fuer Nutzerkonto und Zugriff
@@ -61,4 +61,4 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-47 Punkteschema im Frontend verwalten
 - [x] US-48 Tipps im Frontend abgeben und aendern
 
-29/49
+31/49

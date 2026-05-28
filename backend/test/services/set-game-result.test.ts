@@ -7,6 +7,10 @@ const { prismaMock } = vi.hoisted(() => ({
       findUnique: vi.fn(),
       update: vi.fn(),
     },
+    tip: {
+      update: vi.fn(),
+      updateMany: vi.fn(),
+    },
   },
 }));
 
@@ -23,35 +27,40 @@ describe("setGameResult", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-06-14T20:00:00.000Z"));
 
-    prismaMock.game.findUnique.mockResolvedValue({
-      id: "game-1",
-      groupId: "group-1",
-      homeTeamId: "team-1",
-      awayTeamId: "team-2",
-    });
+    try {
+      prismaMock.game.findUnique.mockResolvedValue({
+        id: "game-1",
+        groupId: "group-1",
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        competition: {
+          scoringRule: null,
+        },
+      });
 
-    prismaMock.game.update.mockResolvedValue({});
+      prismaMock.game.update.mockResolvedValue({});
 
-    await expect(
-      setGameResult("game-1", {
-        homeGoals: 2,
-        awayGoals: 1,
-        resultDecision: "REGULAR_TIME",
-      }),
-    ).resolves.toBeUndefined();
+      await expect(
+        setGameResult("game-1", {
+          homeGoals: 2,
+          awayGoals: 1,
+          resultDecision: "REGULAR_TIME",
+        }),
+      ).resolves.toBeUndefined();
 
-    expect(prismaMock.game.update).toHaveBeenCalledWith({
-      where: { id: "game-1" },
-      data: {
-        homeGoals: 2,
-        awayGoals: 1,
-        resultDecision: "REGULAR_TIME",
-        advancingTeamId: null,
-        resultEnteredAt: new Date("2026-06-14T20:00:00.000Z"),
-      },
-    });
-
-    vi.useRealTimers();
+      expect(prismaMock.game.update).toHaveBeenCalledWith({
+        where: { id: "game-1" },
+        data: {
+          homeGoals: 2,
+          awayGoals: 1,
+          resultDecision: "REGULAR_TIME",
+          advancingTeamId: null,
+          resultEnteredAt: new Date("2026-06-14T20:00:00.000Z"),
+        },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("stores a penalties result for a knockout game with an advancing team", async () => {
@@ -64,6 +73,9 @@ describe("setGameResult", () => {
         groupId: null,
         homeTeamId: "team-1",
         awayTeamId: "team-2",
+        competition: {
+          scoringRule: null,
+        },
       });
 
       prismaMock.game.update.mockResolvedValue({});
@@ -313,4 +325,222 @@ describe("setGameResult", () => {
     expect(prismaMock.game.update).not.toHaveBeenCalled();
   });
 
+  it("clears tip points when the competition has no scoring rules", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-14T20:00:00.000Z"));
+
+    try {
+      prismaMock.game.findUnique.mockResolvedValue({
+        id: "game-1",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        competition: {
+          scoringRule: null,
+        },
+        tips: [
+          {
+            id: "tip-1",
+            homeGoals: 2,
+            awayGoals: 1,
+            advancingTeamId: null,
+          },
+        ],
+      });
+
+      prismaMock.game.update.mockResolvedValue({});
+
+      await expect(
+        setGameResult("game-1", {
+          homeGoals: 2,
+          awayGoals: 1,
+          resultDecision: "REGULAR_TIME",
+        }),
+      ).resolves.toBeUndefined();
+
+      expect(prismaMock.tip.updateMany).toHaveBeenCalledWith({
+        where: {
+          gameId: "game-1",
+        },
+        data: {
+          points: null,
+        },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("recalculates group game tip points when scoring rules exist", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-14T20:00:00.000Z"));
+
+    try {
+      prismaMock.game.findUnique.mockResolvedValue({
+        id: "game-1",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        competition: {
+          scoringRule: {
+            exactScorePoints: 3,
+            goalDifferencePoints: 2,
+            tendencyPoints: 1,
+          },
+        },
+        tips: [
+          {
+            id: "tip-1",
+            homeGoals: 2,
+            awayGoals: 1,
+            advancingTeamId: null,
+          },
+          {
+            id: "tip-2",
+            homeGoals: 3,
+            awayGoals: 2,
+            advancingTeamId: null,
+          },
+        ],
+      });
+
+      prismaMock.game.update.mockResolvedValue({});
+
+      await expect(
+        setGameResult("game-1", {
+          homeGoals: 2,
+          awayGoals: 1,
+          resultDecision: "REGULAR_TIME",
+        }),
+      ).resolves.toBeUndefined();
+
+      expect(prismaMock.tip.update).toHaveBeenCalledTimes(2);
+      expect(prismaMock.tip.update).toHaveBeenNthCalledWith(1, {
+        where: {
+          id: "tip-1",
+        },
+        data: {
+          points: 3,
+        },
+      });
+      expect(prismaMock.tip.update).toHaveBeenNthCalledWith(2, {
+        where: {
+          id: "tip-2",
+        },
+        data: {
+          points: 2,
+        },
+      });
+      expect(prismaMock.tip.updateMany).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("recalculates knockout draw tip points with wrong advancing team as goal difference points", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-28T20:00:00.000Z"));
+
+    try {
+      prismaMock.game.findUnique.mockResolvedValue({
+        id: "game-1",
+        competitionId: "competition-1",
+        groupId: null,
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        competition: {
+          scoringRule: {
+            exactScorePoints: 3,
+            goalDifferencePoints: 2,
+            tendencyPoints: 1,
+          },
+        },
+        tips: [
+          {
+            id: "tip-1",
+            homeGoals: 1,
+            awayGoals: 1,
+            advancingTeamId: "team-1",
+          },
+        ],
+      });
+
+      prismaMock.game.update.mockResolvedValue({});
+
+      await expect(
+        setGameResult("game-1", {
+          homeGoals: 1,
+          awayGoals: 1,
+          resultDecision: "PENALTIES",
+          advancingTeamId: "team-2",
+        }),
+      ).resolves.toBeUndefined();
+
+      expect(prismaMock.tip.update).toHaveBeenCalledWith({
+        where: {
+          id: "tip-1",
+        },
+        data: {
+          points: 2,
+        },
+      });
+      expect(prismaMock.tip.updateMany).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("overwrites existing tip points when a game result changes", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-06-14T21:00:00.000Z"));
+
+    try {
+      prismaMock.game.findUnique.mockResolvedValue({
+        id: "game-1",
+        competitionId: "competition-1",
+        groupId: "group-1",
+        homeTeamId: "team-1",
+        awayTeamId: "team-2",
+        competition: {
+          scoringRule: {
+            exactScorePoints: 3,
+            goalDifferencePoints: 2,
+            tendencyPoints: 1,
+          },
+        },
+        tips: [
+          {
+            id: "tip-1",
+            homeGoals: 2,
+            awayGoals: 1,
+            advancingTeamId: null,
+            points: 3,
+          },
+        ],
+      });
+
+      prismaMock.game.update.mockResolvedValue({});
+
+      await expect(
+        setGameResult("game-1", {
+          homeGoals: 1,
+          awayGoals: 1,
+          resultDecision: "REGULAR_TIME",
+        }),
+      ).resolves.toBeUndefined();
+
+      expect(prismaMock.tip.update).toHaveBeenCalledWith({
+        where: {
+          id: "tip-1",
+        },
+        data: {
+          points: 0,
+        },
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

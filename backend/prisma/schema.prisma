@@ -168,6 +168,7 @@ model Tip {
   homeGoals       Int
   awayGoals       Int
   advancingTeamId String?
+  points          Int?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

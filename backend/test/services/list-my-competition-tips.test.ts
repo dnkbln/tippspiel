@@ -39,12 +39,14 @@ describe("listMyCompetitionTips", () => {
         homeGoals: 2,
         awayGoals: 1,
         advancingTeamId: null,
+        points: 3,
       },
       {
         gameId: "game-2",
         homeGoals: 1,
         awayGoals: 1,
         advancingTeamId: "team-2",
+        points: null,
       },
     ]);
 
@@ -56,12 +58,14 @@ describe("listMyCompetitionTips", () => {
         homeGoals: 2,
         awayGoals: 1,
         advancingTeamId: null,
+        points: 3,
       },
       {
         gameId: "game-2",
         homeGoals: 1,
         awayGoals: 1,
         advancingTeamId: "team-2",
+        points: null,
       },
     ]);
 
@@ -77,6 +81,7 @@ describe("listMyCompetitionTips", () => {
         homeGoals: true,
         awayGoals: true,
         advancingTeamId: true,
+        points: true,
       },
       orderBy: {
         game: {

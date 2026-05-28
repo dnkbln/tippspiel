@@ -65,9 +65,6 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-13 Kein Tipp bedeutet backendseitig kein Tipp
 
-- Das Akzeptanzkriterium "Fehlende Tipps erhalten keine Punkte" ist noch nicht vollstaendig nachweisbar.
-  Es gibt aktuell noch keine Punkteberechnung fuer Tipps. Bei `US-25` und `US-26` muss explizit abgesichert werden, dass fehlende `Tip`-Datensaetze keine Punkte erzeugen.
-
 ### US-49 Eigene Tipps im Backend abrufen
 
 ### US-14 Meine offenen Tipps schnell finden
@@ -110,12 +107,13 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
-- Technische Strategie fuer die Neuberechnung bei Ergebnis-Aenderungen festlegen.
-  Fachlich muessen Ergebnis-Aenderungen die Punkte der betroffenen Tipps aktualisieren; offen ist nur, ob das synchron beim Speichern, ueber einen separaten Service-Schritt oder durch Berechnung beim Abruf erfolgt.
+- Das Akzeptanzkriterium "Die berechneten Punkte fliessen in die Rangliste ein" ist erst mit `US-16` vollstaendig nachweisbar.
+  Die Punkte werden bereits persistent am `Tip` gespeichert und koennen von der spaeteren Rangliste aggregiert werden.
 
 ### US-26 Punkte fuer K.o.-Spiele automatisch berechnen
 
-- Technische Strategie fuer die Neuberechnung bei Ergebnis-Aenderungen analog zu `US-25` festlegen.
+- Das Akzeptanzkriterium "Die berechneten Punkte fliessen in die Rangliste ein" ist erst mit `US-16` vollstaendig nachweisbar.
+  Die Punkte werden bereits persistent am `Tip` gespeichert und koennen von der spaeteren Rangliste aggregiert werden.
 
 ## Frontend-Ergaenzung
 

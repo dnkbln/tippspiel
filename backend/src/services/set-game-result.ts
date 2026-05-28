@@ -1,6 +1,7 @@
 import { GameResultDecision } from "@prisma/client";
 import { AppError } from "../errors/app-error.js";
 import { prisma } from "../lib/prisma.js";
+import { calculateTipPoints } from "./calculate-tip-points.js";
 
 const resultDecisions = new Set<string>(Object.values(GameResultDecision));
 
@@ -58,6 +59,27 @@ export async function setGameResult(
   const game = await prisma.game.findUnique({
     where: {
       id: gameId,
+    },
+    include: {
+      competition: {
+        select: {
+          scoringRule: {
+            select: {
+              exactScorePoints: true,
+              goalDifferencePoints: true,
+              tendencyPoints: true,
+            },
+          },
+        },
+      },
+      tips: {
+        select: {
+          id: true,
+          homeGoals: true,
+          awayGoals: true,
+          advancingTeamId: true,
+        },
+      },
     },
   });
 
@@ -157,4 +179,41 @@ export async function setGameResult(
       resultEnteredAt: new Date(),
     },
   });
+
+  if (!game.competition.scoringRule) {
+    await prisma.tip.updateMany({
+      where: {
+        gameId,
+      },
+      data: {
+        points: null,
+      },
+    });
+
+    return;
+  }
+
+  await Promise.all(
+    game.tips.map((tip) =>
+      prisma.tip.update({
+        where: {
+          id: tip.id,
+        },
+        data: {
+          points: calculateTipPoints({
+            scoringRules: game.competition.scoringRule,
+            game: {
+              isGroupGame: Boolean(game.groupId),
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              homeGoals: candidate.homeGoals,
+              awayGoals: candidate.awayGoals,
+              advancingTeamId,
+            },
+            tip,
+          }),
+        },
+      }),
+    ),
+  );
 }

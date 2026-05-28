@@ -30,6 +30,7 @@ export async function listMyCompetitionTips(
       homeGoals: true,
       awayGoals: true,
       advancingTeamId: true,
+      points: true,
     },
     orderBy: {
       game: {
