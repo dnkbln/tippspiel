@@ -144,6 +144,9 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-48 Tipps im Frontend abgeben und aendern
 
+- Vollstaendiger manueller Nachweis fuer K.o.-Tipps mit festgelegten echten Teams steht noch aus.
+  K.o.-Spiele mit Platzhaltern werden korrekt als nicht tippbar angezeigt; die Tippabgabe inklusive Weiterkommer-Auswahl kann erst mit einem K.o.-Spiel geprueft werden, dessen Heim- und Auswaertsteam festgelegt sind.
+
 ## Betrieb und technische Anforderungen
 
 ### US-27 Anwendung ohne Docker in WSL betreiben

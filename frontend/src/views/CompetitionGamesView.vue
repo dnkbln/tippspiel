@@ -127,6 +127,7 @@
             <th class="px-3 py-2 font-medium text-slate-700">Heimteam</th>
             <th class="px-3 py-2 font-medium text-slate-700">Auswaertsteam</th>
             <th class="px-3 py-2 font-medium text-slate-700">Anstosszeit</th>
+            <th class="px-3 py-2 font-medium text-slate-700">Mein Tipp</th>
           </tr>
         </thead>
         <tbody>
@@ -135,6 +136,63 @@
             <td class="px-3 py-2">{{ game.homeTeam?.name ?? game.homeTeamPlaceholder ?? "Offen" }}</td>
             <td class="px-3 py-2">{{ game.awayTeam?.name ?? game.awayTeamPlaceholder ?? "Offen" }}</td>
             <td class="px-3 py-2">{{ formatBerlinDateTime(game.startsAt) }}</td>
+
+            <td class="px-3 py-2">
+              <form
+                v-if="isGameTippable(game) && tipInputs[game.id]"
+                class="flex items-center gap-2"
+                @submit.prevent="submitTip(game)"
+              >
+                <input
+                  v-model="tipInputs[game.id].homeGoals"
+                  type="number"
+                  min="0"
+                  step="1"
+                  class="w-16 rounded-md border border-slate-300 px-2 py-1"
+                  aria-label="Heimtore tippen"
+                />
+                <span>:</span>
+                <input
+                  v-model="tipInputs[game.id].awayGoals"
+                  type="number"
+                  min="0"
+                  step="1"
+                  class="w-16 rounded-md border border-slate-300 px-2 py-1"
+                  aria-label="Auswaertstore tippen"
+                />
+                <select
+                  v-if="shouldAskAdvancingTeam(game)"
+                  v-model="tipInputs[game.id].advancingTeamId"
+                  class="rounded-md border border-slate-300 px-2 py-1"
+                  aria-label="Weiterkommer tippen"
+                >
+                  <option value="">Weiterkommer</option>
+                  <option v-if="game.homeTeam" :value="game.homeTeam.id">
+                    {{ game.homeTeam.name }}
+                  </option>
+                  <option v-if="game.awayTeam" :value="game.awayTeam.id">
+                    {{ game.awayTeam.name }}
+                  </option>
+                </select>
+                <button
+                  type="submit"
+                  class="rounded-md bg-slate-900 px-3 py-1 text-sm font-medium text-white disabled:opacity-60"
+                  :disabled="tipInputs[game.id].isSaving"
+                >
+                  Speichern
+                </button>
+              </form>
+
+              <span v-else-if="tipsByGameId[game.id]">
+                {{ tipsByGameId[game.id].homeGoals }}:{{ tipsByGameId[game.id].awayGoals }}
+                <span v-if="findTeamName(game, tipsByGameId[game.id].advancingTeamId)">
+                  · {{ findTeamName(game, tipsByGameId[game.id].advancingTeamId) }}
+                </span>
+              </span>
+              <span v-else class="text-slate-500">
+                {{ getTipUnavailableReason(game) ?? "kein Tipp" }}
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -163,6 +221,11 @@ import { updateCompetition } from "../api/update-competition";
 import { deleteCompetition } from "../api/delete-competition";
 import { getCompetitionScoringRules } from "../api/get-competition-scoring-rules";
 import { upsertCompetitionScoringRules } from "../api/upsert-competition-scoring-rules";
+import {
+  listMyCompetitionTips,
+  type MyCompetitionTip,
+} from "../api/list-my-competition-tips";
+import { submitCompetitionGameTip } from "../api/submit-competition-game-tip";
 
 const appStore = useAppStore();
 const authStore = useAuthStore();
@@ -185,7 +248,20 @@ const scoringRulesSuccessMessage = ref<string | null>(null);
 const isSavingScoringRules = ref(false);
 const games = ref<CompetitionGame[]>([]);
 const isLoadingGames = ref(false);
+const tips = ref<MyCompetitionTip[]>([]);
+const isLoadingTips = ref(false);
 
+type TipInput = {
+  homeGoals: string;
+  awayGoals: string;
+  advancingTeamId: string;
+  isSaving: boolean;
+};
+const tipInputs = ref<Record<string, TipInput>>({});
+
+const tipsByGameId = computed(() =>
+  Object.fromEntries(tips.value.map((tip) => [tip.gameId, tip])),
+);
 const selectedCompetition = computed(() =>
   competitions.value.find(
     (competition) => competition.id === selectedCompetitionId.value,
@@ -268,6 +344,7 @@ watch(
 
     if (!selectedCompetitionId.value) {
       games.value = [];
+      tips.value = [];
       scoringExactScorePoints.value = "";
       scoringGoalDifferencePoints.value = "";
       scoringTendencyPoints.value = "";
@@ -276,6 +353,7 @@ watch(
     }
 
     await loadGames(selectedCompetitionId.value);
+    await loadMyTips(selectedCompetitionId.value);
 
     if (authStore.isAdmin) {
       await loadScoringRules(selectedCompetitionId.value);
@@ -311,6 +389,52 @@ async function loadGames(competitionId: string) {
   } finally {
     isLoadingGames.value = false;
   }
+}
+
+async function loadMyTips(competitionId: string) {
+  appStore.clearGlobalError();
+  isLoadingTips.value = true;
+
+  try {
+    const result = await listMyCompetitionTips(competitionId);
+    tips.value = result.tips;
+    syncTipInputs();
+  } catch (error) {
+    tips.value = [];
+
+    if (error instanceof ApiError) {
+      if (error.status === 401) {
+        authStore.clearRole();
+        await router.push("/login");
+        return;
+      }
+
+      appStore.setGlobalErrorFromApiPayload(error.payload);
+      return;
+    }
+
+    appStore.setGlobalError("Unbekannter Fehler");
+  } finally {
+    isLoadingTips.value = false;
+  }
+}
+
+function syncTipInputs() {
+  tipInputs.value = Object.fromEntries(
+    games.value.map((game) => {
+      const tip = tipsByGameId.value[game.id];
+
+      return [
+        game.id,
+        {
+          homeGoals: tip ? String(tip.homeGoals) : "",
+          awayGoals: tip ? String(tip.awayGoals) : "",
+          advancingTeamId: tip?.advancingTeamId ?? "",
+          isSaving: false,
+        },
+      ];
+    }),
+  );
 }
 
 async function submitCompetitionRename() {
@@ -449,5 +573,131 @@ async function submitScoringRules() {
   }
 }
 
-</script>
+function parseGoalValue(value: string) {
+  if (!/^\d+$/.test(value)) {
+    return null;
+  }
 
+  return Number(value);
+}
+
+function isGameTippable(game: CompetitionGame) {
+  return Boolean(game.homeTeam && game.awayTeam && new Date(game.startsAt) > new Date());
+}
+
+async function submitTip(game: CompetitionGame) {
+  if (!selectedCompetitionId.value) {
+    return;
+  }
+
+  const input = tipInputs.value[game.id];
+
+  if (!input) {
+    return;
+  }
+
+  const homeGoals = parseGoalValue(input.homeGoals);
+  const awayGoals = parseGoalValue(input.awayGoals);
+
+  if (homeGoals === null || awayGoals === null) {
+    appStore.setGlobalError("Bitte nicht-negative ganze Zahlen als Tipp eintragen.");
+    return;
+  }
+
+  appStore.clearGlobalError();
+  input.isSaving = true;
+
+  const payload: {
+    homeGoals: number;
+    awayGoals: number;
+    advancingTeamId?: string;
+  } = {
+    homeGoals,
+    awayGoals,
+  };
+
+  if (shouldAskAdvancingTeam(game)) {
+    if (!input.advancingTeamId) {
+      appStore.setGlobalError("Bitte waehle bei einem K.o.-Unentschieden den Weiterkommer aus.");
+      return;
+    }
+
+    payload.advancingTeamId = input.advancingTeamId;
+  }
+
+  try {
+    const result = await submitCompetitionGameTip(selectedCompetitionId.value, game.id, payload);
+
+    tips.value = [
+      ...tips.value.filter((tip) => tip.gameId !== game.id),
+      {
+        gameId: result.tip.gameId,
+        homeGoals: result.tip.homeGoals,
+        awayGoals: result.tip.awayGoals,
+        advancingTeamId: result.tip.advancingTeamId,
+      },
+    ];
+
+    tipInputs.value[game.id] = {
+      homeGoals: String(result.tip.homeGoals),
+      awayGoals: String(result.tip.awayGoals),
+      advancingTeamId: result.tip.advancingTeamId ?? "",
+      isSaving: false,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      appStore.setGlobalErrorFromApiPayload(error.payload);
+      return;
+    }
+
+    appStore.setGlobalError("Unbekannter Fehler");
+  } finally {
+    input.isSaving = false;
+  }
+}
+
+function isKnockoutGame(game: CompetitionGame) {
+  return game.group === null;
+}
+
+function shouldAskAdvancingTeam(game: CompetitionGame) {
+  const input = tipInputs.value[game.id];
+
+  if (!input || !isKnockoutGame(game)) {
+    return false;
+  }
+
+  const homeGoals = parseGoalValue(input.homeGoals);
+  const awayGoals = parseGoalValue(input.awayGoals);
+
+  return homeGoals !== null && awayGoals !== null && homeGoals === awayGoals;
+}
+
+function findTeamName(game: CompetitionGame, teamId: string | null) {
+  if (!teamId) {
+    return null;
+  }
+
+  if (game.homeTeam?.id === teamId) {
+    return game.homeTeam.name;
+  }
+
+  if (game.awayTeam?.id === teamId) {
+    return game.awayTeam.name;
+  }
+
+  return null;
+}
+
+function getTipUnavailableReason(game: CompetitionGame) {
+  if (!game.homeTeam || !game.awayTeam) {
+    return "Teams stehen noch nicht fest";
+  }
+
+  if (new Date(game.startsAt) <= new Date()) {
+    return "Anpfiff bereits erreicht";
+  }
+
+  return null;
+}
+</script>

@@ -59,6 +59,6 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [ ] US-45 Ergebnisse im Frontend durch Admin erfassen
 - [ ] US-46 Startseite optisch passend gestalten
 - [x] US-47 Punkteschema im Frontend verwalten
-- [ ] US-48 Tipps im Frontend abgeben und aendern
+- [x] US-48 Tipps im Frontend abgeben und aendern
 
-27/49
+28/49
