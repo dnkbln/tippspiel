@@ -104,13 +104,7 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
-- Das Akzeptanzkriterium "Die berechneten Punkte fliessen in die Rangliste ein" ist erst mit `US-16` vollstaendig nachweisbar.
-  Die Punkte werden bereits persistent am `Tip` gespeichert und koennen von der spaeteren Rangliste aggregiert werden.
-
 ### US-26 Punkte fuer K.o.-Spiele automatisch berechnen
-
-- Das Akzeptanzkriterium "Die berechneten Punkte fliessen in die Rangliste ein" ist erst mit `US-16` vollstaendig nachweisbar.
-  Die Punkte werden bereits persistent am `Tip` gespeichert und koennen von der spaeteren Rangliste aggregiert werden.
 
 ## Frontend-Ergaenzung
 
@@ -146,6 +140,8 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 - Fuer die Team-Auswahl im Frontend fehlt noch eine klare Datenquelle fuer alle Teams einer Competition.
   `GET /competitions/:competitionId/games` liefert aktuell nur Teams aus den einzelnen Spielen; fuer Platzhalter-Spiele braucht die Oberflaeche entweder einen Teamlisten-Endpunkt oder eine bewusst erweiterte bestehende Response.
+
+### US-51 Rangliste im Frontend anzeigen
 
 ## Betrieb und technische Anforderungen
 

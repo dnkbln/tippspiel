@@ -27,7 +27,7 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-49 Eigene Tipps im Backend abrufen
 - [ ] US-14 Meine offenen Tipps schnell finden
 - [ ] US-15 Tipps anderer Nutzer erst ab Spielbeginn sehen
-- [ ] US-16 Rangliste nach Punkten sehen
+- [x] US-16 Rangliste nach Punkten sehen
 - [x] US-17 Ergebnis manuell eintragen
 - [ ] US-18 Ergebnisse per JSON importieren
 - [ ] US-19 Externe Ergebnisquelle spaeter anbinden koennen
@@ -61,5 +61,6 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-47 Punkteschema im Frontend verwalten
 - [x] US-48 Tipps im Frontend abgeben und aendern
 - [ ] US-50 K.o.-Spielteilnehmer im Frontend festlegen
+- [ ] US-51 Rangliste im Frontend anzeigen
 
-31/50
+32/51

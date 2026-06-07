@@ -597,6 +597,20 @@ Akzeptanzkriterien:
 - Ein dadurch vollstaendig festgelegtes, noch nicht begonnenes K.o.-Spiel wird fuer Nutzer tippbar.
 - Bei bereits begonnenen Spielen, Spielen ohne Platzhalter oder ungueltigen Teamkombinationen werden Backend-Fehler nachvollziehbar angezeigt.
 
+### US-51 Rangliste im Frontend anzeigen
+
+Als Nutzer moechte ich die Rangliste eines Wettbewerbs in der Oberflaeche sehen, damit ich den aktuellen Stand direkt im Tippspiel verfolgen kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend bietet fuer einen ausgewaehlten Wettbewerb eine Ranglistenansicht.
+- Die Rangliste nutzt den Backend-Endpunkt aus `US-16`.
+- Pro Eintrag werden mindestens Platzierung, Anzeigename und Gesamtpunkte angezeigt.
+- Die Sortierung entspricht der vom Backend gelieferten Reihenfolge.
+- E-Mail-Adressen werden nicht angezeigt.
+- Wenn fuer einen Wettbewerb noch keine Punkte vorhanden sind, zeigt die Oberflaeche einen nachvollziehbaren Leerzustand.
+- Lade- und Fehlerzustand werden konsistent mit den bestehenden Frontend-API-Aufrufen behandelt.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
 Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Tipp und dem echten Ergebnis berechnet werden, damit die Rangliste ohne manuelle Nacharbeit aktuell ist.
