@@ -11,6 +11,7 @@ import RegisterView from "./views/RegisterView.vue";
 import LoginView from "./views/LoginView.vue";
 import CompetitionGamesView from "./views/CompetitionGamesView.vue";
 import AdminImportView from "./views/AdminImportView.vue";
+import CompetitionLeaderboardView from "./views/CompetitionLeaderboardView.vue";
 
 type RouteAccess = "public" | "authenticated" | "admin";
 
@@ -70,6 +71,18 @@ const routes: RouteRecordRaw[] = [
     name: "admin-import",
     component: AdminImportView,
     meta: { access: "admin" satisfies RouteAccess },
+  },
+    {
+    path: "/leaderboard",
+    name: "leaderboard",
+    component: CompetitionLeaderboardView,
+    meta: { access: "authenticated" satisfies RouteAccess },
+  },
+  {
+    path: "/competitions/:competitionId/leaderboard",
+    name: "competition-leaderboard",
+    component: CompetitionLeaderboardView,
+    meta: { access: "authenticated" satisfies RouteAccess },
   },
 ];
 

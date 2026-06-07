@@ -61,6 +61,6 @@ Die fachlichen Details und Akzeptanzkriterien bleiben in `Tippspiel-UserStories.
 - [x] US-47 Punkteschema im Frontend verwalten
 - [x] US-48 Tipps im Frontend abgeben und aendern
 - [ ] US-50 K.o.-Spielteilnehmer im Frontend festlegen
-- [ ] US-51 Rangliste im Frontend anzeigen
+- [x] US-51 Rangliste im Frontend anzeigen
 
-32/51
+33/51

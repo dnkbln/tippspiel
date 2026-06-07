@@ -16,6 +16,7 @@ export function getNavigationItems(authState: AuthState): NavigationItem[] {
   }
 
   items.push({ label: "Spielliste", to: "/competitions" });
+  items.push({ label: "Rangliste", to: "/leaderboard" });
 
   if (authState.isAdmin) {
     items.push({ label: "Admin-Import", to: "/admin/import" });
