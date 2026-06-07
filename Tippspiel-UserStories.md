@@ -583,6 +583,20 @@ Akzeptanzkriterien:
 - Das Frontend nutzt die Backend-Endpunkte aus `US-09` bis `US-13`.
 - Validierungs-, Frist- und Berechtigungsfehler aus dem Backend werden nachvollziehbar angezeigt.
 
+### US-50 K.o.-Spielteilnehmer im Frontend festlegen
+
+Als Admin moechte ich Platzhalter in K.o.-Spielen ueber die Weboberflaeche durch echte Teams ersetzen koennen, damit ich den Spielplan nach Gruppenphase und K.o.-Runden ohne direkte API-Nutzung aktualisieren kann.
+
+Akzeptanzkriterien:
+
+- Das Frontend zeigt Admins bei K.o.-Spielen mit Platzhaltern eine Moeglichkeit zur Teilnehmerfestlegung.
+- Normale Nutzer sehen diese Bedienmoeglichkeit nicht.
+- Admins koennen Heimteam und Auswaertsteam aus den Teams der Competition auswaehlen.
+- Das Frontend nutzt den Backend-Endpunkt aus `US-38`.
+- Nach erfolgreichem Speichern zeigt die Spielliste die echten Teams statt der Platzhalter.
+- Ein dadurch vollstaendig festgelegtes, noch nicht begonnenes K.o.-Spiel wird fuer Nutzer tippbar.
+- Bei bereits begonnenen Spielen, Spielen ohne Platzhalter oder ungueltigen Teamkombinationen werden Backend-Fehler nachvollziehbar angezeigt.
+
 ### US-25 Punkte fuer Gruppenspiele automatisch berechnen
 
 Als Nutzer moechte ich, dass Punkte fuer Gruppenspiele automatisch aus meinem Tipp und dem echten Ergebnis berechnet werden, damit die Rangliste ohne manuelle Nacharbeit aktuell ist.

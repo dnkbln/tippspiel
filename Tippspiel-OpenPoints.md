@@ -26,9 +26,6 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 
 ### US-37 Initialen Admin per Bootstrap-Token anlegen
 
-- Sicherer Provisionierungsprozess fuer den initialen Bootstrap-Token-Hash fehlt noch.
-  Der Setup-Endpunkt erwartet einen gespeicherten Token-Hash in `BootstrapSetup.tokenHash`, aber es gibt noch keinen dokumentierten oder implementierten Betriebsweg, der diesen Datensatz erzeugt, ohne den Klartext-Token in Git, Container-Images oder dauerhafte Logs zu schreiben.
-
 ## Spielplan und Turnierdaten
 
 ### US-06 Spielplan per JSON importieren
@@ -145,9 +142,19 @@ Diese Datei sammelt offene Punkte getrennt nach User Story.
 - Vollstaendiger manueller Nachweis fuer K.o.-Tipps mit festgelegten echten Teams steht noch aus.
   K.o.-Spiele mit Platzhaltern werden korrekt als nicht tippbar angezeigt; die Tippabgabe inklusive Weiterkommer-Auswahl kann erst mit einem K.o.-Spiel geprueft werden, dessen Heim- und Auswaertsteam festgelegt sind.
 
+### US-50 K.o.-Spielteilnehmer im Frontend festlegen
+
+- Fuer die Team-Auswahl im Frontend fehlt noch eine klare Datenquelle fuer alle Teams einer Competition.
+  `GET /competitions/:competitionId/games` liefert aktuell nur Teams aus den einzelnen Spielen; fuer Platzhalter-Spiele braucht die Oberflaeche entweder einen Teamlisten-Endpunkt oder eine bewusst erweiterte bestehende Response.
+
 ## Betrieb und technische Anforderungen
 
 ### US-27 Anwendung ohne Docker in WSL betreiben
+
+- Produktiver Zielsystem-Nachweis fuer `scripts/prod-setup.sh` und `scripts/prod-deploy.sh` steht noch aus.
+  Die Scripts sind vorhanden, aber noch nicht auf einem Ubuntu-22.04-/WSL-Zielsystem mit Caddy, PostgreSQL-Dienst und Intranet-Zugriff durchgespielt.
+- Windows-Firewall-Regel oder WSL-Portweiterleitung muss je nach Zielrechner noch konkret festgelegt werden.
+- Backup-Konzept fuer die PostgreSQL-Datenbank fehlt noch.
 
 ### US-28 Sichere Basis fuer spaetere Erweiterungen schaffen
 
